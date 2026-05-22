@@ -1,540 +1,286 @@
-import { Component } from '@angular/core';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { ContextMenuModule } from 'primeng/contextmenu';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
-import { ButtonModule } from 'primeng/button';
-import { MegaMenuModule } from 'primeng/megamenu';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { TabsModule } from 'primeng/tabs';
 import { MenubarModule } from 'primeng/menubar';
-import { InputTextModule } from 'primeng/inputtext';
-import { StepperModule } from 'primeng/stepper';
-import { IconField, IconFieldModule } from 'primeng/iconfield';
-import { InputIcon, InputIconModule } from 'primeng/inputicon';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { ButtonModule } from 'primeng/button';
+import { TabsModule } from 'primeng/tabs';
+import { TableModule } from 'primeng/table';
+import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
     selector: 'app-menu-demo',
     standalone: true,
-    imports: [
-        CommonModule,
-        BreadcrumbModule,
-        TieredMenuModule,
-        IconFieldModule,
-        InputIconModule,
-        MenuModule,
-        ButtonModule,
-        ContextMenuModule,
-        MegaMenuModule,
-        PanelMenuModule,
-        TabsModule,
-        MenubarModule,
-        InputTextModule,
-        TabsModule,
-        StepperModule,
-        TabsModule,
-        IconField,
-        InputIcon
-    ],
+    imports: [CommonModule, RouterModule, MenuModule, MenubarModule, BreadcrumbModule, PanelMenuModule, TieredMenuModule, ButtonModule, TabsModule, TableModule],
+    styles: [DEMO_STYLES],
     template: `
-        <div class="card">
-            <div class="font-semibold text-xl mb-4">Menubar</div>
-            <p-menubar [model]="nestedMenuItems">
-                <ng-template #end>
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-search" />
-                        <input type="text" pInputText placeholder="Search" />
-                    </p-iconfield>
-                </ng-template>
-            </p-menubar>
-        </div>
-
-        <div class="card">
-            <div class="font-semibold text-xl mb-4">Breadcrumb</div>
-            <p-breadcrumb [model]="breadcrumbItems" [home]="breadcrumbHome"></p-breadcrumb>
-        </div>
-
-        <div class="flex flex-col md:flex-row gap-8">
-            <div class="md:w-1/2">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Steps</div>
-                    <p-stepper [value]="1">
-                        <p-step-list>
-                            <p-step [value]="1">Header I</p-step>
-                            <p-step [value]="2">Header II</p-step>
-                            <p-step [value]="3">Header III</p-step>
-                        </p-step-list>
-                    </p-stepper>
-                </div>
-            </div>
-            <div class="md:w-1/2">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">TabMenu</div>
-                    <p-tabs [value]="0">
-                        <p-tablist>
-                            <p-tab [value]="0">Header I</p-tab>
-                            <p-tab [value]="1">Header II</p-tab>
-                            <p-tab [value]="2">Header III</p-tab>
-                        </p-tablist>
-                    </p-tabs>
-                </div>
+        <div class="comp-header">
+            <h1 class="comp-name">Navegação</h1>
+            <p class="comp-desc">Componentes de navegação: Menu, Menubar, Breadcrumb, PanelMenu e TieredMenu.</p>
+            <div class="import-snippet">
+                <span class="tok-kw">import</span><span class="tok-pt">&nbsp;&#123;&nbsp;</span><span class="tok-id">MenuModule</span><span class="tok-pt">&nbsp;&#125;&nbsp;</span><span class="tok-kw">from</span><span class="tok-str">&nbsp;'primeng/menu'</span><span class="tok-pt">;</span>
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-8 mt-6">
-            <div class="md:w-1/3">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Tiered Menu</div>
-                    <p-tieredmenu [model]="tieredMenuItems"></p-tieredmenu>
-                </div>
-            </div>
-            <div class="md:w-1/3">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Plain Menu</div>
-                    <p-menu [model]="menuItems"></p-menu>
-                </div>
-            </div>
-            <div class="md:w-1/3">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">Overlay Menu</div>
-                    <p-menu #menu [popup]="true" [model]="overlayMenuItems"></p-menu>
-                    <button type="button" pButton icon="pi pi-chevron-down" label="Options" (click)="menu.toggle($event)" style="width:auto"></button>
-                </div>
+        <p-tabs value="features" styleClass="mt-1">
+            <p-tablist>
+                <p-tab value="features">Features</p-tab>
+                <p-tab value="api">API</p-tab>
+                <p-tab value="theming">Theming</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="features"><div style="padding:20px 0">
 
-                <div class="card" #anchor>
-                    <div class="font-semibold text-xl mb-4">Context Menu</div>
-                    Right click to display.
-                    <p-contextmenu [target]="anchor" [model]="contextMenuItems"></p-contextmenu>
-                </div>
-            </div>
-        </div>
+                    <!-- Menu -->
+                    <div id="menu" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Menu</div>
+                            <p class="demo-card-desc">Lista de itens de navegação com suporte a separadores e ícones.</p>
+                        </div>
+                        <div class="demo-card-body" style="align-items:flex-start;gap:20px">
+                            <p-menu [model]="menuItems" styleClass="w-full" [style]="{'max-width':'220px'}" />
+                            <div>
+                                <p style="font-size:13px;margin:0 0 8px;color:var(--text-color-secondary);font-weight:600">Popup (clique):</p>
+                                <p-button label="Abrir Menu" icon="pi pi-bars" (click)="popupMenu.toggle($event)" severity="secondary" />
+                                <p-menu #popupMenu [model]="menuItems" [popup]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.menu }}</pre></div>
+                    </div>
 
-        <div class="flex flex-col md:flex-row gap-8 mt-8">
-            <div class="md:w-1/2">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">MegaMenu | Horizontal</div>
-                    <p-megamenu [model]="megaMenuItems" />
+                    <!-- Menubar -->
+                    <div id="menubar" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Menubar</div>
+                            <p class="demo-card-desc">Barra de menu horizontal com suporte a submenus aninhados.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:16px;gap:0">
+                            <p-menubar [model]="menubarItems" styleClass="w-full">
+                                <ng-template pTemplate="start">
+                                    <span style="font-weight:800;font-size:15px;color:var(--primary-color)">InDS</span>
+                                </ng-template>
+                                <ng-template pTemplate="end">
+                                    <p-button icon="pi pi-user" severity="secondary" text size="small" />
+                                </ng-template>
+                            </p-menubar>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.menubar }}</pre></div>
+                    </div>
 
-                    <div class="font-semibold text-xl mb-4 mt-8">MegaMenu | Vertical</div>
-                    <p-megamenu [model]="megaMenuItems" orientation="vertical" />
-                </div>
-            </div>
-            <div class="md:w-1/2">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">PanelMenu</div>
-                    <p-panelmenu [model]="panelMenuItems" />
-                </div>
-            </div>
-        </div>
+                    <!-- Breadcrumb -->
+                    <div id="breadcrumb" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Breadcrumb</div>
+                            <p class="demo-card-desc">Trilha de navegação hierárquica mostrando o caminho até a página atual.</p>
+                        </div>
+                        <div class="demo-card-body col" style="gap:12px;padding:20px">
+                            <p-breadcrumb [model]="breadcrumbItems" [home]="breadcrumbHome" styleClass="w-full" />
+                            <p-breadcrumb [model]="breadcrumbDeep" [home]="breadcrumbHome" styleClass="w-full" />
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.breadcrumb }}</pre></div>
+                    </div>
+
+                    <!-- PanelMenu -->
+                    <div id="panelmenu" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">PanelMenu</div>
+                            <p class="demo-card-desc">Menu vertical com accordion para organizar links em categorias recolhíveis. Ideal para sidebars.</p>
+                        </div>
+                        <div class="demo-card-body" style="align-items:flex-start">
+                            <p-panelmenu [model]="panelMenuItems" styleClass="w-full" style="max-width:280px" />
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.panelmenu }}</pre></div>
+                    </div>
+
+                    <!-- TieredMenu -->
+                    <div id="tieredmenu" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">TieredMenu</div>
+                            <p class="demo-card-desc">Menu com submenus hierárquicos que abrem ao lado. Útil para menus de contexto complexos.</p>
+                        </div>
+                        <div class="demo-card-body" style="align-items:flex-start;gap:20px">
+                            <p-tieredmenu [model]="tieredMenuItems" />
+                            <div>
+                                <p style="font-size:13px;margin:0 0 8px;color:var(--text-color-secondary);font-weight:600">Popup:</p>
+                                <p-button label="Menu Contextual" icon="pi pi-angle-down" iconPos="right" (click)="tieredPopup.toggle($event)" severity="secondary" />
+                                <p-tieredmenu #tieredPopup [model]="tieredMenuItems" [popup]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.tieredmenu }}</pre></div>
+                    </div>
+
+                </div></p-tabpanel>
+
+                <p-tabpanel value="api"><div style="padding:16px 0">
+                    <div class="api-block-title">MenuItem — Interface</div>
+                    <p-table [value]="propsMenuItem" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header"><tr><th style="width:180px">Prop</th><th style="width:140px">Tipo</th><th>Descrição</th></tr></ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr><td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td></tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+
+                <p-tabpanel value="theming"><div style="padding:16px 0">
+                    <p-table [value]="themeVars" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header"><tr><th style="width:360px">Variável CSS</th><th>Descrição</th></tr></ng-template>
+                        <ng-template pTemplate="body" let-v>
+                            <tr><td><span class="theme-var">{{ v.variable }}</span></td><td style="font-size:13px;color:var(--text-color-secondary)">{{ v.description }}</td></tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
     `
 })
-export class MenuDemo {
-    nestedMenuItems = [
-        {
-            label: 'Customers',
-            icon: 'pi pi-fw pi-table',
-            items: [
-                {
-                    label: 'New',
-                    icon: 'pi pi-fw pi-user-plus',
-                    items: [
-                        {
-                            label: 'Customer',
-                            icon: 'pi pi-fw pi-plus'
-                        },
-                        {
-                            label: 'Duplicate',
-                            icon: 'pi pi-fw pi-copy'
-                        }
-                    ]
-                },
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-fw pi-user-edit'
-                }
-            ]
-        },
-        {
-            label: 'Orders',
-            icon: 'pi pi-fw pi-shopping-cart',
-            items: [
-                {
-                    label: 'View',
-                    icon: 'pi pi-fw pi-list'
-                },
-                {
-                    label: 'Search',
-                    icon: 'pi pi-fw pi-search'
-                }
-            ]
-        },
-        {
-            label: 'Shipments',
-            icon: 'pi pi-fw pi-envelope',
-            items: [
-                {
-                    label: 'Tracker',
-                    icon: 'pi pi-fw pi-compass'
-                },
-                {
-                    label: 'Map',
-                    icon: 'pi pi-fw pi-map-marker'
-                },
-                {
-                    label: 'Manage',
-                    icon: 'pi pi-fw pi-pencil'
-                }
-            ]
-        },
-        {
-            label: 'Profile',
-            icon: 'pi pi-fw pi-user',
-            items: [
-                {
-                    label: 'Settings',
-                    icon: 'pi pi-fw pi-cog'
-                },
-                {
-                    label: 'Billing',
-                    icon: 'pi pi-fw pi-file'
-                }
-            ]
-        },
-        {
-            label: 'Quit',
-            icon: 'pi pi-fw pi-sign-out'
-        }
-    ];
-    breadcrumbHome = { icon: 'pi pi-home', to: '/' };
-    breadcrumbItems = [{ label: 'Computer' }, { label: 'Notebook' }, { label: 'Accessories' }, { label: 'Backpacks' }, { label: 'Item' }];
-    tieredMenuItems = [
-        {
-            label: 'Customers',
-            icon: 'pi pi-fw pi-table',
-            items: [
-                {
-                    label: 'New',
-                    icon: 'pi pi-fw pi-user-plus',
-                    items: [
-                        {
-                            label: 'Customer',
-                            icon: 'pi pi-fw pi-plus'
-                        },
-                        {
-                            label: 'Duplicate',
-                            icon: 'pi pi-fw pi-copy'
-                        }
-                    ]
-                },
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-fw pi-user-edit'
-                }
-            ]
-        },
-        {
-            label: 'Orders',
-            icon: 'pi pi-fw pi-shopping-cart',
-            items: [
-                {
-                    label: 'View',
-                    icon: 'pi pi-fw pi-list'
-                },
-                {
-                    label: 'Search',
-                    icon: 'pi pi-fw pi-search'
-                }
-            ]
-        },
-        {
-            label: 'Shipments',
-            icon: 'pi pi-fw pi-envelope',
-            items: [
-                {
-                    label: 'Tracker',
-                    icon: 'pi pi-fw pi-compass'
-                },
-                {
-                    label: 'Map',
-                    icon: 'pi pi-fw pi-map-marker'
-                },
-                {
-                    label: 'Manage',
-                    icon: 'pi pi-fw pi-pencil'
-                }
-            ]
-        },
-        {
-            label: 'Profile',
-            icon: 'pi pi-fw pi-user',
-            items: [
-                {
-                    label: 'Settings',
-                    icon: 'pi pi-fw pi-cog'
-                },
-                {
-                    label: 'Billing',
-                    icon: 'pi pi-fw pi-file'
-                }
-            ]
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Quit',
-            icon: 'pi pi-fw pi-sign-out'
-        }
-    ];
-    overlayMenuItems = [
-        {
-            label: 'Save',
-            icon: 'pi pi-save'
-        },
-        {
-            label: 'Update',
-            icon: 'pi pi-refresh'
-        },
-        {
-            label: 'Delete',
-            icon: 'pi pi-trash'
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Home',
-            icon: 'pi pi-home'
-        }
-    ];
-    menuItems = [
-        {
-            label: 'Customers',
-            items: [
-                {
-                    label: 'New',
-                    icon: 'pi pi-fw pi-plus'
-                },
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-fw pi-user-edit'
-                }
-            ]
-        },
-        {
-            label: 'Orders',
-            items: [
-                {
-                    label: 'View',
-                    icon: 'pi pi-fw pi-list'
-                },
-                {
-                    label: 'Search',
-                    icon: 'pi pi-fw pi-search'
-                }
-            ]
-        }
-    ];
-    contextMenuItems = [
-        {
-            label: 'Save',
-            icon: 'pi pi-save'
-        },
-        {
-            label: 'Update',
-            icon: 'pi pi-refresh'
-        },
-        {
-            label: 'Delete',
-            icon: 'pi pi-trash'
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Options',
-            icon: 'pi pi-cog'
-        }
-    ];
-    megaMenuItems = [
-        {
-            label: 'Fashion',
-            icon: 'pi pi-fw pi-tag',
-            items: [
-                [
-                    {
-                        label: 'Woman',
-                        items: [{ label: 'Woman Item' }, { label: 'Woman Item' }, { label: 'Woman Item' }]
-                    },
-                    {
-                        label: 'Men',
-                        items: [{ label: 'Men Item' }, { label: 'Men Item' }, { label: 'Men Item' }]
-                    }
-                ],
-                [
-                    {
-                        label: 'Kids',
-                        items: [{ label: 'Kids Item' }, { label: 'Kids Item' }]
-                    },
-                    {
-                        label: 'Luggage',
-                        items: [{ label: 'Luggage Item' }, { label: 'Luggage Item' }, { label: 'Luggage Item' }]
-                    }
+export class MenuDemo implements OnInit {
+    menuItems: MenuItem[] = [];
+    menubarItems: MenuItem[] = [];
+    breadcrumbItems: MenuItem[] = [];
+    breadcrumbDeep: MenuItem[] = [];
+    breadcrumbHome: MenuItem = {};
+    panelMenuItems: MenuItem[] = [];
+    tieredMenuItems: MenuItem[] = [];
+
+    ngOnInit() {
+        this.menuItems = [
+            { label: 'Início', icon: 'pi pi-home' },
+            { label: 'Minha Conta', icon: 'pi pi-user' },
+            { separator: true },
+            { label: 'Configurações', icon: 'pi pi-cog' },
+            { label: 'Sair', icon: 'pi pi-sign-out' },
+        ];
+
+        this.menubarItems = [
+            {
+                label: 'Sistemas', icon: 'pi pi-th-large',
+                items: [
+                    { label: 'Protocolo', icon: 'pi pi-file' },
+                    { label: 'Financeiro', icon: 'pi pi-money-bill' },
                 ]
-            ]
-        },
-        {
-            label: 'Electronics',
-            icon: 'pi pi-fw pi-desktop',
-            items: [
-                [
-                    {
-                        label: 'Computer',
-                        items: [{ label: 'Computer Item' }, { label: 'Computer Item' }]
-                    },
-                    {
-                        label: 'Camcorder',
-                        items: [{ label: 'Camcorder Item' }, { label: 'Camcorder Item' }, { label: 'Camcorder Item' }]
-                    }
-                ],
-                [
-                    {
-                        label: 'TV',
-                        items: [{ label: 'TV Item' }, { label: 'TV Item' }]
-                    },
-                    {
-                        label: 'Audio',
-                        items: [{ label: 'Audio Item' }, { label: 'Audio Item' }, { label: 'Audio Item' }]
-                    }
-                ],
-                [
-                    {
-                        label: 'Sports.7',
-                        items: [{ label: 'Sports.7.1' }, { label: 'Sports.7.2' }]
-                    }
+            },
+            { label: 'Relatórios', icon: 'pi pi-chart-bar' },
+            { label: 'Cadastros', icon: 'pi pi-list' },
+            { label: 'Ajuda', icon: 'pi pi-question-circle' },
+        ];
+
+        this.breadcrumbHome = { icon: 'pi pi-home', routerLink: '/ds' };
+        this.breadcrumbItems = [
+            { label: 'Componentes' },
+            { label: 'Navegação' },
+        ];
+        this.breadcrumbDeep = [
+            { label: 'Sistemas' },
+            { label: 'Financeiro' },
+            { label: 'Lançamentos' },
+            { label: 'Novo Lançamento' },
+        ];
+
+        this.panelMenuItems = [
+            {
+                label: 'Átomos', icon: 'pi pi-circle',
+                items: [
+                    { label: 'Buttons', icon: 'pi pi-stop' },
+                    { label: 'Input', icon: 'pi pi-pencil' },
                 ]
-            ]
-        },
-        {
-            label: 'Furniture',
-            icon: 'pi pi-fw pi-image',
-            items: [
-                [
-                    {
-                        label: 'Living Room',
-                        items: [{ label: 'Living Room Item' }, { label: 'Living Room Item' }]
-                    },
-                    {
-                        label: 'Kitchen',
-                        items: [{ label: 'Kitchen Item' }, { label: 'Kitchen Item' }, { label: 'Kitchen Item' }]
-                    }
-                ],
-                [
-                    {
-                        label: 'Bedroom',
-                        items: [{ label: 'Bedroom Item' }, { label: 'Bedroom Item' }]
-                    },
-                    {
-                        label: 'Outdoor',
-                        items: [{ label: 'Outdoor Item' }, { label: 'Outdoor Item' }, { label: 'Outdoor Item' }]
-                    }
+            },
+            {
+                label: 'Moléculas', icon: 'pi pi-clone',
+                items: [
+                    { label: 'Painéis', icon: 'pi pi-tablet' },
+                    { label: 'Mensagens', icon: 'pi pi-comment' },
                 ]
-            ]
-        },
-        {
-            label: 'Sports',
-            icon: 'pi pi-fw pi-star',
-            items: [
-                [
-                    {
-                        label: 'Basketball',
-                        items: [{ label: 'Basketball Item' }, { label: 'Basketball Item' }]
-                    },
-                    {
-                        label: 'Football',
-                        items: [{ label: 'Football Item' }, { label: 'Football Item' }, { label: 'Football Item' }]
-                    }
-                ],
-                [
-                    {
-                        label: 'Tennis',
-                        items: [{ label: 'Tennis Item' }, { label: 'Tennis Item' }]
-                    }
+            },
+            {
+                label: 'Organismos', icon: 'pi pi-box',
+                items: [
+                    { label: 'DataTable', icon: 'pi pi-table' },
+                    { label: 'Navegação', icon: 'pi pi-bars' },
                 ]
-            ]
-        }
+            },
+        ];
+
+        this.tieredMenuItems = [
+            { label: 'Arquivo', icon: 'pi pi-file',
+              items: [
+                { label: 'Novo', icon: 'pi pi-plus' },
+                { label: 'Abrir', icon: 'pi pi-folder-open' },
+                { separator: true },
+                { label: 'Exportar', icon: 'pi pi-download',
+                  items: [
+                    { label: 'PDF', icon: 'pi pi-file-pdf' },
+                    { label: 'Excel', icon: 'pi pi-file-excel' },
+                  ]
+                }
+              ]
+            },
+            { label: 'Editar', icon: 'pi pi-pencil',
+              items: [
+                { label: 'Copiar', icon: 'pi pi-copy' },
+                { label: 'Colar', icon: 'pi pi-clipboard' },
+              ]
+            },
+        ];
+    }
+
+    code: any = {
+        menu: `<p-menu [model]="items" />
+
+<!-- Como popup -->
+<p-button label="Menu" (click)="menu.toggle($event)" />
+<p-menu #menu [model]="items" [popup]="true" />`,
+
+        menubar: `<p-menubar [model]="items">
+    <ng-template pTemplate="start">
+        <span class="logo">MyApp</span>
+    </ng-template>
+    <ng-template pTemplate="end">
+        <p-button icon="pi pi-user" text />
+    </ng-template>
+</p-menubar>`,
+
+        breadcrumb: `<p-breadcrumb
+    [model]="items"
+    [home]="{ icon: 'pi pi-home', routerLink: '/' }" />`,
+
+        panelmenu: `<p-panelmenu [model]="items" />`,
+
+        tieredmenu: `<p-tieredmenu [model]="items" />
+
+<!-- Como popup -->
+<p-button label="Ações" (click)="tm.toggle($event)" />
+<p-tieredmenu #tm [model]="items" [popup]="true" />`,
+    };
+
+    propsMenuItem = [
+        { name: 'label',       type: 'string',   description: 'Texto do item.' },
+        { name: 'icon',        type: 'string',   description: 'Ícone PrimeIcons.' },
+        { name: 'routerLink',  type: 'any[]',    description: 'Rota Angular para navegação.' },
+        { name: 'url',         type: 'string',   description: 'URL externa.' },
+        { name: 'command',     type: 'Function', description: 'Callback ao clicar no item.' },
+        { name: 'items',       type: 'MenuItem[]', description: 'Subitems (submenu).' },
+        { name: 'separator',   type: 'boolean',  description: 'Se true, renderiza como separador.' },
+        { name: 'disabled',    type: 'boolean',  description: 'Desabilita o item.' },
+        { name: 'visible',     type: 'boolean',  description: 'Se false, oculta o item.' },
+        { name: 'badge',       type: 'string',   description: 'Valor do badge no item.' },
+        { name: 'badgeClass',  type: 'string',   description: 'Classe CSS extra do badge.' },
+        { name: 'fragment',    type: 'string',   description: 'Fragment da URL para âncoras.' },
     ];
-    panelMenuItems = [
-        {
-            label: 'Customers',
-            icon: 'pi pi-fw pi-table',
-            items: [
-                {
-                    label: 'New',
-                    icon: 'pi pi-fw pi-user-plus',
-                    items: [
-                        {
-                            label: 'Customer',
-                            icon: 'pi pi-fw pi-plus'
-                        },
-                        {
-                            label: 'Duplicate',
-                            icon: 'pi pi-fw pi-copy'
-                        }
-                    ]
-                },
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-fw pi-user-edit'
-                }
-            ]
-        },
-        {
-            label: 'Orders',
-            icon: 'pi pi-fw pi-shopping-cart',
-            items: [
-                {
-                    label: 'View',
-                    icon: 'pi pi-fw pi-list'
-                },
-                {
-                    label: 'Search',
-                    icon: 'pi pi-fw pi-search'
-                }
-            ]
-        },
-        {
-            label: 'Shipments',
-            icon: 'pi pi-fw pi-envelope',
-            items: [
-                {
-                    label: 'Tracker',
-                    icon: 'pi pi-fw pi-compass'
-                },
-                {
-                    label: 'Map',
-                    icon: 'pi pi-fw pi-map-marker'
-                },
-                {
-                    label: 'Manage',
-                    icon: 'pi pi-fw pi-pencil'
-                }
-            ]
-        },
-        {
-            label: 'Profile',
-            icon: 'pi pi-fw pi-user',
-            items: [
-                {
-                    label: 'Settings',
-                    icon: 'pi pi-fw pi-cog'
-                },
-                {
-                    label: 'Billing',
-                    icon: 'pi pi-fw pi-file'
-                }
-            ]
-        }
+
+    themeVars = [
+        { variable: '--p-menu-background',              description: 'Fundo do menu.' },
+        { variable: '--p-menu-border-color',            description: 'Borda do menu.' },
+        { variable: '--p-menu-item-hover-background',   description: 'Fundo do item no hover.' },
+        { variable: '--p-menu-item-focus-background',   description: 'Fundo do item em foco.' },
+        { variable: '--p-menu-item-color',              description: 'Cor do texto dos itens.' },
+        { variable: '--p-menu-item-icon-color',         description: 'Cor dos ícones dos itens.' },
+        { variable: '--p-menubar-background',           description: 'Fundo da menubar.' },
+        { variable: '--p-breadcrumb-background',        description: 'Fundo do breadcrumb.' },
     ];
 }

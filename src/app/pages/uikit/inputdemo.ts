@@ -1,339 +1,563 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { TextareaModule } from 'primeng/textarea';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { FluidModule } from 'primeng/fluid';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { SliderModule } from 'primeng/slider';
+import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { AutoCompleteModule, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { DatePickerModule } from 'primeng/datepicker';
+import { TabsModule } from 'primeng/tabs';
+import { TableModule } from 'primeng/table';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { SliderModule } from 'primeng/slider';
-import { RatingModule } from 'primeng/rating';
-import { ColorPickerModule } from 'primeng/colorpicker';
-import { KnobModule } from 'primeng/knob';
-import { SelectModule } from 'primeng/select';
-import { DatePickerModule } from 'primeng/datepicker';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { TreeSelectModule } from 'primeng/treeselect';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { ListboxModule } from 'primeng/listbox';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { TextareaModule } from 'primeng/textarea';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { CountryService } from '@/app/pages/service/country.service';
-import { NodeService } from '@/app/pages/service/node.service';
-import { TreeNode } from 'primeng/api';
-import { Country } from '@/app/pages/service/customer.service';
+import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
     selector: 'app-input-demo',
     standalone: true,
     imports: [
-        CommonModule,
-        FormsModule,
-        InputTextModule,
-        ButtonModule,
-        CheckboxModule,
-        RadioButtonModule,
-        SelectButtonModule,
-        InputGroupModule,
-        FluidModule,
-        IconFieldModule,
-        InputIconModule,
-        FloatLabelModule,
-        AutoCompleteModule,
-        InputNumberModule,
-        SliderModule,
-        RatingModule,
-        ColorPickerModule,
-        KnobModule,
-        SelectModule,
-        DatePickerModule,
-        ToggleButtonModule,
-        ToggleSwitchModule,
-        TreeSelectModule,
-        MultiSelectModule,
-        ListboxModule,
-        InputGroupAddonModule,
-        TextareaModule
+        CommonModule, FormsModule,
+        InputTextModule, PasswordModule, TextareaModule, InputNumberModule,
+        CheckboxModule, RadioButtonModule, ToggleSwitchModule, SliderModule,
+        SelectModule, MultiSelectModule, AutoCompleteModule, DatePickerModule,
+        TabsModule, TableModule, FloatLabelModule, IconFieldModule, InputIconModule
     ],
-    template: ` <p-fluid class="flex flex-col md:flex-row gap-8">
-            <div class="md:w-1/2">
-                <div class="card flex flex-col gap-4">
-                    <div class="font-semibold text-xl">InputText</div>
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <input pInputText type="text" placeholder="Default" />
-                        <input pInputText type="text" placeholder="Disabled" [disabled]="true" />
-                        <input pInputText type="text" placeholder="Invalid" class="ng-dirty ng-invalid" />
-                    </div>
-
-                    <div class="font-semibold text-xl">Icons</div>
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-user" />
-                        <input pInputText type="text" placeholder="Username" />
-                    </p-iconfield>
-                    <p-iconfield iconPosition="left">
-                        <input pInputText type="text" placeholder="Search" />
-                        <p-inputicon class="pi pi-search" />
-                    </p-iconfield>
-
-                    <div class="font-semibold text-xl">Float Label</div>
-                    <p-floatlabel>
-                        <input pInputText id="username" type="text" [(ngModel)]="floatValue" />
-                        <label for="username">Username</label>
-                    </p-floatlabel>
-
-                    <div class="font-semibold text-xl">Textarea</div>
-                    <textarea pTextarea placeholder="Your Message" [autoResize]="true" rows="3" cols="30"></textarea>
-
-                    <div class="font-semibold text-xl">AutoComplete</div>
-                    <p-autocomplete [(ngModel)]="selectedAutoValue" [suggestions]="autoFilteredValue" optionLabel="name" placeholder="Search" dropdown multiple display="chip" (completeMethod)="filterCountry($event)" />
-
-                    <div class="font-semibold text-xl">DatePicker</div>
-                    <p-datepicker [showIcon]="true" [showButtonBar]="true" [(ngModel)]="calendarValue"></p-datepicker>
-
-                    <div class="font-semibold text-xl">InputNumber</div>
-                    <p-inputnumber [(ngModel)]="inputNumberValue" showButtons mode="decimal"></p-inputnumber>
-                </div>
-
-                <div class="card flex flex-col gap-4">
-                    <div class="font-semibold text-xl">Slider</div>
-                    <input pInputText [(ngModel)]="sliderValue" type="number" />
-                    <p-slider [(ngModel)]="sliderValue" />
-
-                    <div class="flex flex-row mt-6">
-                        <div class="flex flex-col gap-4 w-1/2">
-                            <div class="font-semibold text-xl">Rating</div>
-                            <p-rating [(ngModel)]="ratingValue" />
-                        </div>
-                        <div class="flex flex-col gap-4 w-1/2">
-                            <div class="font-semibold text-xl">ColorPicker</div>
-                            <p-colorpicker [style]="{ width: '2rem' }" [(ngModel)]="colorValue" />
-                        </div>
-                    </div>
-
-                    <div class="font-semibold text-xl">Knob</div>
-                    <p-knob [(ngModel)]="knobValue" [step]="10" [min]="-50" [max]="50" valueTemplate="{value}%" />
-                </div>
+    styles: [DEMO_STYLES + `
+        .form-col { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 280px; }
+        .form-col label { font-size: 13px; font-weight: 600; color: var(--text-color-secondary); }
+        .demo-card-body.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 20px; background: var(--surface-ground); }
+    `],
+    template: `
+        <!-- ── Header ── -->
+        <div class="comp-header">
+            <h1 class="comp-name">Input & Select</h1>
+            <p class="comp-desc">Campos de entrada e seleção para formulários. Integrados com Angular Forms e temas PrimeNG.</p>
+            <div class="import-snippet">
+                <span class="tok-kw">import</span><span class="tok-pt">&nbsp;&#123;&nbsp;</span><span class="tok-id">InputTextModule</span><span class="tok-pt">&nbsp;&#125;&nbsp;</span><span class="tok-kw">from</span><span class="tok-str">&nbsp;'primeng/inputtext'</span><span class="tok-pt">;</span>
             </div>
-            <div class="md:w-1/2">
-                <div class="card flex flex-col gap-4">
-                    <div class="font-semibold text-xl">RadioButton</div>
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex items-center">
-                            <p-radiobutton id="option1" name="option" value="Chicago" [(ngModel)]="radioValue" />
-                            <label for="option1" class="leading-none ml-2">Chicago</label>
+        </div>
+
+        <p-tabs value="features" styleClass="mt-1">
+            <p-tablist>
+                <p-tab value="features">Features</p-tab>
+                <p-tab value="api">API</p-tab>
+                <p-tab value="theming">Theming</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+
+                <!-- ══ FEATURES ══ -->
+                <p-tabpanel value="features"><div style="padding:20px 0">
+
+                    <!-- InputText -->
+                    <div id="inputtext" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">InputText</div>
+                            <p class="demo-card-desc">Campo de texto simples. Use <code>pInputText</code> em inputs nativos ou com Float Label e ícones.</p>
                         </div>
-                        <div class="flex items-center">
-                            <p-radiobutton id="option2" name="option" value="Los Angeles" [(ngModel)]="radioValue" />
-                            <label for="option2" class="leading-none ml-2">Los Angeles</label>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>Básico</label>
+                                <input pInputText type="text" placeholder="Digite algo" [(ngModel)]="txt" />
+                            </div>
+                            <div class="form-col">
+                                <label>Desabilitado</label>
+                                <input pInputText type="text" value="Valor fixo" [disabled]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Com ícone</label>
+                                <p-iconfield>
+                                    <p-inputicon class="pi pi-search" />
+                                    <input pInputText type="text" placeholder="Buscar..." />
+                                </p-iconfield>
+                            </div>
+                            <div class="form-col">
+                                <p-floatlabel>
+                                    <input pInputText id="fl" type="text" [(ngModel)]="txt2" />
+                                    <label for="fl">Float Label</label>
+                                </p-floatlabel>
+                            </div>
                         </div>
-                        <div class="flex items-center">
-                            <p-radiobutton id="option3" name="option" value="New York" [(ngModel)]="radioValue" />
-                            <label for="option3" class="leading-none ml-2">New York</label>
-                        </div>
+                        <div class="demo-card-code"><pre>{{ code.inputtext }}</pre></div>
                     </div>
 
-                    <div class="font-semibold text-xl">Checkbox</div>
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <div class="flex items-center">
-                            <p-checkbox id="checkOption1" name="option" value="Chicago" [(ngModel)]="checkboxValue" />
-                            <label for="checkOption1" class="ml-2">Chicago</label>
+                    <!-- Password -->
+                    <div id="password" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Password</div>
+                            <p class="demo-card-desc">Campo de senha com toggle de visibilidade e medidor de força opcional.</p>
                         </div>
-                        <div class="flex items-center">
-                            <p-checkbox id="checkOption2" name="option" value="Los Angeles" [(ngModel)]="checkboxValue" />
-                            <label for="checkOption2" class="ml-2">Los Angeles</label>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>Básico</label>
+                                <p-password [(ngModel)]="pwd" [feedback]="false" [toggleMask]="true" [fluid]="true" placeholder="Senha" />
+                            </div>
+                            <div class="form-col">
+                                <label>Com medidor de força</label>
+                                <p-password [(ngModel)]="pwd2" [feedback]="true" [toggleMask]="true" [fluid]="true" placeholder="Digite sua senha" />
+                            </div>
                         </div>
-                        <div class="flex items-center">
-                            <p-checkbox id="checkOption3" name="option" value="New York" [(ngModel)]="checkboxValue" />
-                            <label for="checkOption3" class="ml-2">New York</label>
-                        </div>
+                        <div class="demo-card-code"><pre>{{ code.password }}</pre></div>
                     </div>
 
-                    <div class="font-semibold text-xl">ToggleSwitch</div>
-                    <p-toggleswitch [(ngModel)]="switchValue" />
-                </div>
+                    <!-- Textarea -->
+                    <div id="textarea" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Textarea</div>
+                            <p class="demo-card-desc">Campo de texto multilinha com redimensionamento automático opcional.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col" style="max-width:340px">
+                                <label>Básico</label>
+                                <textarea pTextarea rows="3" placeholder="Escreva aqui..." [(ngModel)]="area" style="width:100%"></textarea>
+                            </div>
+                            <div class="form-col" style="max-width:340px">
+                                <label>Auto-resize</label>
+                                <textarea pTextarea [autoResize]="true" rows="2" placeholder="Cresce conforme o conteúdo..." style="width:100%"></textarea>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.textarea }}</pre></div>
+                    </div>
 
-                <div class="card flex flex-col gap-4">
-                    <div class="font-semibold text-xl">Listbox</div>
-                    <p-listbox [(ngModel)]="listboxValue" [options]="listboxValues" optionLabel="name" [filter]="true" />
+                    <!-- InputNumber -->
+                    <div id="inputnumber" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">InputNumber</div>
+                            <p class="demo-card-desc">Campo numérico com formatação de moeda, porcentagem e botões de incremento.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>Inteiro</label>
+                                <p-inputnumber [(ngModel)]="num" [fluid]="true" placeholder="0" />
+                            </div>
+                            <div class="form-col">
+                                <label>Moeda (BRL)</label>
+                                <p-inputnumber [(ngModel)]="currency" mode="currency" currency="BRL" locale="pt-BR" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Com botões</label>
+                                <p-inputnumber [(ngModel)]="num2" [showButtons]="true" [min]="0" [max]="100" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Porcentagem</label>
+                                <p-inputnumber [(ngModel)]="pct" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" suffix="%" [fluid]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.inputnumber }}</pre></div>
+                    </div>
 
-                    <div class="font-semibold text-xl">Select</div>
-                    <p-select [(ngModel)]="dropdownValue" [options]="dropdownValues" optionLabel="name" placeholder="Select" />
-
-                    <div class="font-semibold text-xl">MultiSelect</div>
-                    <p-multiselect [options]="multiselectCountries" [(ngModel)]="multiselectSelectedCountries" placeholder="Select Countries" optionLabel="name" display="chip" [filter]="true">
-                        <ng-template #selecteditems let-countries>
-                            @for (country of countries; track country.code) {
-                                <div class="inline-flex items-center py-1 px-2 bg-primary text-primary-contrast rounded-border mr-2">
-                                    <span [class]="'mr-2 flag flag-' + country.code.toLowerCase()" style="width: 18px; height: 12px"></span>
-                                    <div>{{ country.name }}</div>
+                    <!-- Checkbox -->
+                    <div id="checkbox" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Checkbox</div>
+                            <p class="demo-card-desc">Seleção booleana ou múltipla com suporte a estados indeterminados.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:20px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <p-checkbox [(ngModel)]="chk1" [binary]="true" inputId="chk1" />
+                                <label for="chk1" style="font-size:14px;cursor:pointer">Aceito os termos</label>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <p-checkbox [(ngModel)]="chk2" [binary]="true" inputId="chk2" [disabled]="true" />
+                                <label for="chk2" style="font-size:14px;color:var(--text-color-secondary)">Desabilitado</label>
+                            </div>
+                            @for (opt of chkOptions; track opt.value) {
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <p-checkbox [(ngModel)]="chkSelected" [value]="opt.value" [inputId]="opt.value" name="opts" />
+                                    <label [for]="opt.value" style="font-size:14px;cursor:pointer">{{ opt.label }}</label>
                                 </div>
                             }
-                        </ng-template>
-                        <ng-template #item let-country>
-                            <div class="flex items-center">
-                                <span [class]="'mr-2 flag flag-' + country.code.toLowerCase()" style="width: 18px; height: 12px"></span>
-                                <div>{{ country.name }}</div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.checkbox }}</pre></div>
+                    </div>
+
+                    <!-- RadioButton -->
+                    <div id="radio" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">RadioButton</div>
+                            <p class="demo-card-desc">Seleção única dentro de um grupo de opções.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:20px">
+                            @for (opt of radioOptions; track opt.value) {
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <p-radiobutton [(ngModel)]="radioSelected" [value]="opt.value" [inputId]="'r'+opt.value" name="radio" />
+                                    <label [for]="'r'+opt.value" style="font-size:14px;cursor:pointer">{{ opt.label }}</label>
+                                </div>
+                            }
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.radio }}</pre></div>
+                    </div>
+
+                    <!-- ToggleSwitch -->
+                    <div id="toggle" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ToggleSwitch</div>
+                            <p class="demo-card-desc">Interruptor on/off para configurações binárias.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:24px">
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <p-toggleswitch [(ngModel)]="tog1" />
+                                <span style="font-size:14px">Notificações {{ tog1 ? 'ativas' : 'inativas' }}</span>
                             </div>
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <p-toggleswitch [(ngModel)]="tog2" [disabled]="true" />
+                                <span style="font-size:14px;color:var(--text-color-secondary)">Desabilitado</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.toggle }}</pre></div>
+                    </div>
+
+                    <!-- Slider -->
+                    <div id="slider" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Slider</div>
+                            <p class="demo-card-desc">Controle deslizante para selecionar valores dentro de um intervalo.</p>
+                        </div>
+                        <div class="demo-card-body col" style="gap:20px;padding:24px">
+                            <div style="width:100%;max-width:360px">
+                                <p style="font-size:13px;margin:0 0 8px;color:var(--text-color-secondary)">Valor: <strong>{{ sliderVal }}</strong></p>
+                                <p-slider [(ngModel)]="sliderVal" [min]="0" [max]="100" styleClass="w-full" />
+                            </div>
+                            <div style="width:100%;max-width:360px">
+                                <p style="font-size:13px;margin:0 0 8px;color:var(--text-color-secondary)">Range: <strong>{{ sliderRange[0] }} – {{ sliderRange[1] }}</strong></p>
+                                <p-slider [(ngModel)]="sliderRange" [range]="true" [min]="0" [max]="100" styleClass="w-full" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.slider }}</pre></div>
+                    </div>
+
+                    <!-- ─── SELECT ─── -->
+
+                    <!-- Select -->
+                    <div id="select" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Select</div>
+                            <p class="demo-card-desc">Dropdown de seleção única com suporte a filtro e grupos.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>Básico</label>
+                                <p-select [(ngModel)]="selVal" [options]="cities" optionLabel="name" placeholder="Selecione a cidade" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Com filtro</label>
+                                <p-select [(ngModel)]="selVal2" [options]="cities" optionLabel="name" [filter]="true" placeholder="Busque a cidade" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Desabilitado</label>
+                                <p-select [options]="cities" optionLabel="name" placeholder="—" [disabled]="true" [fluid]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.select }}</pre></div>
+                    </div>
+
+                    <!-- MultiSelect -->
+                    <div id="multiselect" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">MultiSelect</div>
+                            <p class="demo-card-desc">Dropdown de seleção múltipla com chips e filtro.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col" style="max-width:320px">
+                                <label>Básico</label>
+                                <p-multiselect [(ngModel)]="multiVal" [options]="cities" optionLabel="name" placeholder="Selecione cidades" [fluid]="true" display="chip" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.multiselect }}</pre></div>
+                    </div>
+
+                    <!-- AutoComplete -->
+                    <div id="autocomplete" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">AutoComplete</div>
+                            <p class="demo-card-desc">Campo de texto com sugestões dinâmicas ao digitar.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col" style="max-width:320px">
+                                <label>Básico (digite uma cidade)</label>
+                                <p-autocomplete [(ngModel)]="autoVal" [suggestions]="autoSuggestions" (completeMethod)="onComplete($event)" field="name" [fluid]="true" placeholder="Ex: Goiânia" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.autocomplete }}</pre></div>
+                    </div>
+
+                    <!-- DatePicker -->
+                    <div id="datepicker" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">DatePicker</div>
+                            <p class="demo-card-desc">Seletor de data com calendário, range e modo inline.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>Data simples</label>
+                                <p-datepicker [(ngModel)]="date1" [fluid]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" />
+                            </div>
+                            <div class="form-col">
+                                <label>Range de datas</label>
+                                <p-datepicker [(ngModel)]="dateRange" selectionMode="range" [fluid]="true" dateFormat="dd/mm/yy" placeholder="Início – Fim" />
+                            </div>
+                            <div class="form-col">
+                                <label>Com hora</label>
+                                <p-datepicker [(ngModel)]="dateTime" [showTime]="true" hourFormat="24" [fluid]="true" dateFormat="dd/mm/yy" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.datepicker }}</pre></div>
+                    </div>
+
+                </div></p-tabpanel>
+
+                <!-- ══ API ══ -->
+                <p-tabpanel value="api"><div style="padding:16px 0">
+                    <div class="api-block-title">InputText — Propriedades principais</div>
+                    <p-table [value]="propsInput" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:180px">Nome</th><th style="width:140px">Tipo</th><th style="width:110px">Padrão</th><th>Descrição</th></tr>
                         </ng-template>
-                    </p-multiselect>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="api-block-title" style="margin-top:28px">Select — Propriedades principais</div>
+                    <p-table [value]="propsSelect" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:180px">Nome</th><th style="width:140px">Tipo</th><th style="width:110px">Padrão</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
 
-                    <div class="font-semibold text-xl">TreeSelect</div>
-                    <p-treeselect [(ngModel)]="selectedNode" [options]="treeSelectNodes" placeholder="Select Item"></p-treeselect>
-                </div>
+                <!-- ══ THEMING ══ -->
+                <p-tabpanel value="theming"><div style="padding:16px 0">
+                    <p-table [value]="themeVars" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:360px">Variável CSS</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-v>
+                            <tr>
+                                <td><span class="theme-var">{{ v.variable }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ v.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
 
-                <div class="card flex flex-col gap-4">
-                    <div class="font-semibold text-xl">ToggleButton</div>
-                    <p-togglebutton [(ngModel)]="toggleValue" onLabel="Yes" offLabel="No" [style]="{ width: '10em' }" />
-
-                    <div class="font-semibold text-xl">SelectButton</div>
-                    <p-selectbutton [(ngModel)]="selectButtonValue" [options]="selectButtonValues" optionLabel="name" />
-                </div>
-            </div>
-        </p-fluid>
-
-        <p-fluid class="flex mt-8">
-            <div class="card flex flex-col gap-6 w-full">
-                <div class="font-semibold text-xl">InputGroup</div>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <p-inputgroup>
-                        <p-inputgroup-addon>
-                            <i class="pi pi-user"></i>
-                        </p-inputgroup-addon>
-                        <input pInputText placeholder="Username" />
-                    </p-inputgroup>
-                    <p-inputgroup>
-                        <p-inputgroup-addon>
-                            <i class="pi pi-clock"></i>
-                        </p-inputgroup-addon>
-                        <p-inputgroup-addon>
-                            <i class="pi pi-star-fill"></i>
-                        </p-inputgroup-addon>
-                        <p-inputnumber placeholder="Price" />
-                        <p-inputgroup-addon>$</p-inputgroup-addon>
-                        <p-inputgroup-addon>.00</p-inputgroup-addon>
-                    </p-inputgroup>
-                </div>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <p-inputgroup>
-                        <p-button label="Search" />
-                        <input pInputText placeholder="Keyword" />
-                    </p-inputgroup>
-                    <p-inputgroup>
-                        <p-inputgroup-addon>
-                            <p-checkbox [(ngModel)]="inputGroupValue" [binary]="true" />
-                        </p-inputgroup-addon>
-                        <input pInputText placeholder="Confirm" />
-                    </p-inputgroup>
-                </div>
-            </div>
-        </p-fluid>`,
-    providers: [CountryService, NodeService]
+            </p-tabpanels>
+        </p-tabs>
+    `
 })
 export class InputDemo implements OnInit {
-    floatValue: any = null;
+    txt = ''; txt2 = ''; pwd = ''; pwd2 = ''; area = '';
+    num: number | null = null; num2 = 50; currency: number | null = null; pct: number | null = null;
+    chk1 = false; chk2 = true;
+    chkSelected: string[] = [];
+    radioSelected = 'goiania';
+    tog1 = true; tog2 = false;
+    sliderVal = 40; sliderRange = [20, 70];
+    selVal: any = null; selVal2: any = null;
+    multiVal: any[] = [];
+    autoVal: any = null; autoSuggestions: any[] = [];
+    date1: Date | null = null; dateRange: Date[] | null = null; dateTime: Date | null = null;
 
-    autoValue: any[] | undefined;
-
-    autoFilteredValue: any[] = [];
-
-    selectedAutoValue: any = null;
-
-    calendarValue: any = null;
-
-    inputNumberValue: any = null;
-
-    sliderValue: number = 50;
-
-    ratingValue: any = null;
-
-    colorValue: string = '#1976D2';
-
-    radioValue: any = null;
-
-    checkboxValue: any[] = [];
-
-    switchValue: boolean = false;
-
-    listboxValues: any[] = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
+    cities = [
+        { name: 'Goiânia', code: 'GYN' },
+        { name: 'Anápolis', code: 'ANA' },
+        { name: 'Aparecida de Goiânia', code: 'APG' },
+        { name: 'Rio Verde', code: 'RVD' },
+        { name: 'Luziânia', code: 'LUZ' },
     ];
 
-    listboxValue: any = null;
-
-    dropdownValues = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
+    chkOptions = [
+        { label: 'Angular', value: 'angular' },
+        { label: 'React', value: 'react' },
+        { label: 'Vue', value: 'vue' },
     ];
 
-    dropdownValue: any = null;
-
-    multiselectCountries: Country[] = [
-        { name: 'Australia', code: 'AU' },
-        { name: 'Brazil', code: 'BR' },
-        { name: 'China', code: 'CN' },
-        { name: 'Egypt', code: 'EG' },
-        { name: 'France', code: 'FR' },
-        { name: 'Germany', code: 'DE' },
-        { name: 'India', code: 'IN' },
-        { name: 'Japan', code: 'JP' },
-        { name: 'Spain', code: 'ES' },
-        { name: 'United States', code: 'US' }
+    radioOptions = [
+        { label: 'Goiânia', value: 'goiania' },
+        { label: 'Anápolis', value: 'anapolis' },
+        { label: 'Rio Verde', value: 'rioverde' },
     ];
 
-    multiselectSelectedCountries!: Country[];
+    ngOnInit() {}
 
-    toggleValue: boolean = false;
-
-    selectButtonValue: any = null;
-
-    selectButtonValues: any = [{ name: 'Option 1' }, { name: 'Option 2' }, { name: 'Option 3' }];
-
-    knobValue: number = 50;
-
-    inputGroupValue: boolean = false;
-
-    treeSelectNodes!: TreeNode[];
-
-    selectedNode: any = null;
-
-    countryService = inject(CountryService);
-
-    nodeService = inject(NodeService);
-
-    ngOnInit() {
-        this.countryService.getCountries().then((countries) => {
-            this.autoValue = countries;
-        });
-
-        this.nodeService.getFiles().then((data) => (this.treeSelectNodes = data));
+    onComplete(event: AutoCompleteCompleteEvent) {
+        const q = event.query.toLowerCase();
+        this.autoSuggestions = this.cities.filter(c => c.name.toLowerCase().includes(q));
     }
 
-    filterCountry(event: AutoCompleteCompleteEvent) {
-        const filtered: any[] = [];
-        const query = event.query;
+    code: any = {
+        inputtext: `<!-- Básico -->
+<input pInputText type="text" placeholder="Digite algo" [(ngModel)]="txt" />
 
-        for (let i = 0; i < (this.autoValue as any[]).length; i++) {
-            const country = (this.autoValue as any[])[i];
-            if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-                filtered.push(country);
-            }
-        }
+<!-- Com ícone -->
+<p-iconfield>
+    <p-inputicon class="pi pi-search" />
+    <input pInputText type="text" placeholder="Buscar..." />
+</p-iconfield>
 
-        this.autoFilteredValue = filtered;
-    }
+<!-- Float Label -->
+<p-floatlabel>
+    <input pInputText id="fl" type="text" [(ngModel)]="txt" />
+    <label for="fl">Seu nome</label>
+</p-floatlabel>`,
+
+        password: `<p-password [(ngModel)]="pwd"
+    [feedback]="false"
+    [toggleMask]="true"
+    [fluid]="true"
+    placeholder="Senha" />
+
+<!-- Com medidor de força -->
+<p-password [(ngModel)]="pwd"
+    [feedback]="true"
+    [toggleMask]="true"
+    [fluid]="true" />`,
+
+        textarea: `<textarea pTextarea rows="4" [(ngModel)]="texto"
+    placeholder="Escreva aqui..."
+    style="width:100%">
+</textarea>
+
+<!-- Auto-resize -->
+<textarea pTextarea [autoResize]="true" rows="2"
+    placeholder="Cresce conforme o conteúdo...">
+</textarea>`,
+
+        inputnumber: `<!-- Inteiro -->
+<p-inputnumber [(ngModel)]="num" [fluid]="true" />
+
+<!-- Moeda -->
+<p-inputnumber [(ngModel)]="val" mode="currency"
+    currency="BRL" locale="pt-BR" [fluid]="true" />
+
+<!-- Com botões -->
+<p-inputnumber [(ngModel)]="num" [showButtons]="true"
+    [min]="0" [max]="100" [fluid]="true" />`,
+
+        checkbox: `<!-- Binário -->
+<p-checkbox [(ngModel)]="aceito" [binary]="true" inputId="chk" />
+<label for="chk">Aceito os termos</label>
+
+<!-- Múltipla seleção -->
+<p-checkbox [(ngModel)]="selecionados" value="angular"
+    inputId="ang" name="techs" />
+<label for="ang">Angular</label>`,
+
+        radio: `<p-radiobutton [(ngModel)]="selected" value="goiania"
+    inputId="r1" name="city" />
+<label for="r1">Goiânia</label>
+
+<p-radiobutton [(ngModel)]="selected" value="anapolis"
+    inputId="r2" name="city" />
+<label for="r2">Anápolis</label>`,
+
+        toggle: `<p-toggleswitch [(ngModel)]="ativo" />`,
+
+        slider: `<p-slider [(ngModel)]="valor" [min]="0" [max]="100" styleClass="w-full" />
+
+<!-- Range -->
+<p-slider [(ngModel)]="range" [range]="true"
+    [min]="0" [max]="100" styleClass="w-full" />`,
+
+        select: `<p-select [(ngModel)]="cidade"
+    [options]="cidades"
+    optionLabel="name"
+    placeholder="Selecione a cidade"
+    [fluid]="true" />
+
+<!-- Com filtro -->
+<p-select [(ngModel)]="cidade"
+    [options]="cidades"
+    optionLabel="name"
+    [filter]="true"
+    [fluid]="true" />`,
+
+        multiselect: `<p-multiselect [(ngModel)]="cidades"
+    [options]="opcoes"
+    optionLabel="name"
+    placeholder="Selecione cidades"
+    display="chip"
+    [fluid]="true" />`,
+
+        autocomplete: `<p-autocomplete [(ngModel)]="value"
+    [suggestions]="filteredItems"
+    (completeMethod)="search($event)"
+    field="name"
+    [fluid]="true"
+    placeholder="Digite para buscar..." />`,
+
+        datepicker: `<!-- Data simples -->
+<p-datepicker [(ngModel)]="date"
+    dateFormat="dd/mm/yy"
+    [fluid]="true" />
+
+<!-- Range -->
+<p-datepicker [(ngModel)]="dateRange"
+    selectionMode="range"
+    dateFormat="dd/mm/yy"
+    [fluid]="true" />
+
+<!-- Com hora -->
+<p-datepicker [(ngModel)]="date"
+    [showTime]="true"
+    hourFormat="24"
+    [fluid]="true" />`,
+    };
+
+    propsInput = [
+        { name: 'type',        type: 'string',  default: 'text',  description: 'Tipo do input HTML.' },
+        { name: 'placeholder', type: 'string',  default: 'null',  description: 'Texto exibido quando vazio.' },
+        { name: 'disabled',    type: 'boolean', default: 'false', description: 'Desabilita o campo.' },
+        { name: 'readonly',    type: 'boolean', default: 'false', description: 'Torna o campo somente leitura.' },
+        { name: 'fluid',       type: 'boolean', default: 'false', description: 'Ocupa toda a largura disponível.' },
+        { name: 'invalid',     type: 'boolean', default: 'false', description: 'Aplica estilo de erro ao campo.' },
+        { name: 'size',        type: 'string',  default: 'null',  description: 'Tamanho: "small" ou "large".' },
+    ];
+
+    propsSelect = [
+        { name: 'options',      type: 'any[]',   default: 'null',  description: 'Lista de opções.' },
+        { name: 'optionLabel',  type: 'string',  default: 'null',  description: 'Propriedade do objeto usada como label.' },
+        { name: 'optionValue',  type: 'string',  default: 'null',  description: 'Propriedade do objeto usada como valor.' },
+        { name: 'placeholder',  type: 'string',  default: 'null',  description: 'Texto quando nada está selecionado.' },
+        { name: 'filter',       type: 'boolean', default: 'false', description: 'Habilita campo de busca interno.' },
+        { name: 'disabled',     type: 'boolean', default: 'false', description: 'Desabilita o componente.' },
+        { name: 'fluid',        type: 'boolean', default: 'false', description: 'Largura total.' },
+        { name: 'showClear',    type: 'boolean', default: 'false', description: 'Exibe botão para limpar seleção.' },
+        { name: 'editable',     type: 'boolean', default: 'false', description: 'Permite digitar no campo.' },
+    ];
+
+    themeVars = [
+        { variable: '--p-inputtext-background',       description: 'Fundo do campo de texto.' },
+        { variable: '--p-inputtext-color',            description: 'Cor do texto digitado.' },
+        { variable: '--p-inputtext-border-color',     description: 'Cor da borda padrão.' },
+        { variable: '--p-inputtext-focus-border-color', description: 'Cor da borda em foco.' },
+        { variable: '--p-inputtext-invalid-border-color', description: 'Cor da borda em estado inválido.' },
+        { variable: '--p-inputtext-placeholder-color', description: 'Cor do placeholder.' },
+        { variable: '--p-inputtext-border-radius',    description: 'Raio de borda.' },
+        { variable: '--p-inputtext-padding-x',        description: 'Padding horizontal.' },
+        { variable: '--p-inputtext-padding-y',        description: 'Padding vertical.' },
+        { variable: '--p-select-background',          description: 'Fundo do Select.' },
+        { variable: '--p-select-border-color',        description: 'Borda do Select.' },
+        { variable: '--p-select-option-focus-background', description: 'Fundo da opção em hover.' },
+        { variable: '--p-select-option-selected-background', description: 'Fundo da opção selecionada.' },
+    ];
 }
