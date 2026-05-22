@@ -87,25 +87,74 @@ interface ComponentGroup {
             background: #ECFDF5; border-color: #6EE7B7;
             color: #059669; font-weight: 600;
         }
-        .start-section {
-            background: var(--surface-card);
-            border: 1px solid var(--surface-border);
-            border-radius: 12px; padding: 28px 32px;
+        .gs-steps {
+            display: flex; flex-direction: column; gap: 0;
             margin-bottom: 48px;
         }
-        .start-title { font-size: 18px; font-weight: 700; color: var(--text-color); margin: 0 0 8px; }
-        .start-desc { font-size: 14px; color: var(--text-color-secondary); margin: 0 0 20px; }
-        .code-block {
-            background: var(--surface-ground);
-            border: 1px solid var(--surface-border);
-            border-radius: 8px; padding: 14px 18px;
-            font-family: monospace; font-size: 13px;
-            color: var(--text-color);
-            display: flex; align-items: center; justify-content: space-between;
+        .gs-step {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 0 20px;
         }
-        .token-green { color: #059669; }
-        .token-blue { color: #3B82F6; }
-        .token-orange { color: #D97706; }
+        .gs-step-left {
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .gs-step-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #059669; color: #fff;
+            font-size: 14px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: 2px;
+            box-shadow: 0 2px 8px rgba(5,150,105,.25);
+        }
+        .gs-step-line {
+            width: 2px; flex: 1; background: #D1FAE5;
+            margin: 6px 0; min-height: 20px;
+        }
+        .gs-step:last-child .gs-step-line { display: none; }
+        .gs-step-body {
+            padding-bottom: 28px;
+        }
+        .gs-step-title {
+            font-size: 16px; font-weight: 700; color: var(--text-color);
+            margin: 0 0 4px; padding-top: 4px;
+        }
+        .gs-step-desc {
+            font-size: 13px; color: var(--text-color-secondary);
+            margin: 0 0 12px; line-height: 1.6;
+        }
+        .code-block {
+            background: #0F172A;
+            border: 1px solid #1E293B;
+            border-radius: 8px; padding: 12px 16px;
+            font-family: 'Courier New', monospace; font-size: 13px;
+            color: #E2E8F0;
+            margin-bottom: 8px;
+            overflow-x: auto;
+        }
+        .code-block:last-child { margin-bottom: 0; }
+        .code-comment { color: #64748B; }
+        .code-cmd { color: #86EFAC; }
+        .code-str { color: #FCD34D; }
+        .code-key { color: #93C5FD; }
+        .gs-tip {
+            display: flex; align-items: flex-start; gap: 8px;
+            background: #ECFDF5; border: 1px solid #A7F3D0;
+            border-radius: 8px; padding: 10px 14px;
+            font-size: 12px; color: #065F46; line-height: 1.5;
+            margin-top: 8px;
+        }
+        .gs-tip i { color: #059669; font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+        .gs-prereqs {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;
+        }
+        .gs-prereq-tag {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--surface-ground); border: 1px solid var(--surface-border);
+            border-radius: 6px; padding: 4px 12px;
+            font-size: 12px; font-weight: 600; color: var(--text-color-secondary);
+        }
+        .gs-prereq-tag i { color: #059669; font-size: 12px; }
     `],
     template: `
         <!-- Hero -->
@@ -154,22 +203,155 @@ interface ComponentGroup {
             }
         </div>
 
-        <!-- Começando -->
-        <h2 class="section-title">Começando</h2>
-        <p class="section-sub">Acesse qualquer componente pelo menu lateral ou pelos links acima.</p>
-        <div class="start-section">
-            <div class="start-title">Estrutura de cada componente</div>
-            <p class="start-desc">
-                Cada página de componente contém: visão geral, demonstrações interativas,
-                variações de estado e referência de propriedades.
-            </p>
-            <div class="code-block">
-                <span>
-                    <span class="token-green">import</span> &#123; <span class="token-blue">ButtonModule</span> &#125;
-                    <span class="token-green"> from</span>
-                    <span class="token-orange"> 'primeng/button'</span>;
-                </span>
+        <!-- Como Iniciar -->
+        <h2 class="section-title">Como iniciar</h2>
+        <p class="section-sub">
+            Siga os passos abaixo para clonar o kit e começar a desenvolver com o Informatiza Design System v3.0.
+        </p>
+
+        <div class="gs-steps">
+
+            <!-- Pré-requisitos -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">1</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Pré-requisitos</div>
+                    <p class="gs-step-desc">Certifique-se de ter as ferramentas abaixo instaladas antes de começar.</p>
+                    <div class="gs-prereqs">
+                        <span class="gs-prereq-tag"><i class="pi pi-check-circle"></i> Node.js 22+</span>
+                        <span class="gs-prereq-tag"><i class="pi pi-check-circle"></i> npm 10+</span>
+                        <span class="gs-prereq-tag"><i class="pi pi-check-circle"></i> Angular CLI 21</span>
+                        <span class="gs-prereq-tag"><i class="pi pi-check-circle"></i> Git</span>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-comment"># Instale o Angular CLI globalmente (caso ainda não tenha)</span><br/>
+                        <span class="code-cmd">npm install -g &#64;angular/cli&#64;21</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Clonar o repositório -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">2</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Clonar o repositório</div>
+                    <p class="gs-step-desc">Clone o repositório oficial do Informatiza DS e entre na pasta do projeto.</p>
+                    <div class="code-block">
+                        <span class="code-cmd">git clone https://github.com/felippeissa/informatizaDS.git</span><br/>
+                        <span class="code-cmd">cd informatizaDS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instalar dependências -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">3</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Instalar dependências</div>
+                    <p class="gs-step-desc">Instale todos os pacotes necessários com npm.</p>
+                    <div class="code-block">
+                        <span class="code-cmd">npm install</span>
+                    </div>
+                    <div class="gs-tip">
+                        <i class="pi pi-info-circle"></i>
+                        <span>O projeto usa <strong>Angular 21</strong>, <strong>PrimeNG 21</strong> e <strong>Tailwind CSS 4</strong>. Todas as dependências serão instaladas automaticamente.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodar localmente -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">4</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Rodar localmente</div>
+                    <p class="gs-step-desc">Inicie o servidor de desenvolvimento. A aplicação abre automaticamente em <strong>http://localhost:4200</strong>.</p>
+                    <div class="code-block">
+                        <span class="code-cmd">ng serve</span>
+                    </div>
+                    <div class="code-block">
+                        <span class="code-comment"># Ou via npm</span><br/>
+                        <span class="code-cmd">npm start</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estrutura do projeto -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">5</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Estrutura do projeto</div>
+                    <p class="gs-step-desc">Conheça a organização de pastas do kit.</p>
+                    <div class="code-block">
+                        <span class="code-key">src/</span><br/>
+                        <span>&nbsp;&nbsp;</span><span class="code-key">app/</span><br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="code-key">layout/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Topbar, sidebar, configurador de tema</span><br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="code-key">pages/</span><br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="code-key">ds/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Página inicial do design system</span><br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="code-key">uikit/</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Demos de cada componente</span><br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="code-key">auth/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Tela de login</span><br/>
+                        <span>&nbsp;&nbsp;</span><span class="code-key">assets/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Estilos globais, temas, imagens</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usar um componente -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">6</div>
+                    <div class="gs-step-line"></div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Usar um componente</div>
+                    <p class="gs-step-desc">Importe o módulo do componente desejado diretamente do PrimeNG no seu componente standalone.</p>
+                    <div class="code-block">
+                        <span class="code-key">import</span> &#123; <span class="code-str">ButtonModule</span> &#125; <span class="code-key">from</span> <span class="code-str">'primeng/button'</span>;<br/>
+                        <span class="code-key">import</span> &#123; <span class="code-str">InputTextModule</span> &#125; <span class="code-key">from</span> <span class="code-str">'primeng/inputtext'</span>;<br/><br/>
+                        <span class="code-key">&#64;Component</span>(&#123;<br/>
+                        &nbsp;&nbsp;<span class="code-str">standalone</span>: <span class="code-key">true</span>,<br/>
+                        &nbsp;&nbsp;<span class="code-str">imports</span>: [<span class="code-str">ButtonModule</span>, <span class="code-str">InputTextModule</span>],<br/>
+                        &nbsp;&nbsp;<span class="code-comment">// ...</span><br/>
+                        &#125;)
+                    </div>
+                    <div class="gs-tip">
+                        <i class="pi pi-lightbulb"></i>
+                        <span>Cada página de componente neste portal traz exemplos prontos, variações de estado e referência completa de propriedades.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Build para produção -->
+            <div class="gs-step">
+                <div class="gs-step-left">
+                    <div class="gs-step-num">7</div>
+                </div>
+                <div class="gs-step-body">
+                    <div class="gs-step-title">Build para produção</div>
+                    <p class="gs-step-desc">Gere o build otimizado para deploy.</p>
+                    <div class="code-block">
+                        <span class="code-cmd">ng build --configuration production</span>
+                    </div>
+                    <div class="gs-tip">
+                        <i class="pi pi-info-circle"></i>
+                        <span>O CI/CD via GitHub Actions já está configurado — qualquer push na branch <strong>main</strong> faz deploy automático no GitHub Pages.</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     `
 })
