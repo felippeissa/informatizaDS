@@ -193,8 +193,8 @@ export class Login {
 
     constructor(private router: Router) {}
 
-    onSenhaKeyUp(event: KeyboardEvent) {
-        if (event.key === 'Enter') this.entrar();
+    onSenhaKeyUp(event: Event) {
+        if ((event as KeyboardEvent).key === 'Enter') this.entrar();
     }
 
     entrar() {

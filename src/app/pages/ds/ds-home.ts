@@ -165,7 +165,7 @@ interface ComponentGroup {
             </p>
             <div class="code-block">
                 <span>
-                    <span class="token-green">import</span> { <span class="token-blue">ButtonModule</span> }
+                    <span class="token-green">import</span> &#123; <span class="token-blue">ButtonModule</span> &#125;
                     <span class="token-green"> from</span>
                     <span class="token-orange"> 'primeng/button'</span>;
                 </span>
