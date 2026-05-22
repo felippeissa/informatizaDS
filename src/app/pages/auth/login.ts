@@ -154,18 +154,7 @@ import { CommonModule } from '@angular/common';
                         <button class="recover">Recuperar senha</button>
                     </div>
 
-                    <p-button label="Entrar" styleClass="btn-entrar" (onClick)="entrar()" />
-
-                    <div class="ou">Ou</div>
-
-                    <button class="btn-social" pRipple>
-                        <span class="id-goias">ID</span>
-                        Entrar com ID Goiás
-                    </button>
-                    <button class="btn-social" pRipple>
-                        <span class="govbr">gov.br</span>
-                        Entrar com gov.br
-                    </button>
+                    <p-button label="Entrar" styleClass="btn-entrar" [style]="{'width':'100%'}" (onClick)="entrar()" />
 
                     <p class="policy">
                         Utilizamos cookies do navegador para rastrear sua sessão e oferecer uma experiência melhor.
