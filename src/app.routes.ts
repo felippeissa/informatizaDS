@@ -10,7 +10,8 @@ export const appRoutes: Routes = [
         component: AppLayout,
         children: [
             { path: '', component: DsHome },
-            { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') }
+            { path: 'uikit',      loadChildren: () => import('./app/pages/uikit/uikit.routes') },
+            { path: 'templates',  loadChildren: () => import('./app/pages/templates/templates.routes') }
         ]
     },
     { path: 'notfound', component: Notfound },

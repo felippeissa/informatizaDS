@@ -30,6 +30,29 @@ export class AppMenu {
                 ]
             },
 
+            /* ══════════════ TEMPLATES ══════════════ */
+            {
+                label: 'Templates',
+                items: [
+                    {
+                        label: 'Listagens',
+                        icon: 'pi pi-fw pi-list',
+                        path: 'tpl-listagens',
+                        items: [
+                            { label: 'Lista com Filtros', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/templates/lista-filtros'] },
+                        ]
+                    },
+                    {
+                        label: 'Formulários',
+                        icon: 'pi pi-fw pi-file-edit',
+                        path: 'tpl-forms',
+                        items: [
+                            { label: 'Incluir IPOF', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/templates/incluir-ipof'] },
+                        ]
+                    },
+                ]
+            },
+
             /* ══════════════ ÁTOMOS ══════════════ */
             {
                 label: 'Átomos',
