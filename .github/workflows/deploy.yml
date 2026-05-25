@@ -14,9 +14,6 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,22 +21,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
 
       - name: Show environment
         run: |
           node --version
           npm --version
-          ls src/assets/ || echo "NO ASSETS"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install 2>&1
 
       - name: Build
-        run: npx ng build --base-href /informatizaDS/
+        run: npx ng build --base-href /informatizaDS/ 2>&1
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Copy 404.html for SPA routing
         run: cp dist/sakai-ng/browser/index.html dist/sakai-ng/browser/404.html
