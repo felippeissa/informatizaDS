@@ -3,6 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { SpeedDialModule } from 'primeng/speeddial';
 import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 @Component({
     selector: 'app-button-demo',
     standalone: true,
-    imports: [CommonModule, ButtonModule, ButtonGroupModule, SplitButtonModule, TabsModule, TableModule],
+    imports: [CommonModule, ButtonModule, ButtonGroupModule, SplitButtonModule, SpeedDialModule, TabsModule, TableModule],
     styles: [DEMO_STYLES],
     template: `
         <!-- ── Header ── -->
@@ -221,6 +222,25 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.splitbutton }}</pre></div>
                     </div>
 
+                    <!-- SpeedDial -->
+                    <div id="speeddial" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">SpeedDial</div>
+                            <p class="demo-card-desc">Menu radial de ações rápidas que se expande ao clicar. Configure a direção com <code>direction</code> e adicione uma máscara com <code>[mask]="true"</code>.</p>
+                        </div>
+                        <div class="demo-card-body" style="position:relative;min-height:220px;overflow:hidden;justify-content:center;align-items:center;gap:80px">
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:flex-end;justify-content:center">
+                                <p-speeddial [model]="speedDialItems" direction="up" />
+                                <span style="position:absolute;top:-22px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">up</span>
+                            </div>
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:flex-start">
+                                <p-speeddial [model]="speedDialItems" direction="right" />
+                                <span style="position:absolute;bottom:-18px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">right</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.speeddial }}</pre></div>
+                    </div>
+
                 </div></p-tabpanel>
 
                 <!-- ══ API ══ -->
@@ -280,6 +300,7 @@ export class ButtonDemo implements OnInit {
 
     loading = [false, false, false, false];
     splitItems: MenuItem[] = [];
+    speedDialItems: MenuItem[] = [];
 
     code: any = {
         primary: `<p-button label="Salvar" />
@@ -334,6 +355,16 @@ export class ButtonDemo implements OnInit {
     <p-button label="Excluir" icon="pi pi-trash"   severity="danger" />
 </p-buttongroup>`,
 
+        speeddial: `<p-speeddial [model]="items" direction="up" />
+
+// Items (MenuItem[]):
+items = [
+    { label: 'Adicionar', icon: 'pi pi-pencil' },
+    { label: 'Atualizar', icon: 'pi pi-refresh' },
+    { label: 'Excluir',   icon: 'pi pi-trash'  },
+    { label: 'Upload',    icon: 'pi pi-upload' },
+];`,
+
         splitbutton: `<p-splitbutton label="Salvar" icon="pi pi-check" [model]="items" />
 <p-splitbutton label="Salvar" [model]="items" severity="secondary" />
 <p-splitbutton label="Salvar" [model]="items" severity="danger" outlined />`,
@@ -386,6 +417,12 @@ export class ButtonDemo implements OnInit {
             { label: 'Duplicar',  icon: 'pi pi-copy' },
             { separator: true },
             { label: 'Excluir',   icon: 'pi pi-times' },
+        ];
+        this.speedDialItems = [
+            { label: 'Adicionar', icon: 'pi pi-pencil', command: () => {} },
+            { label: 'Atualizar', icon: 'pi pi-refresh', command: () => {} },
+            { label: 'Excluir',   icon: 'pi pi-trash',   command: () => {} },
+            { label: 'Upload',    icon: 'pi pi-upload',  command: () => {} },
         ];
     }
 

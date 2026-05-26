@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-menu',
@@ -18,38 +20,58 @@ import { AppMenuitem } from './app.menuitem';
         }
     </ul>`
 })
-export class AppMenu {
+export class AppMenu implements OnInit, OnDestroy {
     model: MenuItem[] = [];
+    private router = inject(Router);
+    private sub!: Subscription;
 
     ngOnInit() {
-        this.model = [
+        this.buildMenu(this.router.url);
+        this.sub = this.router.events
+            .pipe(filter(e => e instanceof NavigationEnd))
+            .subscribe((e: any) => this.buildMenu(e.urlAfterRedirects));
+    }
+
+    ngOnDestroy() { this.sub?.unsubscribe(); }
+
+    private buildMenu(url: string) {
+        if (url.startsWith('/assinago')) {
+            this.model = this.assinagoMenu;
+        } else {
+            this.model = this.dsMenu;
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════
+       Menu: ASSINAGO
+    ══════════════════════════════════════════════════════ */
+    private assinagoMenu: MenuItem[] = [
+        {
+            items: [
+                { label: 'Página inicial',    routerLink: ['/assinago/pagina-inicial'] },
+                { label: 'Minha conta',       routerLink: ['/assinago/minha-conta'] },
+                { label: 'Validar documento', routerLink: ['/assinago/validar-documento'] },
+                {
+                    label: 'Configurações',
+                    items: [
+                        { label: 'Documentos',           routerLink: ['/assinago/configuracoes/documentos'] },
+                        { label: 'Assinaturas',          routerLink: ['/assinago/configuracoes/assinaturas'] },
+                        { label: 'Motivo de recusa',     routerLink: ['/assinago/configuracoes/motivo-recusa'] },
+                        { label: 'Blocos de assinatura', routerLink: ['/assinago/configuracoes/blocos-assinatura'] },
+                    ]
+                },
+            ]
+        },
+    ];
+
+    /* ══════════════════════════════════════════════════════
+       Menu: Informatiza Design System
+    ══════════════════════════════════════════════════════ */
+    private get dsMenu(): MenuItem[] { return [
             {
                 label: 'Início',
                 items: [
                     { label: 'Visão Geral', icon: 'pi pi-fw pi-home', routerLink: ['/ds'] }
-                ]
-            },
-
-            /* ══════════════ TEMPLATES ══════════════ */
-            {
-                label: 'Templates',
-                items: [
-                    {
-                        label: 'Listagens',
-                        icon: 'pi pi-fw pi-list',
-                        path: 'tpl-listagens',
-                        items: [
-                            { label: 'Lista com Filtros', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/templates/lista-filtros'] },
-                        ]
-                    },
-                    {
-                        label: 'Formulários',
-                        icon: 'pi pi-fw pi-file-edit',
-                        path: 'tpl-forms',
-                        items: [
-                            { label: 'Incluir IPOF', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/templates/incluir-ipof'] },
-                        ]
-                    },
                 ]
             },
 
@@ -75,9 +97,14 @@ export class AppMenu {
                             { label: 'InputText',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inputtext'] },
                             { label: 'InputMask',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inputmask'] },
                             { label: 'InputGroup',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inputgroup'] },
+                            { label: 'IconField',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/iconfield'] },
+                            { label: 'FloatLabel',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/floatlabel'] },
+                            { label: 'IftaLabel',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/iftalabel'] },
                             { label: 'Password',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/password'] },
                             { label: 'Textarea',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/textarea'] },
                             { label: 'InputNumber',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inputnumber'] },
+                            { label: 'InputOtp',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inputotp'] },
+                            { label: 'KeyFilter',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/keyfilter'] },
                             { label: 'Checkbox',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/checkbox'] },
                             { label: 'RadioButton',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/radiobutton'] },
                             { label: 'ToggleSwitch', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/toggleswitch'] },
@@ -86,6 +113,8 @@ export class AppMenu {
                             { label: 'Slider',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/slider'] },
                             { label: 'Rating',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/rating'] },
                             { label: 'Knob',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/knob'] },
+                            { label: 'ColorPicker',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/colorpicker'] },
+                            { label: 'Editor',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/editor'] },
                         ]
                     },
                     {
@@ -93,11 +122,13 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-chevron-down',
                         path: 'atm-select',
                         items: [
-                            { label: 'Select',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/select'] },
-                            { label: 'Listbox',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/listbox'] },
-                            { label: 'MultiSelect',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/multiselect'] },
-                            { label: 'AutoComplete', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/autocomplete'] },
-                            { label: 'DatePicker',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/datepicker'] },
+                            { label: 'Select',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/select'] },
+                            { label: 'Listbox',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/listbox'] },
+                            { label: 'MultiSelect',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/multiselect'] },
+                            { label: 'AutoComplete',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/autocomplete'] },
+                            { label: 'CascadeSelect',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/cascadeselect'] },
+                            { label: 'TreeSelect',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/treeselect'] },
+                            { label: 'DatePicker',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/datepicker'] },
                         ]
                     },
                     {
@@ -105,14 +136,19 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-circle',
                         path: 'atm-misc',
                         items: [
-                            { label: 'Avatar',          icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/avatar'] },
-                            { label: 'Badge',           icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/badge'] },
-                            { label: 'Tag',             icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tag'] },
-                            { label: 'Chip',            icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/chip'] },
-                            { label: 'ProgressBar',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/progressbar'] },
-                            { label: 'ProgressSpinner', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/progressspinner'] },
-                            { label: 'MeterGroup',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/metergroup'] },
-                            { label: 'Skeleton',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/skeleton'] },
+                            { label: 'Avatar',           icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/avatar'] },
+                            { label: 'Badge',            icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/badge'] },
+                            { label: 'Tag',              icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tag'] },
+                            { label: 'Chip',             icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/chip'] },
+                            { label: 'ProgressBar',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/progressbar'] },
+                            { label: 'ProgressSpinner',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/progressspinner'] },
+                            { label: 'MeterGroup',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/metergroup'] },
+                            { label: 'Skeleton',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/skeleton'] },
+                            { label: 'Inplace',          icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/inplace'] },
+                            { label: 'BlockUI',          icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/blockui'] },
+                            { label: 'ScrollTop',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/scrolltop'] },
+                            { label: 'AnimateOnScroll',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/animateonscroll'] },
+                            { label: 'Terminal',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/terminal'] },
                         ]
                     },
                 ]
@@ -153,12 +189,13 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-clone',
                         path: 'mol-overlays',
                         items: [
-                            { label: 'Dialog',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dialog'] },
-                            { label: 'Drawer',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/drawer'] },
-                            { label: 'Tooltip',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tooltip'] },
-                            { label: 'Popover',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/popover'] },
-                            { label: 'ConfirmDialog', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/confirmdialog'] },
-                            { label: 'ConfirmPopup',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/confirmpopup'] },
+                            { label: 'Dialog',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dialog'] },
+                            { label: 'DynamicDialog',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dynamicdialog'] },
+                            { label: 'Drawer',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/drawer'] },
+                            { label: 'Tooltip',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tooltip'] },
+                            { label: 'Popover',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/popover'] },
+                            { label: 'ConfirmDialog',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/confirmdialog'] },
+                            { label: 'ConfirmPopup',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/confirmpopup'] },
                         ]
                     },
                 ]
@@ -173,14 +210,16 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-table',
                         path: 'org-dados',
                         items: [
-                            { label: 'DataTable',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/datatable'] },
-                            { label: 'Paginator',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/paginator'] },
-                            { label: 'Tree',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tree'] },
-                            { label: 'TreeTable',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/treetable'] },
-                            { label: 'Timeline',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/timeline'] },
-                            { label: 'OrderList',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/orderlist'] },
-                            { label: 'PickList',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/picklist'] },
-                            { label: 'DataView',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dataview'] },
+                            { label: 'DataTable',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/datatable'] },
+                            { label: 'Paginator',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/paginator'] },
+                            { label: 'Tree',            icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tree'] },
+                            { label: 'TreeTable',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/treetable'] },
+                            { label: 'Timeline',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/timeline'] },
+                            { label: 'OrderList',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/orderlist'] },
+                            { label: 'PickList',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/picklist'] },
+                            { label: 'DataView',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dataview'] },
+                            { label: 'OrgChart',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/orgchart'] },
+                            { label: 'VirtualScroller', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/virtualscroller'] },
                         ]
                     },
                     {
@@ -190,10 +229,12 @@ export class AppMenu {
                         items: [
                             { label: 'Menu',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/menu'] },
                             { label: 'Menubar',     icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/menubar'] },
+                            { label: 'MegaMenu',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/megamenu'] },
                             { label: 'Breadcrumb',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/breadcrumb'] },
                             { label: 'PanelMenu',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/panelmenu'] },
                             { label: 'TieredMenu',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/tieredmenu'] },
                             { label: 'ContextMenu', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/contextmenu'] },
+                            { label: 'Dock',        icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/dock'] },
                             { label: 'Steps',       icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/steps'] },
                         ]
                     },
@@ -202,10 +243,11 @@ export class AppMenu {
                         icon: 'pi pi-fw pi-image',
                         path: 'org-media',
                         items: [
-                            { label: 'Image',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/image'] },
-                            { label: 'Galleria',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/galleria'] },
-                            { label: 'Carousel',   icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/carousel'] },
-                            { label: 'FileUpload', icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/fileupload'] },
+                            { label: 'Image',         icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/image'] },
+                            { label: 'ImageCompare',  icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/imagecompare'] },
+                            { label: 'Galleria',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/galleria'] },
+                            { label: 'Carousel',      icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/carousel'] },
+                            { label: 'FileUpload',    icon: 'pi pi-fw pi-minus', routerLink: ['/ds/uikit/fileupload'] },
                         ]
                     },
                     {
@@ -226,6 +268,5 @@ export class AppMenu {
                     },
                 ]
             },
-        ];
-    }
+        ]; }
 }

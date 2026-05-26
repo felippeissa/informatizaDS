@@ -1,217 +1,273 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { DataViewModule } from 'primeng/dataview';
 import { OrderListModule } from 'primeng/orderlist';
 import { PickListModule } from 'primeng/picklist';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { TagModule } from 'primeng/tag';
-import { Product, ProductService } from '@/app/pages/service/product.service';
+import { DataViewModule } from 'primeng/dataview';
+import { TabsModule } from 'primeng/tabs';
+import { TableModule } from 'primeng/table';
+import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
     selector: 'app-list-demo',
     standalone: true,
-    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, PickListModule, OrderListModule, TagModule, ButtonModule],
-    template: ` <div class="flex flex-col">
-        <div class="card">
-            <div class="font-semibold text-xl">DataView</div>
-            <p-dataview [value]="products" [layout]="layout">
-                <ng-template #header>
-                    <div class="flex justify-end">
-                        <p-select-button [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
-                            <ng-template #item let-option>
-                                <i class="pi " [ngClass]="{ 'pi-bars': option === 'list', 'pi-table': option === 'grid' }"></i>
-                            </ng-template>
-                        </p-select-button>
-                    </div>
-                </ng-template>
-
-                <ng-template #list let-items>
-                    <div class="flex flex-col">
-                        <div *ngFor="let item of items; let i = index">
-                            <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4" [ngClass]="{ 'border-t border-surface': i !== 0 }">
-                                <div class="md:w-40 relative">
-                                    <img class="block xl:block mx-auto rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" />
-                                    <div class="absolute bg-black/70 rounded-border" [style]="{ left: '4px', top: '4px' }">
-                                        <p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
-                                        <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
-                                            <div class="text-lg font-medium mt-2">{{ item.name }}</div>
-                                        </div>
-                                        <div class="bg-surface-100 p-1" style="border-radius: 30px">
-                                            <div
-                                                class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
-                                                style="
-                                                    border-radius: 30px;
-                                                    box-shadow:
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
-                                                "
-                                            >
-                                                <span class="text-surface-900 font-medium text-sm">{{ item.rating }}</span>
-                                                <i class="pi pi-star-fill text-yellow-500"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col md:items-end gap-8">
-                                        <span class="text-xl font-semibold">$ {{ item.price }}</span>
-                                        <div class="flex flex-row-reverse md:flex-row gap-2">
-                                            <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
-                                            <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'" styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-
-                <ng-template #grid let-items>
-                    <div class="grid grid-cols-12 gap-4">
-                        <div *ngFor="let item of items; let i = index" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
-                            <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col">
-                                <div class="relative w-full shadow-sm">
-                                    <img class="rounded w-full" src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}" [alt]="item.name" />
-                                    <div
-                                        class="absolute bg-black/70 rounded-border"
-                                        [style]="{
-                                            left: '4px',
-                                            top: '4px'
-                                        }"
-                                    >
-                                        <p-tag [value]="item.inventoryStatus" [severity]="getSeverity(item)"></p-tag>
-                                    </div>
-                                </div>
-                                <div class="pt-12">
-                                    <div class="flex flex-row justify-between items-start gap-2">
-                                        <div>
-                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
-                                            <div class="text-lg font-medium mt-1">
-                                                {{ item.name }}
-                                            </div>
-                                        </div>
-                                        <div class="bg-surface-100 p-1" style="border-radius: 30px">
-                                            <div
-                                                class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
-                                                style="
-                                                    border-radius: 30px;
-                                                    box-shadow:
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
-                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
-                                                "
-                                            >
-                                                <span class="text-surface-900 font-medium text-xs">{{ item.rating }}</span>
-                                                <i class="pi pi-star-fill text-yellow-500"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col gap-6 mt-6">
-                                        <span class="text-2xl font-semibold">$ {{ item.price }}</span>
-                                        <div class="flex gap-2">
-                                            <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'" class="flex-auto whitespace-nowrap" styleClass="w-full"></p-button>
-                                            <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </p-dataview>
-        </div>
-
-        <div class="flex flex-col lg:flex-row gap-20">
-            <div class="lg:w-2/3">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">PickList</div>
-                    <p-pick-list [source]="sourceCities" [target]="targetCities" breakpoint="1400px">
-                        <ng-template #item let-item>
-                            {{ item.name }}
-                        </ng-template>
-                    </p-pick-list>
-                </div>
-            </div>
-
-            <div class="lg:w-1/3">
-                <div class="card">
-                    <div class="font-semibold text-xl mb-4">OrderList</div>
-                    <p-orderlist [value]="orderCities" dataKey="id" breakpoint="575px">
-                        <ng-template #option let-option>
-                            {{ option.name }}
-                        </ng-template>
-                    </p-orderlist>
-                </div>
+    imports: [CommonModule, FormsModule, OrderListModule, PickListModule, DataViewModule, ButtonModule, TabsModule, TableModule],
+    styles: [DEMO_STYLES + `
+        :host ::ng-deep .p-orderlist-list-container { width: 100%; }
+    `],
+    template: `
+        <div class="comp-header">
+            <h1 class="comp-name">Listas</h1>
+            <p class="comp-desc">Componentes para gerenciar listas ordenáveis e transferência de itens entre duas coleções.</p>
+            <div class="import-snippet">
+                <span class="tok-kw">import</span><span class="tok-pt">&nbsp;&#123;&nbsp;</span><span class="tok-id">OrderListModule</span><span class="tok-pt">&nbsp;&#125;&nbsp;</span><span class="tok-kw">from</span><span class="tok-str">&nbsp;'primeng/orderlist'</span><span class="tok-pt">;</span>
             </div>
         </div>
-    </div>`,
-    styles: `
-        ::ng-deep {
-            .p-orderlist-list-container {
-                width: 100%;
-            }
-        }
-    `,
-    providers: [ProductService]
+
+        <p-tabs value="features" styleClass="mt-1">
+            <p-tablist>
+                <p-tab value="features">Features</p-tab>
+                <p-tab value="api">API</p-tab>
+                <p-tab value="theming">Theming</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="features"><div style="padding:20px 0">
+
+                    <!-- OrderList -->
+                    <div id="orderlist" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">OrderList</div>
+                            <p class="demo-card-desc">Lista reordenável com botões para mover itens para cima, para baixo ou para as extremidades.</p>
+                        </div>
+                        <div class="demo-card-body" style="padding:20px;align-items:flex-start">
+                            <p-orderlist [value]="orderItems" dataKey="id" styleClass="w-full" style="max-width:340px"
+                                         header="Municípios de Goiás" [listStyle]="{'min-height':'200px'}">
+                                <ng-template #option let-item>
+                                    <div style="display:flex;align-items:center;gap:10px;padding:2px 0">
+                                        <i class="pi pi-map-marker" style="color:var(--primary-color);font-size:13px"></i>
+                                        <span style="font-size:14px">{{ item.name }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-orderlist>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.orderlist }}</pre></div>
+                    </div>
+
+                    <!-- PickList -->
+                    <div id="picklist" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">PickList</div>
+                            <p class="demo-card-desc">Transferência de itens entre duas listas (disponível e selecionado) com controles direcionais.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:0">
+                            <p-pick-list [source]="sourceCities" [target]="targetCities"
+                                         sourceHeader="Disponível" targetHeader="Selecionado"
+                                         breakpoint="1400px" [showSourceControls]="false" [showTargetControls]="false">
+                                <ng-template #item let-item>
+                                    <div style="display:flex;align-items:center;gap:10px;padding:2px 0">
+                                        <i class="pi pi-map-marker" style="color:var(--primary-color);font-size:13px"></i>
+                                        <span style="font-size:14px">{{ item.name }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-pick-list>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.picklist }}</pre></div>
+                    </div>
+
+                    <!-- DataView -->
+                    <div id="dataview" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">DataView</div>
+                            <p class="demo-card-desc">Exibe coleções de dados em layout de lista ou grade. Suporta paginação, ordenação e filtragem.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:0;gap:0">
+                            <div style="display:flex;justify-content:flex-end;align-items:center;padding:12px 16px;border-bottom:1px solid var(--surface-border);gap:8px">
+                                <span style="font-size:13px;color:var(--text-color-secondary)">Layout:</span>
+                                <p-button [icon]="dvLayout === 'list' ? 'pi pi-list' : 'pi pi-th-large'"
+                                          [severity]="'secondary'" [text]="true" size="small"
+                                          (click)="dvLayout = dvLayout === 'list' ? 'grid' : 'list'" />
+                            </div>
+                            <p-dataview [value]="dvItems" [layout]="dvLayout">
+                                <ng-template #list let-items>
+                                    @for (item of items; track item.id) {
+                                        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--surface-border)">
+                                            <i class="pi pi-map-marker" style="color:var(--primary-color);font-size:14px"></i>
+                                            <div style="flex:1">
+                                                <p style="margin:0;font-size:14px;font-weight:600;color:var(--text-color)">{{ item.name }}</p>
+                                                <p style="margin:0;font-size:12px;color:var(--text-color-secondary)">{{ item.region }} — {{ item.pop }}</p>
+                                            </div>
+                                        </div>
+                                    }
+                                </ng-template>
+                                <ng-template #grid let-items>
+                                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;padding:16px">
+                                        @for (item of items; track item.id) {
+                                            <div style="border:1px solid var(--surface-border);border-radius:8px;padding:16px;background:var(--surface-card)">
+                                                <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:var(--text-color)">{{ item.name }}</p>
+                                                <p style="margin:0;font-size:12px;color:var(--text-color-secondary)">{{ item.region }}</p>
+                                                <p style="margin:6px 0 0;font-size:12px;color:var(--primary-color);font-weight:600">{{ item.pop }}</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </ng-template>
+                            </p-dataview>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.dataview }}</pre></div>
+                    </div>
+
+                </div></p-tabpanel>
+
+                <p-tabpanel value="api"><div style="padding:16px 0">
+                    <div class="api-block-title">OrderList — Propriedades</div>
+                    <p-table [value]="propsOrderList" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:160px">Nome</th><th style="width:130px">Tipo</th><th style="width:120px">Padrão</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="api-block-title" style="margin-top:24px">PickList — Propriedades</div>
+                    <p-table [value]="propsPickList" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:160px">Nome</th><th style="width:130px">Tipo</th><th style="width:120px">Padrão</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+
+                <p-tabpanel value="theming"><div style="padding:16px 0">
+                    <p-table [value]="themeVars" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:360px">Variável CSS</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-v>
+                            <tr>
+                                <td><span class="theme-var">{{ v.variable }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ v.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    `
 })
 export class ListDemo {
-    layout: 'list' | 'grid' = 'list';
+    dvLayout: 'list' | 'grid' = 'list';
 
-    options = ['list', 'grid'];
+    dvItems = [
+        { id: '1', name: 'Goiânia',               region: 'Centro-Oeste', pop: '1,6 mi hab.' },
+        { id: '2', name: 'Anápolis',               region: 'Centro-Goiano', pop: '400 mil hab.' },
+        { id: '3', name: 'Aparecida de Goiânia',   region: 'Entorno Sul',   pop: '590 mil hab.' },
+        { id: '4', name: 'Rio Verde',              region: 'Sudoeste',      pop: '240 mil hab.' },
+        { id: '5', name: 'Luziânia',               region: 'Entorno Sul',   pop: '215 mil hab.' },
+        { id: '6', name: 'Formosa',                region: 'Leste',         pop: '120 mil hab.' },
+    ];
 
-    products: Product[] = [];
+    orderItems = [
+        { id: '1', name: 'Goiânia' },
+        { id: '2', name: 'Anápolis' },
+        { id: '3', name: 'Aparecida de Goiânia' },
+        { id: '4', name: 'Rio Verde' },
+        { id: '5', name: 'Luziânia' },
+        { id: '6', name: 'Águas Lindas de Goiás' },
+        { id: '7', name: 'Valparaíso de Goiás' },
+    ];
 
-    sourceCities: any[] = [];
+    sourceCities = [
+        { id: '1', name: 'Goiânia' },
+        { id: '2', name: 'Anápolis' },
+        { id: '3', name: 'Aparecida de Goiânia' },
+        { id: '4', name: 'Rio Verde' },
+        { id: '5', name: 'Luziânia' },
+        { id: '6', name: 'Formosa' },
+        { id: '7', name: 'Novo Gama' },
+    ];
 
     targetCities: any[] = [];
 
-    orderCities: any[] = [];
+    code: any = {
+        orderlist: `<p-orderlist [value]="items" dataKey="id" header="Lista">
+    <ng-template #option let-item>
+        {{ item.name }}
+    </ng-template>
+</p-orderlist>
 
-    constructor(private productService: ProductService) {}
+// Dados:
+items = [
+    { id: '1', name: 'Goiânia' },
+    { id: '2', name: 'Anápolis' },
+];`,
 
-    ngOnInit() {
-        this.productService.getProductsSmall().then((data) => (this.products = data.slice(0, 6)));
-
-        this.sourceCities = [
-            { name: 'San Francisco', code: 'SF' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Paris', code: 'PRS' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Berlin', code: 'BRL' },
-            { name: 'Barcelona', code: 'BRC' },
-            { name: 'Rome', code: 'RM' }
-        ];
-
-        this.targetCities = [];
-
-        this.orderCities = [
-            { name: 'San Francisco', code: 'SF' },
-            { name: 'London', code: 'LDN' },
-            { name: 'Paris', code: 'PRS' },
-            { name: 'Istanbul', code: 'IST' },
-            { name: 'Berlin', code: 'BRL' },
-            { name: 'Barcelona', code: 'BRC' },
-            { name: 'Rome', code: 'RM' }
-        ];
-    }
-
-    getSeverity(product: Product) {
-        switch (product.inventoryStatus) {
-            case 'INSTOCK':
-                return 'success';
-
-            case 'LOWSTOCK':
-                return 'warn';
-
-            case 'OUTOFSTOCK':
-                return 'danger';
-
-            default:
-                return 'info';
+        dataview: `<p-dataview [value]="items" [layout]="layout">
+    <ng-template #list let-items>
+        @for (item of items; track item.id) {
+            <div style="padding:12px 16px;border-bottom:1px solid var(--surface-border)">
+                <strong>{{ item.name }}</strong>
+                <p>{{ item.description }}</p>
+            </div>
         }
-    }
+    </ng-template>
+    <ng-template #grid let-items>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:16px">
+            @for (item of items; track item.id) {
+                <div style="border:1px solid var(--surface-border);border-radius:8px;padding:16px">
+                    {{ item.name }}
+                </div>
+            }
+        </div>
+    </ng-template>
+</p-dataview>`,
+
+        picklist: `<p-pick-list [source]="source" [target]="target"
+             sourceHeader="Disponível"
+             targetHeader="Selecionado">
+    <ng-template #item let-item>
+        {{ item.name }}
+    </ng-template>
+</p-pick-list>`,
+    };
+
+    propsOrderList = [
+        { name: 'value',       type: 'any[]',   default: 'null',  description: 'Array de itens.' },
+        { name: 'dataKey',     type: 'string',  default: 'null',  description: 'Campo usado como chave única.' },
+        { name: 'header',      type: 'string',  default: 'null',  description: 'Título da lista.' },
+        { name: 'listStyle',   type: 'object',  default: 'null',  description: 'Estilos inline da lista interna.' },
+        { name: 'breakpoint',  type: 'string',  default: '960px', description: 'Breakpoint para layout responsivo.' },
+    ];
+
+    propsPickList = [
+        { name: 'source',               type: 'any[]',   default: 'null',   description: 'Array de itens disponíveis.' },
+        { name: 'target',               type: 'any[]',   default: 'null',   description: 'Array de itens selecionados.' },
+        { name: 'sourceHeader',         type: 'string',  default: 'null',   description: 'Título da lista de origem.' },
+        { name: 'targetHeader',         type: 'string',  default: 'null',   description: 'Título da lista de destino.' },
+        { name: 'showSourceControls',   type: 'boolean', default: 'true',   description: 'Exibe botões de ordenação na origem.' },
+        { name: 'showTargetControls',   type: 'boolean', default: 'true',   description: 'Exibe botões de ordenação no destino.' },
+        { name: 'breakpoint',           type: 'string',  default: '960px',  description: 'Breakpoint para layout responsivo.' },
+    ];
+
+    themeVars = [
+        { variable: '--p-orderlist-list-border-color',    description: 'Borda da lista.' },
+        { variable: '--p-orderlist-list-background',      description: 'Fundo da lista.' },
+        { variable: '--p-orderlist-item-hover-background',description: 'Fundo do item no hover.' },
+        { variable: '--p-picklist-list-border-color',     description: 'Borda das listas do PickList.' },
+        { variable: '--p-picklist-list-background',       description: 'Fundo das listas do PickList.' },
+        { variable: '--p-dataview-list-border-color',     description: 'Borda do DataView no modo lista.' },
+        { variable: '--p-dataview-content-background',    description: 'Fundo do conteúdo do DataView.' },
+    ];
 }

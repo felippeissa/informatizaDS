@@ -7,6 +7,8 @@ import { MenubarModule } from 'primeng/menubar';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
 import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
@@ -15,7 +17,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 @Component({
     selector: 'app-menu-demo',
     standalone: true,
-    imports: [CommonModule, RouterModule, MenuModule, MenubarModule, BreadcrumbModule, PanelMenuModule, TieredMenuModule, ButtonModule, TabsModule, TableModule],
+    imports: [CommonModule, RouterModule, MenuModule, MenubarModule, BreadcrumbModule, PanelMenuModule, TieredMenuModule, ContextMenuModule, StepsModule, ButtonModule, TabsModule, TableModule],
     styles: [DEMO_STYLES],
     template: `
         <div class="comp-header">
@@ -113,6 +115,42 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.tieredmenu }}</pre></div>
                     </div>
 
+                    <!-- ContextMenu -->
+                    <div id="contextmenu" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ContextMenu</div>
+                            <p class="demo-card-desc">Menu ativado pelo clique com o botão direito em uma área ou elemento específico. Use <code>cm.show($event)</code> para exibir.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:0">
+                            <p-contextmenu #cm [model]="contextMenuItems" />
+                            <div (contextmenu)="cm.show($event)"
+                                 style="padding:24px;border:2px dashed var(--surface-border);border-radius:10px;text-align:center;cursor:context-menu;background:var(--surface-ground)">
+                                <i class="pi pi-mouse" style="font-size:1.5rem;color:var(--text-color-secondary);display:block;margin-bottom:8px"></i>
+                                <p style="margin:0;font-size:13px;color:var(--text-color-secondary)">Clique com o botão direito aqui para ver o menu contextual</p>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.contextmenu }}</pre></div>
+                    </div>
+
+                    <!-- Steps -->
+                    <div id="steps" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Steps</div>
+                            <p class="demo-card-desc">Indicador de progresso em etapas com navegação clicável. Use <code>[model]</code> e <code>[activeIndex]</code>.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:16px">
+                            <p-steps [model]="stepItems" [activeIndex]="activeStepIndex" [readonly]="false"
+                                     (activeIndexChange)="activeStepIndex=$event" styleClass="w-full" />
+                            <div style="display:flex;gap:8px;justify-content:center">
+                                <p-button label="Anterior" icon="pi pi-arrow-left" severity="secondary" size="small"
+                                          [disabled]="activeStepIndex === 0" (click)="activeStepIndex=activeStepIndex-1" />
+                                <p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" size="small"
+                                          [disabled]="activeStepIndex === stepItems.length - 1" (click)="activeStepIndex=activeStepIndex+1" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.steps }}</pre></div>
+                    </div>
+
                 </div></p-tabpanel>
 
                 <p-tabpanel value="api"><div style="padding:16px 0">
@@ -147,6 +185,9 @@ export class MenuDemo implements OnInit {
     breadcrumbHome: MenuItem = {};
     panelMenuItems: MenuItem[] = [];
     tieredMenuItems: MenuItem[] = [];
+    contextMenuItems: MenuItem[] = [];
+    stepItems: MenuItem[] = [];
+    activeStepIndex = 0;
 
     ngOnInit() {
         this.menuItems = [
@@ -206,6 +247,21 @@ export class MenuDemo implements OnInit {
             },
         ];
 
+        this.contextMenuItems = [
+            { label: 'Ver', icon: 'pi pi-eye' },
+            { label: 'Copiar', icon: 'pi pi-copy' },
+            { separator: true },
+            { label: 'Editar', icon: 'pi pi-pencil' },
+            { label: 'Excluir', icon: 'pi pi-trash' },
+        ];
+
+        this.stepItems = [
+            { label: 'Identificação' },
+            { label: 'Endereço' },
+            { label: 'Confirmação' },
+            { label: 'Concluído' },
+        ];
+
         this.tieredMenuItems = [
             { label: 'Arquivo', icon: 'pi pi-file',
               items: [
@@ -250,6 +306,25 @@ export class MenuDemo implements OnInit {
     [home]="{ icon: 'pi pi-home', routerLink: '/' }" />`,
 
         panelmenu: `<p-panelmenu [model]="items" />`,
+
+        contextmenu: `<p-contextmenu #cm [model]="items" />
+
+<!-- Área que abre o menu com botão direito -->
+<div (contextmenu)="cm.show($event)">
+    Clique com o botão direito aqui
+</div>`,
+
+        steps: `<p-steps [model]="stepItems"
+    [activeIndex]="activeIndex"
+    [readonly]="false"
+    (activeIndexChange)="activeIndex=$event" />
+
+// Dados:
+stepItems = [
+    { label: 'Identificação' },
+    { label: 'Endereço' },
+    { label: 'Confirmação' },
+];`,
 
         tieredmenu: `<p-tieredmenu [model]="items" />
 

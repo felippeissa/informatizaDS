@@ -10,9 +10,13 @@ export const appRoutes: Routes = [
         component: AppLayout,
         children: [
             { path: '', component: DsHome },
-            { path: 'uikit',      loadChildren: () => import('./app/pages/uikit/uikit.routes') },
-            { path: 'templates',  loadChildren: () => import('./app/pages/templates/templates.routes') }
+            { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') }
         ]
+    },
+    {
+        path: 'assinago',
+        component: AppLayout,
+        loadChildren: () => import('./app/pages/assinago/assinago.routes').then(m => m.assinagoRoutes)
     },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },

@@ -5,19 +5,28 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputMaskModule } from 'primeng/inputmask';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SliderModule } from 'primeng/slider';
 import { SelectModule } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ListboxModule } from 'primeng/listbox';
 import { AutoCompleteModule, AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { DatePickerModule } from 'primeng/datepicker';
+import { RatingModule } from 'primeng/rating';
+import { KnobModule } from 'primeng/knob';
 import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
 import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
@@ -26,9 +35,14 @@ import { DEMO_STYLES } from './demo-shared.styles';
     imports: [
         CommonModule, FormsModule,
         InputTextModule, PasswordModule, TextareaModule, InputNumberModule,
-        CheckboxModule, RadioButtonModule, ToggleSwitchModule, SliderModule,
-        SelectModule, MultiSelectModule, AutoCompleteModule, DatePickerModule,
-        TabsModule, TableModule, FloatLabelModule, IconFieldModule, InputIconModule
+        InputMaskModule, InputGroupModule, InputGroupAddonModule,
+        CheckboxModule, RadioButtonModule, ToggleSwitchModule,
+        SelectButtonModule, ToggleButtonModule,
+        SliderModule, SelectModule, MultiSelectModule, ListboxModule,
+        AutoCompleteModule, DatePickerModule,
+        RatingModule, KnobModule,
+        TabsModule, TableModule, FloatLabelModule, IconFieldModule, InputIconModule,
+        ButtonModule
     ],
     styles: [DEMO_STYLES + `
         .form-col { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 280px; }
@@ -86,6 +100,73 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code.inputtext }}</pre></div>
+                    </div>
+
+                    <!-- InputMask -->
+                    <div id="inputmask" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">InputMask</div>
+                            <p class="demo-card-desc">Campo com máscara de formatação para CPF, CNPJ, telefone e datas. Use <code>mask</code> com <code>9</code> para dígitos, <code>a</code> para letras.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col">
+                                <label>CPF</label>
+                                <p-inputmask [(ngModel)]="maskCpf" mask="999.999.999-99" placeholder="000.000.000-00" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Telefone</label>
+                                <p-inputmask [(ngModel)]="maskPhone" mask="(99) 9 9999-9999" placeholder="(62) 9 0000-0000" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>Data</label>
+                                <p-inputmask [(ngModel)]="maskDate" mask="99/99/9999" placeholder="dd/mm/aaaa" [fluid]="true" />
+                            </div>
+                            <div class="form-col">
+                                <label>CNPJ</label>
+                                <p-inputmask [(ngModel)]="maskCnpj" mask="99.999.999/9999-99" placeholder="00.000.000/0001-00" [fluid]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.inputmask }}</pre></div>
+                    </div>
+
+                    <!-- InputGroup -->
+                    <div id="inputgroup" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">InputGroup</div>
+                            <p class="demo-card-desc">Adiciona addons (ícones, texto ou botões) antes ou depois de um input usando <code>p-inputgroup</code> e <code>p-inputgroup-addon</code>.</p>
+                        </div>
+                        <div class="demo-card-body grid">
+                            <div class="form-col" style="max-width:300px">
+                                <label>Com ícone à esquerda</label>
+                                <p-inputgroup>
+                                    <p-inputgroup-addon><i class="pi pi-user"></i></p-inputgroup-addon>
+                                    <input pInputText placeholder="Usuário" [(ngModel)]="igUser" />
+                                </p-inputgroup>
+                            </div>
+                            <div class="form-col" style="max-width:300px">
+                                <label>Prefixo de texto</label>
+                                <p-inputgroup>
+                                    <p-inputgroup-addon>R$</p-inputgroup-addon>
+                                    <input pInputText placeholder="0,00" type="number" [(ngModel)]="igPrice" />
+                                    <p-inputgroup-addon>,00</p-inputgroup-addon>
+                                </p-inputgroup>
+                            </div>
+                            <div class="form-col" style="max-width:300px">
+                                <label>Com botão</label>
+                                <p-inputgroup>
+                                    <input pInputText placeholder="Buscar protocolo..." [(ngModel)]="igSearch" />
+                                    <p-button icon="pi pi-search" />
+                                </p-inputgroup>
+                            </div>
+                            <div class="form-col" style="max-width:300px">
+                                <label>URL</label>
+                                <p-inputgroup>
+                                    <p-inputgroup-addon>https://</p-inputgroup-addon>
+                                    <input pInputText placeholder="site.goias.gov.br" [(ngModel)]="igUrl" />
+                                </p-inputgroup>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.inputgroup }}</pre></div>
                     </div>
 
                     <!-- Password -->
@@ -214,6 +295,39 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.toggle }}</pre></div>
                     </div>
 
+                    <!-- SelectButton -->
+                    <div id="selectbutton" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">SelectButton</div>
+                            <p class="demo-card-desc">Seleção de uma ou múltiplas opções exibidas como botões agrupados. Alternativa visual ao RadioButton e Checkbox.</p>
+                        </div>
+                        <div class="demo-card-body col" style="gap:16px;padding:20px">
+                            <div>
+                                <p style="font-size:12px;font-weight:700;color:var(--text-color-secondary);margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em">Seleção única</p>
+                                <p-selectbutton [(ngModel)]="sbSingle" [options]="sbViewOptions" optionLabel="label" optionValue="value" />
+                            </div>
+                            <div>
+                                <p style="font-size:12px;font-weight:700;color:var(--text-color-secondary);margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em">Múltipla seleção</p>
+                                <p-selectbutton [(ngModel)]="sbMulti" [options]="sbDayOptions" optionLabel="label" optionValue="value" [multiple]="true" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.selectbutton }}</pre></div>
+                    </div>
+
+                    <!-- ToggleButton -->
+                    <div id="togglebutton" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ToggleButton</div>
+                            <p class="demo-card-desc">Botão com estado ligado/desligado e labels customizáveis. Útil para ativar/desativar funcionalidades.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:16px">
+                            <p-togglebutton [(ngModel)]="togBtn1" onLabel="Ativo" offLabel="Inativo" onIcon="pi pi-check" offIcon="pi pi-times" />
+                            <p-togglebutton [(ngModel)]="togBtn2" onLabel="Favorito" offLabel="Adicionar" onIcon="pi pi-star-fill" offIcon="pi pi-star" />
+                            <p-togglebutton [(ngModel)]="togBtn3" onLabel="Fixado" offLabel="Fixar" onIcon="pi pi-lock" offIcon="pi pi-unlock" severity="warn" />
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.togglebutton }}</pre></div>
+                    </div>
+
                     <!-- Slider -->
                     <div id="slider" class="demo-card">
                         <div class="demo-card-head">
@@ -231,6 +345,52 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code.slider }}</pre></div>
+                    </div>
+
+                    <!-- Rating -->
+                    <div id="rating" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Rating</div>
+                            <p class="demo-card-desc">Avaliação por estrelas. Use <code>[cancel]="false"</code> para remover o botão de limpar e <code>[stars]</code> para alterar a quantidade.</p>
+                        </div>
+                        <div class="demo-card-body col" style="gap:16px;padding:20px">
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <p-rating [(ngModel)]="ratingVal" />
+                                <span style="font-size:13px;color:var(--text-color-secondary)">{{ ratingVal }} / 5 estrelas</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <p-rating [(ngModel)]="ratingVal2" [stars]="10" />
+                                <span style="font-size:13px;color:var(--text-color-secondary)">{{ ratingVal2 }}/10</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <p-rating [(ngModel)]="ratingVal3" [readonly]="true" />
+                                <span style="font-size:13px;color:var(--text-color-secondary)">Somente leitura</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.rating }}</pre></div>
+                    </div>
+
+                    <!-- Knob -->
+                    <div id="knob" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Knob</div>
+                            <p class="demo-card-desc">Controle circular (dial) para entrada numérica visual. Suporte a min/max, passo e modo readonly.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:32px;flex-wrap:wrap;padding:20px">
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-knob [(ngModel)]="knobVal1" />
+                                <span style="font-size:12px;color:var(--text-color-secondary)">Padrão: {{ knobVal1 }}%</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-knob [(ngModel)]="knobVal2" [min]="0" [max]="200" [step]="10" valueColor="#059669" rangeColor="#D1FAE5" />
+                                <span style="font-size:12px;color:var(--text-color-secondary)">0–200 (step 10): {{ knobVal2 }}</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-knob [(ngModel)]="knobVal3" [readonly]="true" valueColor="#3B82F6" />
+                                <span style="font-size:12px;color:var(--text-color-secondary)">Somente leitura</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.knob }}</pre></div>
                     </div>
 
                     <!-- ─── SELECT ─── -->
@@ -256,6 +416,26 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code.select }}</pre></div>
+                    </div>
+
+                    <!-- Listbox -->
+                    <div id="listbox" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Listbox</div>
+                            <p class="demo-card-desc">Lista de opções visível sem necessidade de clicar para expandir. Suporta seleção única, múltipla e filtragem.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:24px;align-items:flex-start;flex-wrap:wrap;padding:20px">
+                            <div>
+                                <p style="font-size:12px;font-weight:700;color:var(--text-color-secondary);margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em">Seleção única</p>
+                                <p-listbox [options]="cities" [(ngModel)]="lbSingle" optionLabel="name" style="min-width:200px" />
+                            </div>
+                            <div>
+                                <p style="font-size:12px;font-weight:700;color:var(--text-color-secondary);margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em">Múltipla + filtro</p>
+                                <p-listbox [options]="cities" [(ngModel)]="lbMulti" optionLabel="name"
+                                           [multiple]="true" [filter]="true" style="min-width:200px" />
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.listbox }}</pre></div>
                     </div>
 
                     <!-- MultiSelect -->
@@ -329,6 +509,20 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             </tr>
                         </ng-template>
                     </p-table>
+                    <div class="api-block-title" style="margin-top:28px">InputMask — Propriedades</div>
+                    <p-table [value]="propsInputMask" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:180px">Nome</th><th style="width:140px">Tipo</th><th style="width:110px">Padrão</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
                     <div class="api-block-title" style="margin-top:28px">Select — Propriedades principais</div>
                     <p-table [value]="propsSelect" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
                         <ng-template pTemplate="header">
@@ -367,12 +561,20 @@ import { DEMO_STYLES } from './demo-shared.styles';
 export class InputDemo implements OnInit {
     txt = ''; txt2 = ''; pwd = ''; pwd2 = ''; area = '';
     num: number | null = null; num2 = 50; currency: number | null = null; pct: number | null = null;
+    maskCpf = ''; maskPhone = ''; maskDate = ''; maskCnpj = '';
+    igUser = ''; igPrice: number | null = null; igSearch = ''; igUrl = '';
     chk1 = false; chk2 = true;
     chkSelected: string[] = [];
     radioSelected = 'goiania';
     tog1 = true; tog2 = false;
+    sbSingle = 'list';
+    sbMulti: string[] = [];
+    togBtn1 = true; togBtn2 = false; togBtn3 = false;
     sliderVal = 40; sliderRange = [20, 70];
+    ratingVal = 3; ratingVal2 = 7; ratingVal3 = 4;
+    knobVal1 = 60; knobVal2 = 80; knobVal3 = 45;
     selVal: any = null; selVal2: any = null;
+    lbSingle: any = null; lbMulti: any[] = [];
     multiVal: any[] = [];
     autoVal: any = null; autoSuggestions: any[] = [];
     date1: Date | null = null; dateRange: Date[] | null = null; dateTime: Date | null = null;
@@ -397,6 +599,20 @@ export class InputDemo implements OnInit {
         { label: 'Rio Verde', value: 'rioverde' },
     ];
 
+    sbViewOptions = [
+        { label: 'Lista',  value: 'list'  },
+        { label: 'Grade',  value: 'grid'  },
+        { label: 'Kanban', value: 'kanban' },
+    ];
+
+    sbDayOptions = [
+        { label: 'Seg', value: 'mon' },
+        { label: 'Ter', value: 'tue' },
+        { label: 'Qua', value: 'wed' },
+        { label: 'Qui', value: 'thu' },
+        { label: 'Sex', value: 'fri' },
+    ];
+
     ngOnInit() {}
 
     onComplete(event: AutoCompleteCompleteEvent) {
@@ -419,6 +635,40 @@ export class InputDemo implements OnInit {
     <input pInputText id="fl" type="text" [(ngModel)]="txt" />
     <label for="fl">Seu nome</label>
 </p-floatlabel>`,
+
+        inputmask: `<!-- CPF -->
+<p-inputmask [(ngModel)]="cpf"
+    mask="999.999.999-99"
+    placeholder="000.000.000-00"
+    [fluid]="true" />
+
+<!-- Telefone -->
+<p-inputmask [(ngModel)]="tel"
+    mask="(99) 9 9999-9999"
+    placeholder="(62) 9 0000-0000"
+    [fluid]="true" />
+
+<!-- Máscara: 9=dígito  a=letra  *=alfanumérico -->`,
+
+        inputgroup: `<!-- Ícone à esquerda -->
+<p-inputgroup>
+    <p-inputgroup-addon>
+        <i class="pi pi-user"></i>
+    </p-inputgroup-addon>
+    <input pInputText placeholder="Usuário" />
+</p-inputgroup>
+
+<!-- Prefixo texto -->
+<p-inputgroup>
+    <p-inputgroup-addon>R$</p-inputgroup-addon>
+    <input pInputText type="number" placeholder="0,00" />
+</p-inputgroup>
+
+<!-- Com botão -->
+<p-inputgroup>
+    <input pInputText placeholder="Buscar..." />
+    <p-button icon="pi pi-search" />
+</p-inputgroup>`,
 
         password: `<p-password [(ngModel)]="pwd"
     [feedback]="false"
@@ -472,11 +722,48 @@ export class InputDemo implements OnInit {
 
         toggle: `<p-toggleswitch [(ngModel)]="ativo" />`,
 
+        selectbutton: `<p-selectbutton [(ngModel)]="value"
+    [options]="options"
+    optionLabel="label"
+    optionValue="value" />
+
+<!-- Múltiplo -->
+<p-selectbutton [(ngModel)]="days"
+    [options]="dayOptions"
+    optionLabel="label"
+    optionValue="value"
+    [multiple]="true" />`,
+
+        togglebutton: `<p-togglebutton [(ngModel)]="ativo"
+    onLabel="Ativo"
+    offLabel="Inativo"
+    onIcon="pi pi-check"
+    offIcon="pi pi-times" />`,
+
         slider: `<p-slider [(ngModel)]="valor" [min]="0" [max]="100" styleClass="w-full" />
 
 <!-- Range -->
 <p-slider [(ngModel)]="range" [range]="true"
     [min]="0" [max]="100" styleClass="w-full" />`,
+
+        rating: `<!-- Padrão (5 estrelas) -->
+<p-rating [(ngModel)]="rating" />
+
+<!-- 10 estrelas sem botão cancelar -->
+<p-rating [(ngModel)]="rating"
+    [stars]="10" />
+
+<!-- Somente leitura -->
+<p-rating [(ngModel)]="rating"
+    [readonly]="true" />`,
+
+        knob: `<p-knob [(ngModel)]="valor" />
+
+<!-- Customizado -->
+<p-knob [(ngModel)]="valor"
+    [min]="0" [max]="200" [step]="10"
+    valueColor="#059669"
+    rangeColor="#D1FAE5" />`,
 
         select: `<p-select [(ngModel)]="cidade"
     [options]="cidades"
@@ -490,6 +777,17 @@ export class InputDemo implements OnInit {
     optionLabel="name"
     [filter]="true"
     [fluid]="true" />`,
+
+        listbox: `<p-listbox [options]="cidades"
+    [(ngModel)]="selecionada"
+    optionLabel="name" />
+
+<!-- Múltiplo + filtro -->
+<p-listbox [options]="cidades"
+    [(ngModel)]="selecionadas"
+    optionLabel="name"
+    [multiple]="true"
+    [filter]="true" />`,
 
         multiselect: `<p-multiselect [(ngModel)]="cidades"
     [options]="opcoes"
@@ -533,6 +831,14 @@ export class InputDemo implements OnInit {
         { name: 'size',        type: 'string',  default: 'null',  description: 'Tamanho: "small" ou "large".' },
     ];
 
+    propsInputMask = [
+        { name: 'mask',        type: 'string',  default: 'null',  description: 'Padrão da máscara. 9=dígito, a=letra, *=alfanumérico.' },
+        { name: 'placeholder', type: 'string',  default: 'null',  description: 'Texto placeholder.' },
+        { name: 'slotChar',    type: 'string',  default: '_',     description: 'Caractere usado para slots vazios.' },
+        { name: 'autoClear',   type: 'boolean', default: 'true',  description: 'Limpa o campo se o valor não bater com a máscara.' },
+        { name: 'fluid',       type: 'boolean', default: 'false', description: 'Largura total.' },
+    ];
+
     propsSelect = [
         { name: 'options',      type: 'any[]',   default: 'null',  description: 'Lista de opções.' },
         { name: 'optionLabel',  type: 'string',  default: 'null',  description: 'Propriedade do objeto usada como label.' },
@@ -559,5 +865,10 @@ export class InputDemo implements OnInit {
         { variable: '--p-select-border-color',        description: 'Borda do Select.' },
         { variable: '--p-select-option-focus-background', description: 'Fundo da opção em hover.' },
         { variable: '--p-select-option-selected-background', description: 'Fundo da opção selecionada.' },
+        { variable: '--p-rating-icon-color',          description: 'Cor das estrelas não selecionadas.' },
+        { variable: '--p-rating-icon-active-color',   description: 'Cor das estrelas selecionadas.' },
+        { variable: '--p-knob-value-color',           description: 'Cor do arco preenchido do knob.' },
+        { variable: '--p-knob-range-color',           description: 'Cor do arco de fundo do knob.' },
+        { variable: '--p-knob-text-color',            description: 'Cor do valor exibido no knob.' },
     ];
 }

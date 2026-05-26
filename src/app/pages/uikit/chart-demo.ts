@@ -185,7 +185,8 @@ export class ChartDemoPage {
         };
 
         this.chartOptions = {
-            maintainAspectRatio: false, aspectRatio: 0.8,
+            responsive: true,
+            aspectRatio: 0.8,
             plugins: { legend: { labels: { color: textColor } } },
             scales,
         };

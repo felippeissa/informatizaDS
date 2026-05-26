@@ -10,12 +10,14 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ButtonModule } from 'primeng/button';
 import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MeterGroupModule } from 'primeng/metergroup';
 import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
     selector: 'app-misc-demo',
     standalone: true,
-    imports: [CommonModule, AvatarModule, AvatarGroupModule, BadgeModule, TagModule, ChipModule, ProgressBarModule, SkeletonModule, ButtonModule, TabsModule, TableModule],
+    imports: [CommonModule, AvatarModule, AvatarGroupModule, BadgeModule, TagModule, ChipModule, ProgressBarModule, SkeletonModule, ProgressSpinnerModule, MeterGroupModule, ButtonModule, TabsModule, TableModule],
     styles: [DEMO_STYLES + `
         .demo-card-body.wrap { flex-wrap: wrap; gap: 10px; }
     `],
@@ -156,11 +158,56 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.skeleton }}</pre></div>
                     </div>
 
+                    <!-- ProgressSpinner -->
+                    <div id="progressspinner" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ProgressSpinner</div>
+                            <p class="demo-card-desc">Indicador circular de carregamento indeterminado para operações assíncronas sem duração conhecida.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:24px;align-items:center">
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-progressspinner />
+                                <span style="font-size:11px;color:var(--text-color-secondary)">Padrão</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-progressspinner [style]="{'width':'50px','height':'50px'}" strokeWidth="6" />
+                                <span style="font-size:11px;color:var(--text-color-secondary)">Stroke 6</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                                <p-progressspinner [style]="{'width':'40px','height':'40px'}" strokeWidth="4" animationDuration=".5s" />
+                                <span style="font-size:11px;color:var(--text-color-secondary)">Rápido</span>
+                            </div>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.progressspinner }}</pre></div>
+                    </div>
+
+                    <!-- MeterGroup -->
+                    <div id="metergroup" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">MeterGroup</div>
+                            <p class="demo-card-desc">Barra de progresso segmentada para exibir múltiplas métricas lado a lado em uma única barra.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:0;width:100%">
+                            <p-metergroup [value]="meterItems" />
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.metergroup }}</pre></div>
+                    </div>
+
                 </div></p-tabpanel>
 
                 <p-tabpanel value="api"><div style="padding:16px 0">
                     <div class="api-block-title">Tag — Propriedades</div>
                     <p-table [value]="propsTag" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header"><tr><th style="width:180px">Nome</th><th style="width:140px">Tipo</th><th style="width:110px">Padrão</th><th>Descrição</th></tr></ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr><td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td></tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="api-block-title" style="margin-top:28px">ProgressSpinner — Propriedades</div>
+                    <p-table [value]="propsSpinner" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
                         <ng-template pTemplate="header"><tr><th style="width:180px">Nome</th><th style="width:140px">Tipo</th><th style="width:110px">Padrão</th><th>Descrição</th></tr></ng-template>
                         <ng-template pTemplate="body" let-r>
                             <tr><td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
@@ -238,6 +285,25 @@ export class MiscDemo {
 <!-- Sem label interno -->
 <p-progressbar [value]="40" [showValue]="false" />`,
 
+        progressspinner: `<!-- Padrão -->
+<p-progressspinner />
+
+<!-- Customizado -->
+<p-progressspinner
+    [style]="{'width':'50px','height':'50px'}"
+    strokeWidth="6"
+    animationDuration=".5s" />`,
+
+        metergroup: `<p-metergroup [value]="items" />
+
+// Dados:
+items = [
+    { label: 'Concluídos',   value: 45, color: '#059669' },
+    { label: 'Em andamento', value: 30, color: '#3B82F6' },
+    { label: 'Pendentes',    value: 15, color: '#F59E0B' },
+    { label: 'Cancelados',   value: 10, color: '#EF4444' },
+];`,
+
         skeleton: `<!-- Linha de texto -->
 <p-skeleton width="100%" height="14px" />
 
@@ -247,6 +313,19 @@ export class MiscDemo {
 <!-- Card completo -->
 <p-skeleton width="100%" height="160px" borderRadius="8px" />`,
     };
+
+    meterItems = [
+        { label: 'Concluídos',   value: 45, color: '#059669' },
+        { label: 'Em andamento', value: 30, color: '#3B82F6' },
+        { label: 'Pendentes',    value: 15, color: '#F59E0B' },
+        { label: 'Cancelados',   value: 10, color: '#EF4444' },
+    ];
+
+    propsSpinner = [
+        { name: 'strokeWidth',        type: 'string',  default: '2',     description: 'Espessura do traço (CSS stroke-width).' },
+        { name: 'fill',               type: 'string',  default: 'none',  description: 'Cor de preenchimento do círculo de fundo.' },
+        { name: 'animationDuration',  type: 'string',  default: '2s',    description: 'Duração da animação de rotação.' },
+    ];
 
     propsTag = [
         { name: 'value',    type: 'string',  default: 'null',  description: 'Texto exibido na tag.' },
@@ -273,5 +352,9 @@ export class MiscDemo {
         { variable: '--p-badge-danger-background', description: 'Fundo do badge danger.' },
         { variable: '--p-progressbar-background',  description: 'Fundo da progress bar.' },
         { variable: '--p-progressbar-value-background', description: 'Cor do valor preenchido.' },
+        { variable: '--p-metergroup-background',         description: 'Fundo da barra do MeterGroup.' },
+        { variable: '--p-metergroup-border-radius',      description: 'Raio de borda dos segmentos.' },
+        { variable: '--p-progressspinner-color-1',       description: 'Primeira cor da animação do spinner.' },
+        { variable: '--p-progressspinner-color-2',       description: 'Segunda cor da animação do spinner.' },
     ];
 }

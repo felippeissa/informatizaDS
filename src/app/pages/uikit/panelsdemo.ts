@@ -8,6 +8,9 @@ import { PanelModule } from 'primeng/panel';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DividerModule } from 'primeng/divider';
 import { StepperModule } from 'primeng/stepper';
+import { FieldsetModule } from 'primeng/fieldset';
+import { SplitterModule } from 'primeng/splitter';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { DEMO_STYLES } from './demo-shared.styles';
@@ -15,7 +18,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 @Component({
     selector: 'app-panels-demo',
     standalone: true,
-    imports: [CommonModule, FormsModule, CardModule, AccordionModule, TabsModule, PanelModule, ToolbarModule, DividerModule, StepperModule, ButtonModule, TableModule],
+    imports: [CommonModule, FormsModule, CardModule, AccordionModule, TabsModule, PanelModule, ToolbarModule, DividerModule, StepperModule, FieldsetModule, SplitterModule, ScrollPanelModule, ButtonModule, TableModule],
     styles: [DEMO_STYLES],
     template: `
         <div class="comp-header">
@@ -219,6 +222,61 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.stepper }}</pre></div>
                     </div>
 
+                    <!-- Fieldset -->
+                    <div id="fieldset" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Fieldset</div>
+                            <p class="demo-card-desc">Agrupa campos relacionados com uma borda e legenda. Suporte a modo <code>[toggleable]</code> para recolher o conteúdo.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:12px">
+                            <p-fieldset legend="Dados do Responsável" styleClass="w-full">
+                                <p style="margin:0;font-size:14px;color:var(--text-color-secondary)">Conteúdo do fieldset: campos de formulário, textos ou qualquer componente.</p>
+                            </p-fieldset>
+                            <p-fieldset legend="Configurações Avançadas" [toggleable]="true" styleClass="w-full">
+                                <p style="margin:0;font-size:14px;color:var(--text-color-secondary)">Clique na legenda para recolher este fieldset.</p>
+                            </p-fieldset>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.fieldset }}</pre></div>
+                    </div>
+
+                    <!-- Splitter -->
+                    <div id="splitter" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Splitter</div>
+                            <p class="demo-card-desc">Divide a área em painéis redimensionáveis. Suporte a divisão horizontal e vertical com <code>layout</code>.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:20px;gap:12px">
+                            <p-splitter [style]="{'height':'180px'}" styleClass="w-full">
+                                <ng-template pTemplate>
+                                    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:14px;color:var(--text-color-secondary)">Painel 1</div>
+                                </ng-template>
+                                <ng-template pTemplate>
+                                    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:14px;color:var(--text-color-secondary)">Painel 2</div>
+                                </ng-template>
+                                <ng-template pTemplate>
+                                    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:14px;color:var(--text-color-secondary)">Painel 3</div>
+                                </ng-template>
+                            </p-splitter>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.splitter }}</pre></div>
+                    </div>
+
+                    <!-- ScrollPanel -->
+                    <div id="scrollpanel" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ScrollPanel</div>
+                            <p class="demo-card-desc">Contêiner com scrollbar customizada para exibir conteúdo em área limitada.</p>
+                        </div>
+                        <div class="demo-card-body" style="padding:20px;align-items:flex-start;gap:20px">
+                            <p-scrollpanel [style]="{'width':'280px','height':'200px'}">
+                                @for (item of scrollItems; track item) {
+                                    <p style="margin:0 0 10px;font-size:14px;color:var(--text-color-secondary);line-height:1.5">{{ item }}</p>
+                                }
+                            </p-scrollpanel>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.scrollpanel }}</pre></div>
+                    </div>
+
                 </div></p-tabpanel>
 
                 <p-tabpanel value="api"><div style="padding:16px 0">
@@ -306,6 +364,34 @@ export class PanelsDemo {
 <!-- Vertical -->
 <p-divider layout="vertical" />`,
 
+        fieldset: `<p-fieldset legend="Título do Grupo">
+    <p>Conteúdo do fieldset</p>
+</p-fieldset>
+
+<!-- Recolhível -->
+<p-fieldset legend="Avançado" [toggleable]="true">
+    <p>Pode ser recolhido</p>
+</p-fieldset>`,
+
+        splitter: `<p-splitter [style]="{'height':'300px'}">
+    <ng-template pTemplate>
+        <div>Painel 1</div>
+    </ng-template>
+    <ng-template pTemplate>
+        <div>Painel 2</div>
+    </ng-template>
+</p-splitter>
+
+<!-- Vertical -->
+<p-splitter layout="vertical" [style]="{'height':'300px'}">
+    <ng-template pTemplate><div>Topo</div></ng-template>
+    <ng-template pTemplate><div>Base</div></ng-template>
+</p-splitter>`,
+
+        scrollpanel: `<p-scrollpanel [style]="{'width':'300px','height':'200px'}">
+    <p>Conteúdo longo que vai além da área visível...</p>
+</p-scrollpanel>`,
+
         stepper: `<p-stepper value="1">
     <p-step-list>
         <p-step value="1">Dados</p-step>
@@ -322,6 +408,19 @@ export class PanelsDemo {
 </p-stepper>`,
     };
 
+    scrollItems = [
+        'Item 1: Secretaria de Fazenda e Planejamento',
+        'Item 2: Secretaria de Saúde do Estado de Goiás',
+        'Item 3: Secretaria de Educação de Goiás',
+        'Item 4: Secretaria de Segurança Pública',
+        'Item 5: Secretaria de Meio Ambiente',
+        'Item 6: Secretaria de Agricultura',
+        'Item 7: Secretaria de Infraestrutura',
+        'Item 8: Secretaria de Desenvolvimento Social',
+        'Item 9: SEFAZ — Receita Estadual',
+        'Item 10: AGE — Auditoria Geral do Estado',
+    ];
+
     propsCard = [
         { name: 'header',    type: 'string', default: 'null', description: 'Título do card.' },
         { name: 'subheader', type: 'string', default: 'null', description: 'Subtítulo abaixo do título.' },
@@ -336,5 +435,10 @@ export class PanelsDemo {
         { variable: '--p-card-body-padding',     description: 'Padding do conteúdo.' },
         { variable: '--p-panel-header-background', description: 'Fundo do cabeçalho do panel.' },
         { variable: '--p-accordion-header-background', description: 'Fundo do cabeçalho do accordion.' },
+        { variable: '--p-fieldset-background',          description: 'Fundo do fieldset.' },
+        { variable: '--p-fieldset-border-color',        description: 'Borda do fieldset.' },
+        { variable: '--p-fieldset-legend-background',   description: 'Fundo da legenda do fieldset.' },
+        { variable: '--p-splitter-handle-background',   description: 'Cor do divisor do splitter.' },
+        { variable: '--p-scrollpanel-bar-background',   description: 'Cor da scrollbar do ScrollPanel.' },
     ];
 }

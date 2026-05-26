@@ -97,6 +97,28 @@ import { ChartDemoPage }    from './chart-demo';
 // ── Table / Paginator ─────────────────────────────────────────────────────────
 import { PaginatorDemo }    from './paginator-demo';
 
+// ── Novos componentes ─────────────────────────────────────────────────────────
+import { CascadeSelectDemo }    from './cascadeselect-demo';
+import { ColorPickerDemo }      from './colorpicker-demo';
+import { FloatLabelDemo }       from './floatlabel-demo';
+import { IconFieldDemo }        from './iconfield-demo';
+import { IftaLabelDemo }        from './iftalabel-demo';
+import { InputOtpDemo }         from './inputotp-demo';
+import { KeyFilterDemo }        from './keyfilter-demo';
+import { TreeSelectDemo }       from './treeselect-demo';
+import { EditorDemo }           from './editor-demo';
+import { OrgChartDemo }         from './orgchart-demo';
+import { VirtualScrollerDemo }  from './virtualscroller-demo';
+import { DynamicDialogDemo }    from './dynamicdialog-demo';
+import { MegaMenuDemo }         from './megamenu-demo';
+import { DockDemo }             from './dock-demo';
+import { ImageCompareDemo }     from './imagecompare-demo';
+import { AnimateOnScrollDemo }  from './animateonscroll-demo';
+import { BlockUIDemo }          from './blockui-demo';
+import { InplaceDemo }          from './inplace-demo';
+import { ScrollTopDemo }        from './scrolltop-demo';
+import { TerminalDemo }         from './terminal-demo';
+
 export default [
     // ── Legacy grouped routes (backward compat) ──────────────────────────────
     { path: 'button',       data: { breadcrumb: 'Button' },       component: ButtonDemo },
@@ -197,6 +219,28 @@ export default [
     { path: 'datatable',    data: { breadcrumb: 'DataTable' },    component: TableDemo },
     { path: 'table',        data: { breadcrumb: 'DataTable' },    component: TableDemo },
     { path: 'paginator',    data: { breadcrumb: 'Paginator' },    component: PaginatorDemo },
+
+    // ── Novos componentes ──────────────────────────────────────────────────────
+    { path: 'cascadeselect',    data: { breadcrumb: 'CascadeSelect' },    component: CascadeSelectDemo },
+    { path: 'colorpicker',      data: { breadcrumb: 'ColorPicker' },      component: ColorPickerDemo },
+    { path: 'floatlabel',       data: { breadcrumb: 'FloatLabel' },       component: FloatLabelDemo },
+    { path: 'iconfield',        data: { breadcrumb: 'IconField' },        component: IconFieldDemo },
+    { path: 'iftalabel',        data: { breadcrumb: 'IftaLabel' },        component: IftaLabelDemo },
+    { path: 'inputotp',         data: { breadcrumb: 'InputOtp' },         component: InputOtpDemo },
+    { path: 'keyfilter',        data: { breadcrumb: 'KeyFilter' },        component: KeyFilterDemo },
+    { path: 'treeselect',       data: { breadcrumb: 'TreeSelect' },       component: TreeSelectDemo },
+    { path: 'editor',           data: { breadcrumb: 'Editor' },           component: EditorDemo },
+    { path: 'orgchart',         data: { breadcrumb: 'OrgChart' },         component: OrgChartDemo },
+    { path: 'virtualscroller',  data: { breadcrumb: 'VirtualScroller' },  component: VirtualScrollerDemo },
+    { path: 'dynamicdialog',    data: { breadcrumb: 'DynamicDialog' },    component: DynamicDialogDemo },
+    { path: 'megamenu',         data: { breadcrumb: 'MegaMenu' },         component: MegaMenuDemo },
+    { path: 'dock',             data: { breadcrumb: 'Dock' },             component: DockDemo },
+    { path: 'imagecompare',     data: { breadcrumb: 'ImageCompare' },     component: ImageCompareDemo },
+    { path: 'animateonscroll',  data: { breadcrumb: 'AnimateOnScroll' },  component: AnimateOnScrollDemo },
+    { path: 'blockui',          data: { breadcrumb: 'BlockUI' },          component: BlockUIDemo },
+    { path: 'inplace',          data: { breadcrumb: 'Inplace' },          component: InplaceDemo },
+    { path: 'scrolltop',        data: { breadcrumb: 'ScrollTop' },        component: ScrollTopDemo },
+    { path: 'terminal',         data: { breadcrumb: 'Terminal' },         component: TerminalDemo },
 
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

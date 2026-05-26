@@ -1,141 +1,204 @@
-import {Component} from '@angular/core';
-import {TimelineModule} from 'primeng/timeline';
-import {CardModule} from 'primeng/card';
-import {CommonModule} from '@angular/common';
-import {ButtonModule} from 'primeng/button';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TimelineModule } from 'primeng/timeline';
+import { ButtonModule } from 'primeng/button';
+import { TabsModule } from 'primeng/tabs';
+import { TableModule } from 'primeng/table';
+import { DEMO_STYLES } from './demo-shared.styles';
 
 @Component({
     selector: 'app-timeline-demo',
     standalone: true,
-    imports: [CommonModule, TimelineModule, ButtonModule, CardModule],
-    template: `<div class="grid grid-cols-12 gap-8">
-        <div class="col-span-12 sm:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Left Align</div>
-                <p-timeline [value]="events1">
-                    <ng-template #content let-event>
-                        {{ event.status }}
-                    </ng-template>
-                </p-timeline>
+    imports: [CommonModule, TimelineModule, ButtonModule, TabsModule, TableModule],
+    styles: [DEMO_STYLES],
+    template: `
+        <div class="comp-header">
+            <h1 class="comp-name">Timeline</h1>
+            <p class="comp-desc">Componente visual para exibir eventos em ordem cronológica, no eixo vertical ou horizontal.</p>
+            <div class="import-snippet">
+                <span class="tok-kw">import</span><span class="tok-pt">&nbsp;&#123;&nbsp;</span><span class="tok-id">TimelineModule</span><span class="tok-pt">&nbsp;&#125;&nbsp;</span><span class="tok-kw">from</span><span class="tok-str">&nbsp;'primeng/timeline'</span><span class="tok-pt">;</span>
             </div>
         </div>
-        <div class="col-span-12 sm:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Right Align</div>
-                <p-timeline [value]="events1" align="right">
-                    <ng-template #content let-event>
-                        {{ event.status }}
-                    </ng-template>
-                </p-timeline>
-            </div>
-        </div>
-        <div class="col-span-12 sm:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Alternate Align</div>
-                <p-timeline [value]="events1" align="alternate">
-                    <ng-template #content let-event>
-                        {{ event.status }}
-                    </ng-template>
-                </p-timeline>
-            </div>
-        </div>
-        <div class="col-span-12 sm:col-span-6">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Opposite Content</div>
-                <p-timeline [value]="events1">
-                    <ng-template #content let-event>
-                        <small class="p-text-secondary">{{ event.date }}</small>
-                    </ng-template>
-                    <ng-template #opposite let-event>
-                        {{ event.status }}
-                    </ng-template>
-                </p-timeline>
-            </div>
-        </div>
-        <div class="col-span-full">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Templating</div>
-                <p-timeline [value]="events1" align="alternate" styleClass="customized-timeline">
-                    <ng-template #marker let-event>
-                        <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm" [style]="{ 'background-color': event.color }">
-                            <i [class]="event.icon"></i>
-                        </span>
-                    </ng-template>
-                    <ng-template #content let-event>
-                        <p-card [header]="event.status" [subheader]="event.date">
-                            <img *ngIf="event.image" [src]="'/demo/images/product/' + event.image" [alt]="event.name" width="200" class="shadow" />
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse,
-                                cupiditate neque quas!
-                            </p>
-                            <p-button label="Read more" [text]="true" />
-                        </p-card>
-                    </ng-template>
-                </p-timeline>
-            </div>
-        </div>
-        <div class="col-span-full">
-            <div class="card">
-                <div class="font-semibold text-xl mb-4">Horizontal</div>
-                <div class="font-semibold mb-2">Top Align</div>
-                <p-timeline [value]="events2" layout="horizontal" align="top">
-                    <ng-template #content let-event>
-                        {{ event }}
-                    </ng-template>
-                </p-timeline>
 
-                <div class="font-semibold mt-4 mb-2">Bottom Align</div>
-                <p-timeline [value]="events2" layout="horizontal" align="bottom">
-                    <ng-template #content let-event>
-                        {{ event }}
-                    </ng-template>
-                </p-timeline>
+        <p-tabs value="features" styleClass="mt-1">
+            <p-tablist>
+                <p-tab value="features">Features</p-tab>
+                <p-tab value="api">API</p-tab>
+                <p-tab value="theming">Theming</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="features"><div style="padding:20px 0">
 
-                <div class="font-semibold mt-4 mb-2">Alternate Align</div>
-                <p-timeline [value]="events2" layout="horizontal" align="alternate">
-                    <ng-template #content let-event>
-                        {{ event }}
-                    </ng-template>
-                    <ng-template #opposite let-event> &nbsp; </ng-template>
-                </p-timeline>
-            </div>
-        </div>
-    </div>`
+                    <!-- Vertical -->
+                    <div id="timeline" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Vertical</div>
+                            <p class="demo-card-desc">Linha do tempo padrão com marcadores customizados e conteúdo à direita.</p>
+                        </div>
+                        <div class="demo-card-body" style="padding:24px;align-items:flex-start">
+                            <p-timeline [value]="events" style="max-width:520px;width:100%">
+                                <ng-template #marker let-event>
+                                    <span [style]="{'background':event.color,'border-radius':'50%','width':'32px','height':'32px','display':'flex','align-items':'center','justify-content':'center','flex-shrink':'0'}">
+                                        <i [class]="event.icon" style="color:#fff;font-size:13px"></i>
+                                    </span>
+                                </ng-template>
+                                <ng-template #content let-event>
+                                    <div style="padding:0 0 20px 6px">
+                                        <p style="font-weight:700;margin:0 0 2px;font-size:14px;color:var(--text-color)">{{ event.status }}</p>
+                                        <p style="font-size:11px;color:var(--text-color-secondary);margin:0 0 4px;font-weight:600">{{ event.date }}</p>
+                                        <p style="font-size:13px;color:var(--text-color-secondary);margin:0;line-height:1.5">{{ event.description }}</p>
+                                    </div>
+                                </ng-template>
+                            </p-timeline>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.vertical }}</pre></div>
+                    </div>
+
+                    <!-- Alternate -->
+                    <div id="alternate" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Alternado</div>
+                            <p class="demo-card-desc">Conteúdo alternado entre esquerda e direita com <code>align="alternate"</code>.</p>
+                        </div>
+                        <div class="demo-card-body col" style="padding:24px;gap:0">
+                            <p-timeline [value]="events" align="alternate" styleClass="w-full">
+                                <ng-template #marker let-event>
+                                    <span [style]="{'background':event.color,'border-radius':'50%','width':'28px','height':'28px','display':'flex','align-items':'center','justify-content':'center'}">
+                                        <i [class]="event.icon" style="color:#fff;font-size:12px"></i>
+                                    </span>
+                                </ng-template>
+                                <ng-template #content let-event>
+                                    <div style="padding-bottom:16px">
+                                        <p style="font-weight:700;margin:0;font-size:13px;color:var(--text-color)">{{ event.status }}</p>
+                                        <p style="font-size:11px;color:var(--text-color-secondary);margin:0">{{ event.date }}</p>
+                                    </div>
+                                </ng-template>
+                            </p-timeline>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.alternate }}</pre></div>
+                    </div>
+
+                    <!-- Horizontal -->
+                    <div id="horizontal" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">Horizontal</div>
+                            <p class="demo-card-desc">Processo em etapas com <code>layout="horizontal"</code>. Ideal para wizards e fluxos lineares.</p>
+                        </div>
+                        <div class="demo-card-body" style="padding:32px 24px;justify-content:center">
+                            <p-timeline [value]="steps" layout="horizontal" styleClass="w-full">
+                                <ng-template #marker let-step>
+                                    <span [style]="{'background':step.color,'border-radius':'50%','width':'32px','height':'32px','display':'flex','align-items':'center','justify-content':'center'}">
+                                        <i [class]="step.icon" style="color:#fff;font-size:13px"></i>
+                                    </span>
+                                </ng-template>
+                                <ng-template #content let-step>
+                                    <p style="font-size:12px;font-weight:600;margin:6px 0 0;text-align:center;color:var(--text-color)">{{ step.label }}</p>
+                                </ng-template>
+                            </p-timeline>
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.horizontal }}</pre></div>
+                    </div>
+
+                </div></p-tabpanel>
+
+                <p-tabpanel value="api"><div style="padding:16px 0">
+                    <div class="api-block-title">Timeline — Propriedades</div>
+                    <p-table [value]="propsTimeline" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:160px">Nome</th><th style="width:130px">Tipo</th><th style="width:120px">Padrão</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-r>
+                            <tr>
+                                <td><strong style="font-family:monospace;font-size:13px">{{ r.name }}</strong></td>
+                                <td><span class="badge-type">{{ r.type }}</span></td>
+                                <td><span class="badge-default">{{ r.default }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ r.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+
+                <p-tabpanel value="theming"><div style="padding:16px 0">
+                    <p-table [value]="themeVars" styleClass="p-datatable-sm" [tableStyle]="{'min-width':'100%'}">
+                        <ng-template pTemplate="header">
+                            <tr><th style="width:360px">Variável CSS</th><th>Descrição</th></tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-v>
+                            <tr>
+                                <td><span class="theme-var">{{ v.variable }}</span></td>
+                                <td style="font-size:13px;color:var(--text-color-secondary)">{{ v.description }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div></p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    `
 })
 export class TimelineDemo {
-    events1: any[] = [];
+    events = [
+        { status: 'Pedido Recebido',  date: '15/01/2025 · 09:00', description: 'Protocolo #12345 registrado no sistema.', icon: 'pi pi-shopping-cart', color: '#3B82F6' },
+        { status: 'Em Análise',       date: '15/01/2025 · 11:30', description: 'Documentos em verificação pela equipe técnica.', icon: 'pi pi-search', color: '#F59E0B' },
+        { status: 'Aprovado',         date: '16/01/2025 · 08:15', description: 'Solicitação aprovada pelo responsável.', icon: 'pi pi-check', color: '#059669' },
+        { status: 'Concluído',        date: '17/01/2025 · 14:00', description: 'Processo finalizado com sucesso.', icon: 'pi pi-flag', color: '#6366F1' },
+    ];
 
-    events2: any[] = [];
+    steps = [
+        { label: 'Solicitação', icon: 'pi pi-file',   color: '#3B82F6' },
+        { label: 'Análise',     icon: 'pi pi-search', color: '#F59E0B' },
+        { label: 'Aprovação',   icon: 'pi pi-check',  color: '#059669' },
+        { label: 'Publicação',  icon: 'pi pi-send',   color: '#6366F1' },
+    ];
 
-    ngOnInit() {
-        this.events1 = [
-            {
-                status: 'Ordered',
-                date: '15/10/2020 10:30',
-                icon: 'pi pi-shopping-cart',
-                color: '#9C27B0',
-                image: 'game-controller.jpg'
-            },
-            {
-                status: 'Processing',
-                date: '15/10/2020 14:00',
-                icon: 'pi pi-cog',
-                color: '#673AB7'
-            },
-            {
-                status: 'Shipped',
-                date: '15/10/2020 16:15',
-                icon: 'pi pi-envelope',
-                color: '#FF9800'
-            },
-            {
-                status: 'Delivered',
-                date: '16/10/2020 10:00',
-                icon: 'pi pi-check',
-                color: '#607D8B'
-            }
-        ];
+    code: any = {
+        vertical: `<p-timeline [value]="events">
+    <ng-template #marker let-event>
+        <span [style]="{'background': event.color, 'border-radius': '50%',
+                        'width': '32px', 'height': '32px',
+                        'display': 'flex', 'align-items': 'center',
+                        'justify-content': 'center'}">
+            <i [class]="event.icon" style="color:#fff"></i>
+        </span>
+    </ng-template>
+    <ng-template #content let-event>
+        <p style="font-weight:700">{{ event.status }}</p>
+        <small>{{ event.date }}</small>
+    </ng-template>
+</p-timeline>`,
 
-        this.events2 = ['2020', '2021', '2022', '2023'];
-    }
+        alternate: `<p-timeline [value]="events" align="alternate">
+    <ng-template #content let-event>
+        <p>{{ event.status }}</p>
+        <small>{{ event.date }}</small>
+    </ng-template>
+</p-timeline>`,
+
+        horizontal: `<p-timeline [value]="steps" layout="horizontal">
+    <ng-template #marker let-step>
+        <span [style]="{'background': step.color, 'border-radius': '50%',
+                        'width': '32px', 'height': '32px', ...}">
+            <i [class]="step.icon" style="color:#fff"></i>
+        </span>
+    </ng-template>
+    <ng-template #content let-step>
+        <p style="text-align:center">{{ step.label }}</p>
+    </ng-template>
+</p-timeline>`,
+    };
+
+    propsTimeline = [
+        { name: 'value',      type: 'any[]',  default: 'null',     description: 'Array de eventos para renderizar.' },
+        { name: 'layout',     type: 'string', default: 'vertical', description: 'Orientação: "vertical" ou "horizontal".' },
+        { name: 'align',      type: 'string', default: 'left',     description: 'Alinhamento: "left" | "right" | "alternate".' },
+        { name: 'dataKey',    type: 'string', default: 'null',     description: 'Campo usado como chave única.' },
+        { name: 'styleClass', type: 'string', default: 'null',     description: 'Classe CSS extra no container.' },
+    ];
+
+    themeVars = [
+        { variable: '--p-timeline-event-marker-background',   description: 'Fundo do marcador.' },
+        { variable: '--p-timeline-event-marker-border-color', description: 'Borda do marcador.' },
+        { variable: '--p-timeline-event-marker-size',         description: 'Tamanho do marcador.' },
+        { variable: '--p-timeline-event-connector-color',     description: 'Cor da linha conectora.' },
+        { variable: '--p-timeline-event-connector-size',      description: 'Espessura da linha conectora.' },
+    ];
 }

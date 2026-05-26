@@ -1,10 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '@/app/layout/service/layout.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-topbar',
@@ -18,69 +19,69 @@ import { LayoutService } from '@/app/layout/service/layout.service';
         .ds-logo-main { font-size: 16px; font-weight: 900; color: #059669; letter-spacing: -.02em; }
         .ds-logo-main span { color: #D97706; }
 
-        /* ── system switcher ── */
+        /* ── system switcher trigger ── */
+        .sys-wrap { display: flex; align-items: center; }
         .sys-btn {
-            display: flex; align-items: center; gap: 7px;
-            padding: 5px 10px 5px 8px;
-            border: 1px solid var(--surface-border);
-            border-radius: 8px;
-            background: var(--surface-card);
+            display: flex; align-items: center; gap: 6px;
+            padding: 0 10px;
+            height: 2.5rem;
+            border: none;
+            border-radius: var(--border-radius, 6px);
+            background: transparent;
             cursor: pointer;
-            transition: background .15s, border-color .15s;
             color: var(--text-color);
+            transition: background .15s;
+            font-family: inherit;
         }
-        .sys-btn:hover { background: var(--surface-hover); border-color: var(--primary-color); }
-        .sys-dot {
-            width: 8px; height: 8px; border-radius: 50%; background: #059669; flex-shrink: 0;
-        }
-        .sys-label {
-            font-size: 12px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap;
-        }
-        .sys-chevron { font-size: 10px; color: var(--text-color-secondary); }
+        .sys-btn:hover { background: var(--surface-hover); }
+        .sys-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .sys-label { font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--text-color); }
+        .sys-chevron { font-size: 9px; color: var(--text-color-secondary); margin-left: 1px; }
 
-        /* ── dropdown panel ── */
+        /* ── dropdown panel — mesmo estilo do app-configurator ── */
         .sys-panel {
-            position: absolute; top: calc(100% + 8px); right: 0;
-            width: 260px;
-            background: var(--surface-overlay);
+            position: absolute; top: calc(100% + 6px); right: 0;
+            width: 240px;
+            background: var(--surface-overlay, var(--surface-card));
             border: 1px solid var(--surface-border);
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,.12);
-            padding: 8px;
+            border-radius: var(--border-radius, 8px);
+            box-shadow: 0 4px 20px rgba(0,0,0,.10);
+            padding: 6px;
             z-index: 9999;
         }
         .sys-panel-title {
             font-size: 10px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .08em; color: var(--text-color-secondary);
-            padding: 4px 8px 8px; border-bottom: 1px solid var(--surface-border);
-            margin-bottom: 6px;
+            letter-spacing: .07em; color: var(--text-color-secondary);
+            padding: 6px 10px 8px;
+            border-bottom: 1px solid var(--surface-border);
+            margin-bottom: 4px;
         }
         .sys-item {
             display: flex; align-items: center; gap: 10px;
-            padding: 9px 10px; border-radius: 8px; cursor: pointer;
-            transition: background .12s;
+            padding: 8px 10px; border-radius: calc(var(--border-radius, 6px) - 2px);
+            cursor: pointer; transition: background .12s;
             border: 1.5px solid transparent;
         }
         .sys-item:hover { background: var(--surface-hover); }
         .sys-item.active {
             background: color-mix(in srgb, var(--primary-color) 8%, transparent);
-            border-color: color-mix(in srgb, var(--primary-color) 30%, transparent);
+            border-color: color-mix(in srgb, var(--primary-color) 25%, transparent);
         }
-        .sys-item.coming-soon { opacity: .5; cursor: not-allowed; }
+        .sys-item.coming-soon { opacity: .45; cursor: not-allowed; }
         .sys-icon {
-            width: 34px; height: 34px; border-radius: 8px;
+            width: 32px; height: 32px; border-radius: calc(var(--border-radius, 6px) - 2px);
             display: flex; align-items: center; justify-content: center;
-            font-size: 16px; flex-shrink: 0;
+            font-size: 14px; flex-shrink: 0;
         }
         .sys-info { flex: 1; min-width: 0; }
-        .sys-name { font-size: 13px; font-weight: 700; color: var(--text-color); }
+        .sys-name { font-size: 12px; font-weight: 700; color: var(--text-color); }
         .sys-desc { font-size: 11px; color: var(--text-color-secondary); margin-top: 1px; }
         .sys-badge {
             font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
-            background: #059669; color: #fff; letter-spacing: .04em; flex-shrink: 0;
+            background: var(--surface-border); color: var(--text-color-secondary);
+            letter-spacing: .03em; flex-shrink: 0;
         }
-        .sys-badge.soon { background: var(--surface-border); color: var(--text-color-secondary); }
-        .sys-check { font-size: 12px; color: var(--primary-color); flex-shrink: 0; }
+        .sys-check { font-size: 11px; color: var(--primary-color); flex-shrink: 0; }
     `],
     template: `
         <div class="layout-topbar">
@@ -88,19 +89,26 @@ import { LayoutService } from '@/app/layout/service/layout.service';
                 <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                     <i class="pi pi-bars"></i>
                 </button>
-                <a class="layout-topbar-logo" routerLink="/ds">
-                    <div class="ds-logo-text">
-                        <span class="ds-logo-sup">Aplicações</span>
-                        <span class="ds-logo-main">expr<span>e</span>sso</span>
-                    </div>
-                </a>
+
+                @if (activeSystem().id === 'assinago') {
+                    <a class="layout-topbar-logo" routerLink="/assinago">
+                        <img src="assets/logoassinago.svg" alt="AssinaGO" style="height:36px;width:auto" />
+                    </a>
+                } @else {
+                    <a class="layout-topbar-logo" routerLink="/ds">
+                        <div class="ds-logo-text">
+                            <span class="ds-logo-sup">Aplicações</span>
+                            <span class="ds-logo-main">expr<span>e</span>sso</span>
+                        </div>
+                    </a>
+                }
             </div>
 
             <div class="layout-topbar-actions">
                 <div class="layout-config-menu">
 
                     <!-- ── System Switcher ── -->
-                    <div class="relative">
+                    <div class="relative sys-wrap">
                         <button
                             class="sys-btn"
                             pStyleClass="@next"
@@ -176,9 +184,10 @@ import { LayoutService } from '@/app/layout/service/layout.service';
         </div>
     `
 })
-export class AppTopbar {
+export class AppTopbar implements OnInit {
     items!: MenuItem[];
     layoutService = inject(LayoutService);
+    router        = inject(Router);
 
     systems = [
         {
@@ -188,6 +197,17 @@ export class AppTopbar {
             icon: 'pi pi-th-large',
             color: '#059669',
             bgColor: 'color-mix(in srgb, #059669 12%, transparent)',
+            route: '/ds',
+            comingSoon: false
+        },
+        {
+            id: 'assinago',
+            name: 'ASSINAGO',
+            desc: 'Assinatura digital de documentos',
+            icon: 'pi pi-pen-to-square',
+            color: '#7C3AED',
+            bgColor: 'color-mix(in srgb, #7C3AED 12%, transparent)',
+            route: '/assinago',
             comingSoon: false
         },
         {
@@ -197,23 +217,28 @@ export class AppTopbar {
             icon: 'pi pi-shield',
             color: '#2563EB',
             bgColor: 'color-mix(in srgb, #2563EB 12%, transparent)',
-            comingSoon: true
-        },
-        {
-            id: 'celeiro',
-            name: 'Celeiro',
-            desc: 'Gestão de estoques',
-            icon: 'pi pi-box',
-            color: '#D97706',
-            bgColor: 'color-mix(in srgb, #D97706 12%, transparent)',
+            route: '/protege',
             comingSoon: true
         },
     ];
 
     activeSystem = signal(this.systems[0]);
 
+    ngOnInit() {
+        this.syncSystemFromUrl(this.router.url);
+        this.router.events
+            .pipe(filter(e => e instanceof NavigationEnd))
+            .subscribe((e: any) => this.syncSystemFromUrl(e.urlAfterRedirects));
+    }
+
+    private syncSystemFromUrl(url: string) {
+        const matched = this.systems.find(s => !s.comingSoon && url.startsWith(s.route));
+        if (matched) this.activeSystem.set(matched);
+    }
+
     selectSystem(sys: any) {
         this.activeSystem.set(sys);
+        this.router.navigateByUrl(sys.route);
     }
 
     toggleDarkMode() {

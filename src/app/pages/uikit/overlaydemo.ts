@@ -6,6 +6,7 @@ import { DrawerModule } from 'primeng/drawer';
 import { TooltipModule } from 'primeng/tooltip';
 import { PopoverModule } from 'primeng/popover';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
 import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
@@ -14,7 +15,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 @Component({
     selector: 'app-overlay-demo',
     standalone: true,
-    imports: [CommonModule, ButtonModule, DialogModule, DrawerModule, TooltipModule, PopoverModule, ConfirmDialogModule, TabsModule, TableModule],
+    imports: [CommonModule, ButtonModule, DialogModule, DrawerModule, TooltipModule, PopoverModule, ConfirmDialogModule, ConfirmPopupModule, TabsModule, TableModule],
     providers: [ConfirmationService],
     styles: [DEMO_STYLES],
     template: `
@@ -27,6 +28,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
         </div>
 
         <p-confirmdialog />
+        <p-confirmpopup />
 
         <p-tabs value="features" styleClass="mt-1">
             <p-tablist>
@@ -135,6 +137,19 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-code"><pre>{{ code.confirmdialog }}</pre></div>
                     </div>
 
+                    <!-- ConfirmPopup -->
+                    <div id="confirmpopup" class="demo-card">
+                        <div class="demo-card-head">
+                            <div class="demo-card-title">ConfirmPopup</div>
+                            <p class="demo-card-desc">Confirmação inline ancorada ao elemento que a disparou. Mais sutil que o ConfirmDialog — ideal para ações destrutivas em linha.</p>
+                        </div>
+                        <div class="demo-card-body" style="gap:12px">
+                            <p-button label="Confirmar inline" icon="pi pi-check" severity="warn" (click)="confirmarPopup($event)" />
+                            <p-button label="Excluir item" icon="pi pi-trash" severity="danger" outlined (click)="excluirPopup($event)" />
+                        </div>
+                        <div class="demo-card-code"><pre>{{ code.confirmpopup }}</pre></div>
+                    </div>
+
                 </div></p-tabpanel>
 
                 <p-tabpanel value="api"><div style="padding:16px 0">
@@ -175,6 +190,30 @@ export class OverlayDemo {
             message: 'Deseja mesmo executar esta ação?',
             header: 'Confirmação', icon: 'pi pi-info-circle',
             accept: () => {}, reject: () => {}
+        });
+    }
+
+    confirmarPopup(event: Event) {
+        this.confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: 'Deseja confirmar esta ação?',
+            icon: 'pi pi-exclamation-circle',
+            acceptLabel: 'Sim',
+            rejectLabel: 'Não',
+            accept: () => {},
+            reject: () => {}
+        });
+    }
+
+    excluirPopup(event: Event) {
+        this.confirmationService.confirm({
+            target: event.target as EventTarget,
+            message: 'Excluir este item?',
+            icon: 'pi pi-trash',
+            acceptLabel: 'Excluir',
+            rejectLabel: 'Cancelar',
+            accept: () => {},
+            reject: () => {}
         });
     }
 
@@ -219,6 +258,21 @@ export class OverlayDemo {
 <p-popover #op>
     <div>Conteúdo rico aqui</div>
 </p-popover>`,
+
+        confirmpopup: `<!-- No template: -->
+<p-confirmpopup />
+
+<!-- No componente: -->
+constructor(private cs: ConfirmationService) {}
+
+this.cs.confirm({
+    target: event.target as EventTarget,
+    message: 'Confirmar?',
+    icon: 'pi pi-exclamation-circle',
+    acceptLabel: 'Sim',
+    rejectLabel: 'Não',
+    accept: () => { /* ação confirmada */ }
+});`,
 
         confirmdialog: `<!-- No template: -->
 <p-confirmdialog />
