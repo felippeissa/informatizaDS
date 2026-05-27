@@ -37,6 +37,8 @@ export class AppMenu implements OnInit, OnDestroy {
     private buildMenu(url: string) {
         if (url.startsWith('/assinago')) {
             this.model = this.assinagoMenu;
+        } else if (url.startsWith('/dracon')) {
+            this.model = this.draconMenu;
         } else {
             this.model = this.dsMenu;
         }
@@ -61,6 +63,51 @@ export class AppMenu implements OnInit, OnDestroy {
                         { label: 'Blocos de assinatura', routerLink: ['/assinago/configuracoes/blocos-assinatura'] },
                     ]
                 },
+            ]
+        },
+    ];
+
+    /* ══════════════════════════════════════════════════════
+       Menu: DRACON
+    ══════════════════════════════════════════════════════ */
+    private draconMenu: MenuItem[] = [
+        {
+            items: [
+                {
+                    label: 'Processos',
+                    path: 'dracon-processos',
+                    items: [
+                        { label: 'Listar processos', routerLink: ['/dracon/processos'] },
+                    ]
+                },
+                {
+                    label: 'Atos',
+                    path: 'dracon-atos',
+                    items: [
+                        { label: 'Listagem',              routerLink: ['/dracon/atos'] },
+                        { label: 'Modelos',               routerLink: ['/dracon/atos/modelos'] },
+                        { label: 'Auditoria',             routerLink: ['/dracon/atos/auditoria'] },
+                        { label: 'Auditoria de modelos',  routerLink: ['/dracon/atos/auditoria-modelos'] },
+                    ]
+                },
+                {
+                    label: 'Gestão',
+                    path: 'dracon-gestao',
+                    items: [
+                        { label: 'Distribuição',   routerLink: ['/dracon/gestao/distribuicao'] },
+                        { label: 'Afastamentos',   routerLink: ['/dracon/gestao/afastamentos'] },
+                    ]
+                },
+                {
+                    label: 'Cadastros',
+                    path: 'dracon-cadastros',
+                    items: [
+                        { label: 'Tipo de ato',      routerLink: ['/dracon/cadastros/tipo-ato'] },
+                        { label: 'Etiquetas',        routerLink: ['/dracon/cadastros/etiquetas'] },
+                        { label: 'Tipo de processo', routerLink: ['/dracon/cadastros/tipo-processo'] },
+                    ]
+                },
+                { label: 'Relatórios', routerLink: ['/dracon/relatorios'] },
             ]
         },
     ];

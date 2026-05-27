@@ -18,6 +18,11 @@ export const appRoutes: Routes = [
         component: AppLayout,
         loadChildren: () => import('./app/pages/assinago/assinago.routes').then(m => m.assinagoRoutes)
     },
+    {
+        path: 'dracon',
+        component: AppLayout,
+        loadChildren: () => import('./app/pages/dracon/dracon.routes').then(m => m.draconRoutes)
+    },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/auth/login' }

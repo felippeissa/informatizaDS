@@ -94,6 +94,13 @@ import { filter } from 'rxjs/operators';
                     <a class="layout-topbar-logo" routerLink="/assinago">
                         <img src="assets/logoassinago.svg" alt="AssinaGO" style="height:36px;width:auto" />
                     </a>
+                } @else if (activeSystem().id === 'dracon') {
+                    <a class="layout-topbar-logo" routerLink="/dracon">
+                        <div class="ds-logo-text">
+                            <span class="ds-logo-sup" style="color:#1755A3">Gestão de Atos</span>
+                            <span class="ds-logo-main" style="color:#1755A3">DRA<span style="color:#D97706">CON</span></span>
+                        </div>
+                    </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">
                         <div class="ds-logo-text">
@@ -208,6 +215,16 @@ export class AppTopbar implements OnInit {
             color: '#7C3AED',
             bgColor: 'color-mix(in srgb, #7C3AED 12%, transparent)',
             route: '/assinago',
+            comingSoon: false
+        },
+        {
+            id: 'dracon',
+            name: 'DRACON',
+            desc: 'Gestão de processos e atos normativos',
+            icon: 'pi pi-briefcase',
+            color: '#1755A3',
+            bgColor: 'color-mix(in srgb, #1755A3 12%, transparent)',
+            route: '/dracon',
             comingSoon: false
         },
         {
