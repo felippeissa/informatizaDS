@@ -9,9 +9,7 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DialogModule } from 'primeng/dialog';
-import { DividerModule } from 'primeng/divider';
 import { ToastModule } from 'primeng/toast';
-import { TagModule } from 'primeng/tag';
 
 const MOCK_ATOS_MAP: Record<number, any> = {
     1:  { processoDracon: '2025000089', tipoModelo: 'Autógrafo de Lei (Sanção) via SEI', dataCriacao: '10/01/2025', dataConclusao: '10/04/2025', unidade: 'Setor de TI - SEAD', responsavel: 'João da Silva Pereira', situacao: 'Em elaboração', prioridade: 'Urgente' },
@@ -24,7 +22,7 @@ const MOCK_ATOS_MAP: Record<number, any> = {
 @Component({
     selector: 'app-dracon-alterar-situacao',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, FileUploadModule, DialogModule, DividerModule, ToastModule, TagModule],
+    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, SelectModule, TextareaModule, FileUploadModule, DialogModule, ToastModule],
     providers: [MessageService],
     styles: [`
         :host { --dracon: #1755A3; }
@@ -40,7 +38,7 @@ const MOCK_ATOS_MAP: Record<number, any> = {
             max-width: 820px;
         }
         .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 24px; }
-        .form-field { display:flex; flex-direction:column; gap:6px; }
+        .form-field { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
         .form-field.full { grid-column: 1 / -1; }
         .form-field label { font-size:12px; font-weight:700; color:var(--text-color-secondary); }
         .readonly-value {

@@ -70,17 +70,17 @@ interface AtoAssociado {
 
         .dest-add-row { display:flex; gap:8px; margin-bottom:12px; align-items:flex-end; }
 
-        ::ng-deep .dracon-table { border: none !important; border-radius: 0 !important; }
-        ::ng-deep .dracon-table .p-datatable-table-container { border-radius: 0 !important; }
-        ::ng-deep .dracon-table .p-datatable-thead > tr > th {
+        ::ng-deep .ds-table { border: none !important; border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-table-container { border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-thead > tr > th {
             background: var(--surface-ground) !important; font-size: 12px; font-weight: 700;
             color: var(--text-color-secondary) !important; border-bottom: 1px solid var(--surface-border) !important; padding: 8px 12px !important;
         }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr > td {
+        ::ng-deep .ds-table .p-datatable-tbody > tr > td {
             padding: 8px 12px !important; border-bottom: 1px solid var(--surface-border) !important; font-size: 13px;
         }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
 
         .act-btn {
             width: 28px; height: 28px; border-radius: 6px;
@@ -92,7 +92,7 @@ interface AtoAssociado {
 
         .action-bar { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
 
-        .table-wrapper { border: 1px solid var(--surface-border); border-radius: 8px; overflow: hidden; }
+        .list-container { border: 1px solid var(--surface-border); border-radius: 8px; overflow: hidden; margin-bottom: 4px; }
     `],
     template: `
         <p-toast />
@@ -170,8 +170,8 @@ interface AtoAssociado {
             </div>
 
             @if (destinatarios.length > 0) {
-                <div class="table-wrapper">
-                    <p-table [value]="destinatarios" styleClass="p-datatable-sm dracon-table" [tableStyle]="{'min-width':'100%'}">
+                <div class="list-container">
+                    <p-table [value]="destinatarios" styleClass="p-datatable-sm ds-table" [tableStyle]="{'min-width':'100%'}">
                         <ng-template #header>
                             <tr>
                                 <th style="width:60px;text-align:center">Ordem</th>
@@ -207,8 +207,8 @@ interface AtoAssociado {
         <!-- ── Atos associados ── -->
         <div class="section-card">
             <div class="section-title"><i class="pi pi-file-edit"></i> Atos associados</div>
-            <div class="table-wrapper">
-                <p-table [value]="atosAssociados" styleClass="p-datatable-sm dracon-table" [tableStyle]="{'min-width':'100%'}">
+            <div class="list-container">
+                <p-table [value]="atosAssociados" styleClass="p-datatable-sm ds-table" [tableStyle]="{'min-width':'100%'}">
                     <ng-template #header>
                         <tr>
                             <th pSortableColumn="numero">Número do ato <p-sortIcon field="numero"/></th>

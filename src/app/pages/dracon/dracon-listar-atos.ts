@@ -175,26 +175,26 @@ const MOCK_ATOS: Ato[] = [
             border-bottom: 1px solid var(--surface-border);
         }
 
-        ::ng-deep .dracon-table { border: none !important; border-radius: 0 !important; }
-        ::ng-deep .dracon-table .p-datatable-table-container { border-radius: 0 !important; }
-        ::ng-deep .dracon-table .p-datatable-paginator-bottom {
+        ::ng-deep .ds-table { border: none !important; border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-table-container { border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-paginator-bottom {
             border-top: 1px solid var(--surface-border) !important;
             border-radius: 0 !important;
         }
-        ::ng-deep .dracon-table .p-datatable-thead > tr > th {
+        ::ng-deep .ds-table .p-datatable-thead > tr > th {
             background: var(--surface-ground) !important;
             font-size: 12px; font-weight: 700;
             color: var(--text-color-secondary) !important;
             border-bottom: 1px solid var(--surface-border) !important;
             padding: 10px 12px !important;
         }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr > td {
+        ::ng-deep .ds-table .p-datatable-tbody > tr > td {
             padding: 10px 12px !important;
             border-bottom: 1px solid var(--surface-border) !important;
             font-size: 13px;
         }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
-        ::ng-deep .dracon-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
 
         .dracon-num { font-size: 13px; font-weight: 700; color: var(--text-color); }
         .sei-num    { font-size: 12px; color: var(--text-color-secondary); }
@@ -326,7 +326,7 @@ const MOCK_ATOS: Ato[] = [
                 [value]="atosFiltrados"
                 [(selection)]="selectedAtos"
                 dataKey="id"
-                styleClass="p-datatable-sm dracon-table"
+                styleClass="p-datatable-sm ds-table"
                 [tableStyle]="{'min-width':'100%'}"
                 [paginator]="true"
                 [rows]="10"
