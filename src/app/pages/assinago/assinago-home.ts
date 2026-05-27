@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -39,46 +41,171 @@ const CORES = ['#3ACC75', '#0EA5E9', '#F97316', '#A855F7', '#EF4444', '#14B8A6']
 function cor(i: number) { return CORES[i % CORES.length]; }
 
 const INITIAL_DOCS: Documento[] = [
+    // ── SIS - Contratação ──────────────────────────────────────────────────
     {
         id: 1, bloco: 'SIS - Contratação',
-        titulo: 'Portaria de contratação 2000',
+        titulo: 'Processo Licitatório nº 001/2024 — Aquisição de Equipamentos de TI',
         assinadores: [
-            { nome: 'Ana Paula',  iniciais: 'AP', cor: cor(0) },
-            { nome: 'Bruno Lima', iniciais: 'BL', cor: cor(1) },
-            { nome: 'Carla Dias', iniciais: 'CD', cor: cor(2) },
-            { nome: 'Daniel S.',  iniciais: 'DS', cor: cor(3) },
+            { nome: 'Ana Paula Ferreira', iniciais: 'AF', cor: cor(0) },
+            { nome: 'Bruno Lima',          iniciais: 'BL', cor: cor(1) },
+            { nome: 'Carla Dias',          iniciais: 'CD', cor: cor(2) },
         ],
-        dataStatus: '03/12/2024 10:00:00', status: 'assinado', expandido: false,
+        dataStatus: '15/01/2024 09:32:00', status: 'assinado', expandido: false,
         filhos: [
-            { id: 101, bloco: 'SIS - Contratação', titulo: 'Anexo I — Memorial descritivo', assinadores: [{ nome: 'Ana Paula', iniciais: 'AP', cor: cor(0) }], dataStatus: '03/12/2024 10:00:00', status: 'assinado' },
-            { id: 102, bloco: 'SIS - Contratação', titulo: 'Anexo II — Planilha de custos',  assinadores: [{ nome: 'Bruno Lima', iniciais: 'BL', cor: cor(1) }], dataStatus: '03/12/2024 10:00:00', status: 'assinado' },
+            { id: 101, bloco: 'SIS - Contratação', titulo: 'Edital — Pregão Eletrônico nº 001/2024', assinadores: [{ nome: 'Ana Paula Ferreira', iniciais: 'AF', cor: cor(0) }], dataStatus: '15/01/2024 09:32:00', status: 'assinado' },
+            { id: 102, bloco: 'SIS - Contratação', titulo: 'Contrato de Fornecimento nº 002/2024', assinadores: [{ nome: 'Bruno Lima', iniciais: 'BL', cor: cor(1) }, { nome: 'Carla Dias', iniciais: 'CD', cor: cor(2) }], dataStatus: '15/01/2024 10:14:00', status: 'assinado' },
+            { id: 103, bloco: 'SIS - Contratação', titulo: 'Termo de Homologação — Pregão nº 001/2024', assinadores: [{ nome: 'Ana Paula Ferreira', iniciais: 'AF', cor: cor(0) }], dataStatus: '15/01/2024 11:05:00', status: 'assinado' },
         ]
     },
-    { id: 2, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 2001', assinadores: [{ nome: 'Eva Torres', iniciais: 'ET', cor: cor(4) }], dataStatus: '03/12/2024 10:00:00', status: 'assinado' },
-    { id: 3, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 2002',
-        assinadores: [{ nome: 'Felipe R.', iniciais: 'FR', cor: cor(0) }, { nome: 'Gabi S.', iniciais: 'GS', cor: cor(1) }, { nome: 'Hugo P.', iniciais: 'HP', cor: cor(2) }, { nome: 'Íris N.', iniciais: 'IN', cor: cor(3) }],
-        dataStatus: '03/12/2024 10:00:00', status: 'assinado' },
-    { id: 4, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 2003', assinadores: [{ nome: 'Julia M.',  iniciais: 'JM', cor: cor(5) }], dataStatus: '03/12/2024 10:00:00', status: 'assinado' },
-    { id: 5, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 3000',
-        assinadores: [{ nome: 'Kayo B.', iniciais: 'KB', cor: cor(0) }, { nome: 'Lara C.', iniciais: 'LC', cor: cor(1) }, { nome: 'Murilo F.', iniciais: 'MF', cor: cor(2) }, { nome: 'Nina G.', iniciais: 'NG', cor: cor(3) }],
-        dataStatus: '03/12/2024 10:00:00', status: 'pendente' },
-    { id: 6, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 3001', assinadores: [{ nome: 'Otávio L.', iniciais: 'OL', cor: cor(4) }], dataStatus: '03/12/2024 10:00:00', status: 'pendente' },
-    { id: 7, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 3002',
-        assinadores: [{ nome: 'Paula T.', iniciais: 'PT', cor: cor(0) }, { nome: 'Rafa W.', iniciais: 'RW', cor: cor(1) }, { nome: 'Sara X.', iniciais: 'SX', cor: cor(2) }, { nome: 'Tiago Z.', iniciais: 'TZ', cor: cor(3) }],
-        dataStatus: '03/12/2024 10:00:00', status: 'expirado' },
-    { id: 8, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 4000',
-        assinadores: [{ nome: 'Ubiratan A.', iniciais: 'UA', cor: cor(0) }, { nome: 'Vera B.', iniciais: 'VB', cor: cor(1) }, { nome: 'Wagner C.', iniciais: 'WC', cor: cor(2) }, { nome: 'Xênia D.', iniciais: 'XD', cor: cor(3) }],
-        dataStatus: '03/12/2024 10:00:00', status: 'recusado' },
-    { id: 9, bloco: 'SIS - Contratação',  titulo: 'Portaria de contratação 4001', assinadores: [{ nome: 'Yara E.', iniciais: 'YE', cor: cor(4) }], dataStatus: '10/12/2024 10:00:00', status: 'recusado' },
-    { id: 10, bloco: 'SIS - Contratação', titulo: 'Portaria de contratação 4002',
-        assinadores: [{ nome: 'Zé F.', iniciais: 'ZF', cor: cor(0) }, { nome: 'Alice G.', iniciais: 'AG', cor: cor(1) }, { nome: 'Bob H.', iniciais: 'BH', cor: cor(2) }, { nome: 'Cris I.', iniciais: 'CI', cor: cor(3) }],
-        dataStatus: '11/12/2024 10:00:00', status: 'recusado' },
-    { id: 11, bloco: 'RH - Admissão', titulo: 'Termo de posse Concurso 2024', assinadores: [{ nome: 'Diana J.', iniciais: 'DJ', cor: cor(5) }], dataStatus: '12/12/2024 09:00:00', status: 'aguardando' },
-    { id: 12, bloco: 'RH - Admissão', titulo: 'Portaria de nomeação nº 88',     assinadores: [{ nome: 'Eduardo K.', iniciais: 'EK', cor: cor(0) }], dataStatus: '15/12/2024 14:30:00', status: 'aguardando' },
-    { id: 13, bloco: 'SEFAZ - Financeiro', titulo: 'Contrato de prestação de serviços 001', assinadores: [{ nome: 'Fernanda L.', iniciais: 'FL', cor: cor(1) }, { nome: 'Gustavo M.', iniciais: 'GM', cor: cor(2) }], dataStatus: '20/12/2024 08:00:00', status: 'pendente' },
-    { id: 14, bloco: 'SEFAZ - Financeiro', titulo: 'Nota de empenho 2024/4521', assinadores: [{ nome: 'Helena N.', iniciais: 'HN', cor: cor(3) }], dataStatus: '22/12/2024 11:00:00', status: 'assinado' },
-    { id: 15, bloco: 'SEFAZ - Financeiro', titulo: 'Ordem de pagamento 888',    assinadores: [{ nome: 'Igor O.', iniciais: 'IO', cor: cor(4) }, { nome: 'Joana P.', iniciais: 'JP', cor: cor(5) }], dataStatus: '28/12/2024 16:00:00', status: 'assinado' },
-    { id: 16, bloco: 'GABINETE',           titulo: 'Memorando 087/2024 — Gov. do Estado', assinadores: [{ nome: 'Kleber Q.', iniciais: 'KQ', cor: cor(0) }, { nome: 'Larissa R.', iniciais: 'LR', cor: cor(1) }], dataStatus: '30/12/2024 17:00:00', status: 'recusado' },
+    {
+        id: 2, bloco: 'SIS - Contratação',
+        titulo: 'Portaria SETIN nº 047/2024 — Designação de Fiscal de Contrato',
+        assinadores: [{ nome: 'Eva Torres', iniciais: 'ET', cor: cor(4) }, { nome: 'Felipe Ramos', iniciais: 'FR', cor: cor(0) }],
+        dataStatus: '22/01/2024 14:15:00', status: 'assinado',
+    },
+    {
+        id: 3, bloco: 'SIS - Contratação',
+        titulo: 'Termo Aditivo nº 003/2024 — Prorrogação do Contrato 015/2023',
+        assinadores: [
+            { nome: 'Gabriela Santos',  iniciais: 'GS', cor: cor(1) },
+            { nome: 'Hugo Pereira',     iniciais: 'HP', cor: cor(2) },
+            { nome: 'Íris Nogueira',    iniciais: 'IN', cor: cor(3) },
+            { nome: 'João Prado',       iniciais: 'JP', cor: cor(4) },
+        ],
+        dataStatus: '05/02/2024 10:00:00', status: 'assinado', expandido: false,
+        filhos: [
+            { id: 104, bloco: 'SIS - Contratação', titulo: 'Minuta do Termo Aditivo nº 003/2024', assinadores: [{ nome: 'Gabriela Santos', iniciais: 'GS', cor: cor(1) }], dataStatus: '05/02/2024 10:00:00', status: 'assinado' },
+            { id: 105, bloco: 'SIS - Contratação', titulo: 'Parecer Jurídico — Justificativa de Prorrogação', assinadores: [{ nome: 'Hugo Pereira', iniciais: 'HP', cor: cor(2) }], dataStatus: '05/02/2024 10:45:00', status: 'assinado' },
+        ]
+    },
+    {
+        id: 4, bloco: 'SIS - Contratação',
+        titulo: 'Contrato de Prestação de Serviços nº 018/2024 — Suporte em TI',
+        assinadores: [
+            { nome: 'Kayo Barbosa',  iniciais: 'KB', cor: cor(0) },
+            { nome: 'Lara Cardoso', iniciais: 'LC', cor: cor(1) },
+            { nome: 'Murilo Fonseca', iniciais: 'MF', cor: cor(2) },
+        ],
+        dataStatus: '10/03/2024 08:30:00', status: 'pendente', expandido: false,
+        filhos: [
+            { id: 106, bloco: 'SIS - Contratação', titulo: 'Contrato de Prestação de Serviços nº 018/2024', assinadores: [{ nome: 'Kayo Barbosa', iniciais: 'KB', cor: cor(0) }, { nome: 'Lara Cardoso', iniciais: 'LC', cor: cor(1) }], dataStatus: '10/03/2024 08:30:00', status: 'pendente' },
+            { id: 107, bloco: 'SIS - Contratação', titulo: 'Anexo I — Especificações Técnicas dos Serviços', assinadores: [{ nome: 'Murilo Fonseca', iniciais: 'MF', cor: cor(2) }], dataStatus: '10/03/2024 08:30:00', status: 'pendente' },
+            { id: 108, bloco: 'SIS - Contratação', titulo: 'Anexo II — Planilha de Composição de Preços', assinadores: [{ nome: 'Kayo Barbosa', iniciais: 'KB', cor: cor(0) }], dataStatus: '10/03/2024 08:30:00', status: 'pendente' },
+        ]
+    },
+    {
+        id: 5, bloco: 'SIS - Contratação',
+        titulo: 'Memorando Circular SETIN/DI nº 012/2024 — Diretrizes de Segurança',
+        assinadores: [{ nome: 'Nina Guimarães', iniciais: 'NG', cor: cor(3) }, { nome: 'Otávio Lima', iniciais: 'OL', cor: cor(4) }],
+        dataStatus: '14/03/2024 17:00:00', status: 'expirado',
+    },
+    {
+        id: 6, bloco: 'SIS - Contratação',
+        titulo: 'Portaria SETIN nº 088/2024 — Abertura de Processo Administrativo',
+        assinadores: [{ nome: 'Paula Teixeira', iniciais: 'PT', cor: cor(0) }, { nome: 'Rafael Wanderley', iniciais: 'RW', cor: cor(1) }],
+        dataStatus: '20/03/2024 11:20:00', status: 'recusado',
+    },
+
+    // ── RH - Admissão ─────────────────────────────────────────────────────
+    {
+        id: 7, bloco: 'RH - Admissão',
+        titulo: 'Admissão Concurso Público 2024 — Cargo: Analista de Sistemas',
+        assinadores: [
+            { nome: 'Diana Jones',    iniciais: 'DJ', cor: cor(5) },
+            { nome: 'Eduardo Kiefer', iniciais: 'EK', cor: cor(0) },
+        ],
+        dataStatus: '08/04/2024 09:00:00', status: 'aguardando', expandido: false,
+        filhos: [
+            { id: 109, bloco: 'RH - Admissão', titulo: 'Portaria de Nomeação nº 088/2024 — Concurso Público', assinadores: [{ nome: 'Eduardo Kiefer', iniciais: 'EK', cor: cor(0) }], dataStatus: '08/04/2024 09:00:00', status: 'aguardando' },
+            { id: 110, bloco: 'RH - Admissão', titulo: 'Termo de Posse — Cargo Analista de Sistemas Sr.', assinadores: [{ nome: 'Diana Jones', iniciais: 'DJ', cor: cor(5) }], dataStatus: '08/04/2024 09:15:00', status: 'aguardando' },
+            { id: 111, bloco: 'RH - Admissão', titulo: 'Ficha de Cadastro Funcional — Prontuário nº 4.821', assinadores: [{ nome: 'Diana Jones', iniciais: 'DJ', cor: cor(5) }, { nome: 'Eduardo Kiefer', iniciais: 'EK', cor: cor(0) }], dataStatus: '08/04/2024 09:30:00', status: 'aguardando' },
+        ]
+    },
+    {
+        id: 8, bloco: 'RH - Admissão',
+        titulo: 'Portaria RH nº 102/2024 — Remoção de Servidor por Necessidade de Serviço',
+        assinadores: [{ nome: 'Fernanda Luz', iniciais: 'FL', cor: cor(1) }],
+        dataStatus: '15/04/2024 14:00:00', status: 'assinado',
+    },
+    {
+        id: 9, bloco: 'RH - Admissão',
+        titulo: 'Portaria RH nº 115/2024 — Licença para Capacitação',
+        assinadores: [{ nome: 'Gustavo Mota', iniciais: 'GM', cor: cor(2) }, { nome: 'Helena Nunes', iniciais: 'HN', cor: cor(3) }],
+        dataStatus: '02/05/2024 10:30:00', status: 'pendente',
+    },
+
+    // ── SEFAZ - Financeiro ────────────────────────────────────────────────
+    {
+        id: 10, bloco: 'SEFAZ - Financeiro',
+        titulo: 'Empenho e Pagamento — Aquisição de Mobiliário Ergonômico 2024',
+        assinadores: [
+            { nome: 'Igor Oliveira', iniciais: 'IO', cor: cor(4) },
+            { nome: 'Joana Prado',   iniciais: 'JP', cor: cor(5) },
+        ],
+        dataStatus: '22/04/2024 11:00:00', status: 'assinado', expandido: false,
+        filhos: [
+            { id: 112, bloco: 'SEFAZ - Financeiro', titulo: 'Nota de Empenho nº 2024/4521 — R$ 87.400,00', assinadores: [{ nome: 'Igor Oliveira', iniciais: 'IO', cor: cor(4) }], dataStatus: '22/04/2024 11:00:00', status: 'assinado' },
+            { id: 113, bloco: 'SEFAZ - Financeiro', titulo: 'Ordem de Pagamento nº 888/2024 — R$ 87.400,00', assinadores: [{ nome: 'Joana Prado', iniciais: 'JP', cor: cor(5) }], dataStatus: '22/04/2024 11:45:00', status: 'assinado' },
+        ]
+    },
+    {
+        id: 11, bloco: 'SEFAZ - Financeiro',
+        titulo: 'Contrato de Manutenção Predial nº 055/2024 — R$ 128.000,00/ano',
+        assinadores: [{ nome: 'Kleber Queiroz', iniciais: 'KQ', cor: cor(0) }, { nome: 'Larissa Rocha', iniciais: 'LR', cor: cor(1) }],
+        dataStatus: '28/04/2024 08:00:00', status: 'pendente',
+    },
+    {
+        id: 12, bloco: 'SEFAZ - Financeiro',
+        titulo: 'Autorização de Despesa Extraordinária nº 007/2024 — Evento Estadual',
+        assinadores: [{ nome: 'Marcos Vidal', iniciais: 'MV', cor: cor(2) }],
+        dataStatus: '03/05/2024 16:30:00', status: 'recusado',
+    },
+
+    // ── GABINETE ──────────────────────────────────────────────────────────
+    {
+        id: 13, bloco: 'GABINETE',
+        titulo: 'Decreto Governamental nº 7.892/2024 — Modernização da Gestão Pública',
+        assinadores: [
+            { nome: 'Natália Barros',       iniciais: 'NB', cor: cor(3) },
+            { nome: 'Oscar Pinto',          iniciais: 'OP', cor: cor(4) },
+            { nome: 'Patrícia Vasconcelos', iniciais: 'PV', cor: cor(5) },
+        ],
+        dataStatus: '10/05/2024 17:00:00', status: 'aguardando', expandido: false,
+        filhos: [
+            { id: 114, bloco: 'GABINETE', titulo: 'Decreto nº 7.892/2024 — Texto Integral', assinadores: [{ nome: 'Natália Barros', iniciais: 'NB', cor: cor(3) }], dataStatus: '10/05/2024 17:00:00', status: 'aguardando' },
+            { id: 115, bloco: 'GABINETE', titulo: 'Exposição de Motivos — Decreto 7.892/2024', assinadores: [{ nome: 'Oscar Pinto', iniciais: 'OP', cor: cor(4) }], dataStatus: '10/05/2024 17:00:00', status: 'aguardando' },
+            { id: 116, bloco: 'GABINETE', titulo: 'Anexo I — Plano de Implementação 2024-2026', assinadores: [{ nome: 'Natália Barros', iniciais: 'NB', cor: cor(3) }, { nome: 'Patrícia Vasconcelos', iniciais: 'PV', cor: cor(5) }], dataStatus: '10/05/2024 17:00:00', status: 'aguardando' },
+        ]
+    },
+    {
+        id: 14, bloco: 'GABINETE',
+        titulo: 'Memorando GAB/SG nº 087/2024 — Solicitação de Liberação de Crédito',
+        assinadores: [{ nome: 'Quirino Andrade', iniciais: 'QA', cor: cor(0) }, { nome: 'Renata Brito', iniciais: 'RB', cor: cor(1) }],
+        dataStatus: '18/05/2024 10:30:00', status: 'recusado',
+    },
+    {
+        id: 15, bloco: 'GABINETE',
+        titulo: 'Portaria GAB nº 215/2024 — Regulamenta Expediente em Período Eleitoral',
+        assinadores: [{ nome: 'Sandro Costa', iniciais: 'SC', cor: cor(2) }],
+        dataStatus: '24/05/2024 08:45:00', status: 'assinado',
+    },
+
+    // ── CORREGEDORIA ──────────────────────────────────────────────────────
+    {
+        id: 16, bloco: 'CORREGEDORIA',
+        titulo: 'Processo Administrativo nº 2024/1123 — Sindicância Investigativa',
+        assinadores: [
+            { nome: 'Tânia Lemos',  iniciais: 'TL', cor: cor(3) },
+            { nome: 'Ulisses Maia', iniciais: 'UM', cor: cor(4) },
+            { nome: 'Vera Bastos',  iniciais: 'VB', cor: cor(5) },
+        ],
+        dataStatus: '30/05/2024 09:00:00', status: 'pendente', expandido: false,
+        filhos: [
+            { id: 117, bloco: 'CORREGEDORIA', titulo: 'Portaria de Instauração de Sindicância nº 003/2024', assinadores: [{ nome: 'Tânia Lemos', iniciais: 'TL', cor: cor(3) }], dataStatus: '30/05/2024 09:00:00', status: 'pendente' },
+            { id: 118, bloco: 'CORREGEDORIA', titulo: 'Relatório Final da Comissão Sindicante', assinadores: [{ nome: 'Ulisses Maia', iniciais: 'UM', cor: cor(4) }, { nome: 'Vera Bastos', iniciais: 'VB', cor: cor(5) }], dataStatus: '30/05/2024 09:30:00', status: 'pendente' },
+            { id: 119, bloco: 'CORREGEDORIA', titulo: 'Notificação ao Servidor Investigado', assinadores: [{ nome: 'Tânia Lemos', iniciais: 'TL', cor: cor(3) }], dataStatus: '30/05/2024 10:00:00', status: 'pendente' },
+        ]
+    },
 ];
 
 @Component({
@@ -93,8 +220,9 @@ const INITIAL_DOCS: Documento[] = [
         TagModule, TabsModule, TooltipModule, DividerModule,
         DialogModule, FileUploadModule, InputOtpModule,
         RadioButtonModule, TextareaModule,
-        ProgressSpinnerModule, ProgressBarModule,
+        ProgressSpinnerModule, ProgressBarModule, ToastModule,
     ],
+    providers: [MessageService],
     styles: [`
         :host { --assa-green: #3ACC75; --assa-green-light: #ECFDF5; }
 
@@ -111,25 +239,34 @@ const INITIAL_DOCS: Documento[] = [
         }
         .tab-badge.active { background: var(--assa-green, #3ACC75); color: #fff; }
 
+        /* ── list container: unique border that wraps all three sections ── */
+        .list-container {
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
         .filter-bar {
             display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
             padding: 14px 16px;
             background: var(--surface-card);
-            border: 1px solid var(--surface-border);
-            border-radius: 10px 10px 0 0;
-            border-bottom: none;
+            border-bottom: 1px solid var(--surface-border);
         }
 
         .action-bar {
             display: flex; align-items: center; gap: 8px;
             padding: 10px 16px;
             background: var(--surface-card);
-            border: 1px solid var(--surface-border);
-            border-top: 1px solid var(--surface-border);
-            border-bottom: none;
+            border-bottom: 1px solid var(--surface-border);
         }
 
-        ::ng-deep .assa-table .p-datatable-table-container { border-radius: 0 0 10px 10px; }
+        ::ng-deep .assa-table { border: none !important; border-radius: 0 !important; }
+        ::ng-deep .assa-table .p-datatable-table-container { border-radius: 0 !important; }
+        ::ng-deep .assa-table .p-datatable-paginator-bottom {
+            border-top: 1px solid var(--surface-border) !important;
+            border-radius: 0 !important;
+        }
         ::ng-deep .assa-table .p-datatable-thead > tr > th {
             background: var(--surface-ground) !important;
             font-size: 12px; font-weight: 700;
@@ -261,6 +398,7 @@ const INITIAL_DOCS: Documento[] = [
         }
     `],
     template: `
+        <p-toast />
         <!-- ─── PAGE HEADER ─── -->
         <div class="page-header">
             <div>
@@ -276,7 +414,7 @@ const INITIAL_DOCS: Documento[] = [
         </div>
 
         <!-- ─── TABS ─── -->
-        <p-tabs [(value)]="activeTab" styleClass="mb-0">
+        <p-tabs [(value)]="activeTab">
             <p-tablist>
                 <p-tab value="todos">
                     Todos os meus documentos
@@ -296,6 +434,9 @@ const INITIAL_DOCS: Documento[] = [
                 </p-tab>
             </p-tablist>
         </p-tabs>
+
+        <!-- ─── LIST CONTAINER (filter + actions + table como um bloco único) ─── -->
+        <div class="list-container">
 
         <!-- ─── FILTER BAR ─── -->
         <div class="filter-bar">
@@ -402,6 +543,8 @@ const INITIAL_DOCS: Documento[] = [
                 </tr>
             </ng-template>
         </p-table>
+
+        </div><!-- /list-container -->
 
 
         <!-- ═══════════════════════════════════════════
@@ -824,6 +967,11 @@ const INITIAL_DOCS: Documento[] = [
                         placeholder="Selecione o tipo" />
                 </div>
                 <div class="form-field">
+                    <label>Bloco de assinatura <span style="font-weight:400;color:var(--text-color-secondary)">(opcional)</span></label>
+                    <p-select [(ngModel)]="novoDoc.bloco" [options]="blocoOptions" optionLabel="label" optionValue="value"
+                        placeholder="Selecione um bloco" [showClear]="true" />
+                </div>
+                <div class="form-field">
                     <label>Descrição (opcional)</label>
                     <textarea pTextarea [(ngModel)]="novoDoc.descricao" rows="3"
                         placeholder="Descreva o conteúdo do documento…" style="width:100%;resize:vertical"></textarea>
@@ -901,6 +1049,10 @@ const INITIAL_DOCS: Documento[] = [
                             <span style="font-size:13px;color:var(--text-color)">{{ novoDoc.tipo || '—' }}</span>
                         </div>
                         <div style="display:flex;gap:8px">
+                            <span style="font-size:12px;font-weight:700;color:var(--text-color-secondary);width:100px;flex-shrink:0">Bloco:</span>
+                            <span style="font-size:13px;color:var(--text-color)">{{ novoDoc.bloco || '—' }}</span>
+                        </div>
+                        <div style="display:flex;gap:8px">
                             <span style="font-size:12px;font-weight:700;color:var(--text-color-secondary);width:100px;flex-shrink:0">Arquivo:</span>
                             <span style="font-size:13px;color:var(--text-color)">{{ novoDoc.pdfNome || 'Sem arquivo' }}</span>
                         </div>
@@ -956,18 +1108,35 @@ const INITIAL_DOCS: Documento[] = [
         </p-dialog>
     `
 })
-export class AssinagoHome {
+export class AssinagoHome implements OnInit {
+    private toast = inject(MessageService);
+
     /* ── docs ── */
     docs: Documento[] = [...INITIAL_DOCS];
 
     /* ── list state ── */
-    activeTab    = 'todos';
-    searchTerm   = '';
-    filterBloco: string | null  = null;
-    filterTipo: string | null   = null;
-    filterStatus: string | null = null;
+    private _activeTab   = 'todos';
+    private _searchTerm  = '';
+    private _filterBloco:  string | null = null;
+    private _filterTipo:   string | null = null;
+    private _filterStatus: string | null = null;
     filterPeriodo: Date[] | null = null;
     selectedDocs: Documento[]   = [];
+
+    get activeTab()    { return this._activeTab; }
+    set activeTab(v: string)           { this._activeTab = v;   this.buildVisiveis(); }
+
+    get searchTerm()   { return this._searchTerm; }
+    set searchTerm(v: string)          { this._searchTerm = v;  this.buildVisiveis(); }
+
+    get filterBloco()  { return this._filterBloco; }
+    set filterBloco(v: string | null)  { this._filterBloco = v;  this.buildVisiveis(); }
+
+    get filterTipo()   { return this._filterTipo; }
+    set filterTipo(v: string | null)   { this._filterTipo = v;   this.buildVisiveis(); }
+
+    get filterStatus() { return this._filterStatus; }
+    set filterStatus(v: string | null) { this._filterStatus = v; this.buildVisiveis(); }
 
     /* ── viewer ── */
     viewerVisible     = false;
@@ -998,6 +1167,7 @@ export class AssinagoHome {
     ];
     novoDoc = {
         nome: '', tipo: null as string | null, descricao: '',
+        bloco: null as string | null,
         pdfNome: '' as string,
         assinadores: [] as { email: string; ordem: number }[],
         novoEmail: '',
@@ -1005,10 +1175,11 @@ export class AssinagoHome {
 
     /* ── options ── */
     blocoOptions = [
-        { label: 'SIS - Contratação',   value: 'SIS - Contratação' },
-        { label: 'RH - Admissão',        value: 'RH - Admissão' },
-        { label: 'SEFAZ - Financeiro',   value: 'SEFAZ - Financeiro' },
-        { label: 'GABINETE',             value: 'GABINETE' },
+        { label: 'SIS - Contratação',  value: 'SIS - Contratação' },
+        { label: 'RH - Admissão',      value: 'RH - Admissão' },
+        { label: 'SEFAZ - Financeiro', value: 'SEFAZ - Financeiro' },
+        { label: 'GABINETE',           value: 'GABINETE' },
+        { label: 'CORREGEDORIA',       value: 'CORREGEDORIA' },
     ];
     tipoOptions = [
         { label: 'Portaria',  value: 'Portaria' },
@@ -1041,30 +1212,34 @@ export class AssinagoHome {
         { label: 'Ordem de pagamento',value: 'Ordem de pagamento' },
     ];
 
-    /* ══ GETTERS ══ */
-    get docsVisiveis(): Documento[] {
+    /* ══ LISTA VISÍVEL ══ */
+    docsVisiveis: Documento[] = [];
+
+    ngOnInit() { this.buildVisiveis(); }
+
+    buildVisiveis() {
         let base = this.docsDoTab;
-        if (this.searchTerm.trim()) {
-            const q = this.searchTerm.toLowerCase();
+        if (this._searchTerm.trim()) {
+            const q = this._searchTerm.toLowerCase();
             base = base.filter(d =>
                 d.titulo.toLowerCase().includes(q) ||
                 d.bloco.toLowerCase().includes(q) ||
                 d.assinadores.some(a => a.nome.toLowerCase().includes(q))
             );
         }
-        if (this.filterBloco)  base = base.filter(d => d.bloco   === this.filterBloco);
-        if (this.filterStatus) base = base.filter(d => d.status  === this.filterStatus);
+        if (this._filterBloco)  base = base.filter(d => d.bloco  === this._filterBloco);
+        if (this._filterStatus) base = base.filter(d => d.status === this._filterStatus);
         const resultado: Documento[] = [];
         for (const doc of base) {
             resultado.push(doc);
             if (doc.expandido && doc.filhos?.length)
                 doc.filhos.forEach(f => resultado.push({ ...f, _isFilho: true }));
         }
-        return resultado;
+        this.docsVisiveis = resultado;
     }
 
     private get docsDoTab(): Documento[] {
-        switch (this.activeTab) {
+        switch (this._activeTab) {
             case 'assinados':   return this.docs.filter(d => d.status === 'assinado');
             case 'aguardando':  return this.docs.filter(d => d.status === 'aguardando' || d.status === 'pendente');
             case 'recusados':   return this.docs.filter(d => d.status === 'recusado');
@@ -1112,7 +1287,9 @@ export class AssinagoHome {
         if (this.viewerDoc) {
             const doc = this.docs.find(d => d.id === this.viewerDoc!.id);
             if (doc) doc.status = 'assinado';
+            this.toast.add({ severity: 'success', summary: 'Documento assinado', detail: `"${this.viewerDoc.titulo}" foi assinado com sucesso.`, life: 4000 });
         }
+        this.buildVisiveis();
     }
 
     /* ══ REFUSE ══ */
@@ -1126,15 +1303,17 @@ export class AssinagoHome {
         if (this.viewerDoc) {
             const doc = this.docs.find(d => d.id === this.viewerDoc!.id);
             if (doc) doc.status = 'recusado';
+            this.toast.add({ severity: 'warn', summary: 'Documento recusado', detail: `"${this.viewerDoc.titulo}" foi recusado.`, life: 4000 });
         }
         this.recusarVisible  = false;
         this.viewerVisible   = false;
+        this.buildVisiveis();
     }
 
     /* ══ NEW DOC ══ */
     openNovoDoc() {
         this.novoDocStep = 1;
-        this.novoDoc = { nome: '', tipo: null, descricao: '', pdfNome: '', assinadores: [], novoEmail: '' };
+        this.novoDoc = { nome: '', tipo: null, descricao: '', bloco: null, pdfNome: '', assinadores: [], novoEmail: '' };
         this.novoDocVisible = true;
     }
 
@@ -1164,7 +1343,7 @@ export class AssinagoHome {
     enviarDocumento() {
         const newDoc: Documento = {
             id: Date.now(),
-            bloco: 'SIS - Contratação',
+            bloco: this.novoDoc.bloco ?? '',
             titulo: this.novoDoc.nome,
             assinadores: this.novoDoc.assinadores.length
                 ? this.novoDoc.assinadores.map((a, i) => ({
@@ -1178,17 +1357,23 @@ export class AssinagoHome {
         };
         this.docs = [newDoc, ...this.docs];
         this.novoDocVisible = false;
+        this.buildVisiveis();
+        this.toast.add({ severity: 'success', summary: 'Documento enviado', detail: `"${newDoc.titulo}" foi enviado para assinatura.`, life: 4000 });
     }
 
     /* ══ MISC ══ */
-    toggleExpand(doc: Documento) { doc.expandido = !doc.expandido; }
+    toggleExpand(doc: Documento) {
+        doc.expandido = !doc.expandido;
+        this.buildVisiveis();
+    }
 
     limparFiltros() {
-        this.searchTerm    = '';
-        this.filterBloco   = null;
-        this.filterTipo    = null;
-        this.filterStatus  = null;
+        this._searchTerm   = '';
+        this._filterBloco  = null;
+        this._filterTipo   = null;
+        this._filterStatus = null;
         this.filterPeriodo = null;
+        this.buildVisiveis();
     }
 
     statusLabel(s: string): string {

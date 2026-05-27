@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,19 +28,40 @@ interface BlocoAssinatura {
 @Component({
     selector: 'app-assinago-config-blocos',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, SelectModule, TableModule, DialogModule, TooltipModule, TagModule, AvatarModule],
+    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, SelectModule, TableModule, DialogModule, TooltipModule, TagModule, AvatarModule, ToastModule],
+    providers: [MessageService],
     styles: [`
         :host { --assa-green: #3ACC75; }
         .page-header { margin-bottom: 28px; display:flex; justify-content:space-between; align-items:flex-start; }
         .breadcrumb  { font-size: 12px; color: var(--text-color-secondary); margin-bottom: 4px; }
         .page-title  { font-size: 28px; font-weight: 800; color: var(--text-color); margin: 0; }
 
-        ::ng-deep .cfg-table .p-datatable-thead > tr > th {
+        .list-container {
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        ::ng-deep .ds-table { border: none !important; border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-table-container { border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-paginator-bottom {
+            border-top: 1px solid var(--surface-border) !important;
+            border-radius: 0 !important;
+        }
+        ::ng-deep .ds-table .p-datatable-thead > tr > th {
             background: var(--surface-ground) !important;
             font-size: 12px; font-weight: 700;
             color: var(--text-color-secondary) !important;
+            border-bottom: 1px solid var(--surface-border) !important;
+            padding: 10px 12px !important;
         }
-        ::ng-deep .cfg-table .p-datatable-tbody > tr > td { font-size: 13px; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr > td {
+            padding: 11px 12px !important;
+            border-bottom: 1px solid var(--surface-border) !important;
+            font-size: 13px;
+        }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
 
         .act-btn {
             width: 30px; height: 30px; border-radius: 6px;
@@ -79,6 +102,7 @@ interface BlocoAssinatura {
         }
     `],
     template: `
+        <p-toast />
         <div class="page-header">
             <div>
                 <div class="breadcrumb">Configurações › Blocos de assinatura</div>
@@ -92,9 +116,10 @@ interface BlocoAssinatura {
             />
         </div>
 
+        <div class="list-container">
         <p-table
             [value]="blocos"
-            styleClass="p-datatable-sm cfg-table"
+            styleClass="p-datatable-sm ds-table"
             [tableStyle]="{'min-width':'100%'}"
             [paginator]="true"
             [rows]="10"
@@ -153,6 +178,7 @@ interface BlocoAssinatura {
                 </tr>
             </ng-template>
         </p-table>
+        </div>
 
         <!-- ── Dialog criar/editar ── -->
         <p-dialog
@@ -230,36 +256,46 @@ interface BlocoAssinatura {
     `
 })
 export class AssinagoConfigBlocos {
+    private toast = inject(MessageService);
     blocos: BlocoAssinatura[] = [
         {
             id: 1, nome: 'SIS - Contratação', tipoAssinatura: 'Token de e-mail',
             assinadores: [
-                { email: 'ana.paula@setin.gov.br',  nome: 'Ana Paula',  ordem: 1 },
-                { email: 'bruno.lima@setin.gov.br',  nome: 'Bruno Lima',  ordem: 2 },
-                { email: 'carla.dias@setin.gov.br',  nome: 'Carla Dias',  ordem: 3 },
+                { email: 'ana.ferreira@setin.gov.br', nome: 'Ana Paula Ferreira', ordem: 1 },
+                { email: 'bruno.lima@setin.gov.br',   nome: 'Bruno Lima',          ordem: 2 },
+                { email: 'carla.dias@setin.gov.br',   nome: 'Carla Dias',          ordem: 3 },
             ]
         },
         {
             id: 2, nome: 'RH - Admissão', tipoAssinatura: 'Certificado digital',
             assinadores: [
-                { email: 'diana.jones@rh.gov.br', nome: 'Diana Jones', ordem: 1 },
-                { email: 'eduardo.k@rh.gov.br',   nome: 'Eduardo K.',   ordem: 2 },
+                { email: 'diana.jones@rh.gov.br',    nome: 'Diana Jones',    ordem: 1 },
+                { email: 'eduardo.kiefer@rh.gov.br', nome: 'Eduardo Kiefer', ordem: 2 },
             ]
         },
         {
             id: 3, nome: 'SEFAZ - Financeiro', tipoAssinatura: 'Todos',
             assinadores: [
-                { email: 'fernanda.l@sefaz.gov.br', nome: 'Fernanda L.', ordem: 1 },
-                { email: 'gustavo.m@sefaz.gov.br',  nome: 'Gustavo M.',  ordem: 2 },
-                { email: 'helena.n@sefaz.gov.br',   nome: 'Helena N.',   ordem: 3 },
-                { email: 'igor.o@sefaz.gov.br',     nome: 'Igor O.',     ordem: 4 },
+                { email: 'igor.oliveira@sefaz.gov.br',  nome: 'Igor Oliveira',  ordem: 1 },
+                { email: 'joana.prado@sefaz.gov.br',    nome: 'Joana Prado',    ordem: 2 },
+                { email: 'kleber.queiroz@sefaz.gov.br', nome: 'Kleber Queiroz', ordem: 3 },
+                { email: 'larissa.rocha@sefaz.gov.br',  nome: 'Larissa Rocha',  ordem: 4 },
             ]
         },
         {
             id: 4, nome: 'GABINETE', tipoAssinatura: 'Gov.br',
             assinadores: [
-                { email: 'kleber.q@gabinete.gov.br',  nome: 'Kleber Q.',  ordem: 1 },
-                { email: 'larissa.r@gabinete.gov.br', nome: 'Larissa R.', ordem: 2 },
+                { email: 'natalia.barros@gabinete.gov.br', nome: 'Natália Barros',      ordem: 1 },
+                { email: 'oscar.pinto@gabinete.gov.br',    nome: 'Oscar Pinto',          ordem: 2 },
+                { email: 'patricia.v@gabinete.gov.br',     nome: 'Patrícia Vasconcelos', ordem: 3 },
+            ]
+        },
+        {
+            id: 5, nome: 'CORREGEDORIA', tipoAssinatura: 'Certificado digital',
+            assinadores: [
+                { email: 'tania.lemos@corregedoria.gov.br',  nome: 'Tânia Lemos',  ordem: 1 },
+                { email: 'ulisses.maia@corregedoria.gov.br', nome: 'Ulisses Maia', ordem: 2 },
+                { email: 'vera.bastos@corregedoria.gov.br',  nome: 'Vera Bastos',  ordem: 3 },
             ]
         },
     ];
@@ -311,17 +347,20 @@ export class AssinagoConfigBlocos {
                 b.tipoAssinatura = this.form.tipoAssinatura;
                 b.assinadores    = [...this.form.assinadores];
             }
+            this.toast.add({ severity: 'success', summary: 'Bloco atualizado', detail: `"${this.form.nome}" foi atualizado com sucesso.`, life: 3000 });
         } else {
             this.blocos = [
                 ...this.blocos,
                 { id: Date.now(), nome: this.form.nome, tipoAssinatura: this.form.tipoAssinatura, assinadores: [...this.form.assinadores] }
             ];
+            this.toast.add({ severity: 'success', summary: 'Bloco criado', detail: `"${this.form.nome}" foi adicionado à lista.`, life: 3000 });
         }
         this.dialogVisible = false;
     }
 
     excluir(b: BlocoAssinatura) {
         this.blocos = this.blocos.filter(x => x.id !== b.id);
+        this.toast.add({ severity: 'warn', summary: 'Bloco removido', detail: `"${b.nome}" foi excluído.`, life: 3000 });
     }
 
     iniciais(nomeOuEmail: string): string {

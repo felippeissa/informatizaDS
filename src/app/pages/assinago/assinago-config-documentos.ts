@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,21 +23,40 @@ interface TipoDocumento {
 @Component({
     selector: 'app-assinago-config-documentos',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, TableModule, DialogModule, TooltipModule, TagModule, ToggleSwitchModule],
+    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, TableModule, DialogModule, TooltipModule, TagModule, ToggleSwitchModule, ToastModule],
+    providers: [MessageService],
     styles: [`
         :host { --assa-green: #3ACC75; }
         .page-header { margin-bottom: 28px; display:flex; justify-content:space-between; align-items:flex-start; }
         .breadcrumb  { font-size: 12px; color: var(--text-color-secondary); margin-bottom: 4px; }
         .page-title  { font-size: 28px; font-weight: 800; color: var(--text-color); margin: 0; }
 
-        ::ng-deep .cfg-table .p-datatable-thead > tr > th {
+        .list-container {
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        ::ng-deep .ds-table { border: none !important; border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-table-container { border-radius: 0 !important; }
+        ::ng-deep .ds-table .p-datatable-paginator-bottom {
+            border-top: 1px solid var(--surface-border) !important;
+            border-radius: 0 !important;
+        }
+        ::ng-deep .ds-table .p-datatable-thead > tr > th {
             background: var(--surface-ground) !important;
             font-size: 12px; font-weight: 700;
             color: var(--text-color-secondary) !important;
+            border-bottom: 1px solid var(--surface-border) !important;
+            padding: 10px 12px !important;
         }
-        ::ng-deep .cfg-table .p-datatable-tbody > tr > td {
+        ::ng-deep .ds-table .p-datatable-tbody > tr > td {
+            padding: 11px 12px !important;
+            border-bottom: 1px solid var(--surface-border) !important;
             font-size: 13px;
         }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:last-child > td { border-bottom: none !important; }
+        ::ng-deep .ds-table .p-datatable-tbody > tr:hover > td { background: var(--surface-ground) !important; }
 
         .act-btn {
             width: 30px; height: 30px; border-radius: 6px;
@@ -53,6 +74,7 @@ interface TipoDocumento {
         .form-field label { font-size:12px; font-weight:700; color:var(--text-color-secondary); }
     `],
     template: `
+        <p-toast />
         <div class="page-header">
             <div>
                 <div class="breadcrumb">Configurações › Documentos</div>
@@ -66,9 +88,10 @@ interface TipoDocumento {
             />
         </div>
 
+        <div class="list-container">
         <p-table
             [value]="tipos"
-            styleClass="p-datatable-sm cfg-table"
+            styleClass="p-datatable-sm ds-table"
             [tableStyle]="{'min-width':'100%'}"
             [paginator]="true"
             [rows]="10"
@@ -113,6 +136,7 @@ interface TipoDocumento {
                 </tr>
             </ng-template>
         </p-table>
+        </div>
 
         <!-- ── Dialog criar/editar ── -->
         <p-dialog
@@ -144,6 +168,7 @@ interface TipoDocumento {
     `
 })
 export class AssinagoConfigDocumentos {
+    private toast = inject(MessageService);
     tipos: TipoDocumento[] = [
         { id: 1, nome: 'Portaria',       descricao: 'Ato administrativo normativo expedido por autoridade competente', ativo: true,  totalDocumentos: 8  },
         { id: 2, nome: 'Contrato',       descricao: 'Acordo formal firmado entre duas ou mais partes',                 ativo: true,  totalDocumentos: 3  },
@@ -169,16 +194,19 @@ export class AssinagoConfigDocumentos {
         if (this.editando) {
             const t = this.tipos.find(x => x.id === this.editandoId);
             if (t) { t.nome = this.form.nome; t.descricao = this.form.descricao; }
+            this.toast.add({ severity: 'success', summary: 'Tipo atualizado', detail: `"${this.form.nome}" foi atualizado com sucesso.`, life: 3000 });
         } else {
             this.tipos = [
                 ...this.tipos,
                 { id: Date.now(), nome: this.form.nome, descricao: this.form.descricao, ativo: true, totalDocumentos: 0 }
             ];
+            this.toast.add({ severity: 'success', summary: 'Tipo criado', detail: `"${this.form.nome}" foi adicionado à lista.`, life: 3000 });
         }
         this.dialogVisible = false;
     }
 
     excluir(t: TipoDocumento) {
         this.tipos = this.tipos.filter(x => x.id !== t.id);
+        this.toast.add({ severity: 'warn', summary: 'Tipo removido', detail: `"${t.nome}" foi excluído.`, life: 3000 });
     }
 }

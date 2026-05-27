@@ -53,6 +53,7 @@ export class AppMenu implements OnInit, OnDestroy {
                 { label: 'Validar documento', routerLink: ['/assinago/validar-documento'] },
                 {
                     label: 'Configurações',
+                    path: 'assinago-config',
                     items: [
                         { label: 'Documentos',           routerLink: ['/assinago/configuracoes/documentos'] },
                         { label: 'Assinaturas',          routerLink: ['/assinago/configuracoes/assinaturas'] },

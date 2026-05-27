@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -20,7 +22,8 @@ interface MetodoAssinatura {
 @Component({
     selector: 'app-assinago-config-assinaturas',
     standalone: true,
-    imports: [CommonModule, FormsModule, ButtonModule, ToggleSwitchModule, DividerModule, TagModule],
+    imports: [CommonModule, FormsModule, ButtonModule, ToggleSwitchModule, DividerModule, TagModule, ToastModule],
+    providers: [MessageService],
     styles: [`
         :host { --assa-green: #3ACC75; }
         .page-header { margin-bottom: 28px; }
@@ -66,6 +69,7 @@ interface MetodoAssinatura {
         }
     `],
     template: `
+        <p-toast />
         <div class="page-header">
             <div class="breadcrumb">Configurações › Assinaturas</div>
             <h1 class="page-title">Métodos de assinatura</h1>
@@ -135,6 +139,7 @@ interface MetodoAssinatura {
     `
 })
 export class AssinagoConfigAssinaturas {
+    private toast = inject(MessageService);
     metodos: MetodoAssinatura[] = [
         {
             id: 'token',
@@ -171,5 +176,7 @@ export class AssinagoConfigAssinaturas {
     exigirTodos    = true;
     notificarEmail = true;
 
-    salvar() { /* mock */ alert('Configurações salvas!'); }
+    salvar() {
+        this.toast.add({ severity: 'success', summary: 'Configurações salvas', detail: 'As configurações de assinatura foram atualizadas.', life: 3000 });
+    }
 }
