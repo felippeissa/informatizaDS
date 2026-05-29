@@ -96,10 +96,7 @@ import { filter } from 'rxjs/operators';
                     </a>
                 } @else if (activeSystem().id === 'dracon') {
                     <a class="layout-topbar-logo" routerLink="/dracon">
-                        <div class="ds-logo-text">
-                            <span class="ds-logo-sup" style="color:#1755A3">Gestão de Atos</span>
-                            <span class="ds-logo-main" style="color:#1755A3">DRA<span style="color:#D97706">CON</span></span>
-                        </div>
+                        <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:var(--text-color)">DRACON</span>
                     </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">

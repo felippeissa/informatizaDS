@@ -1,0 +1,222 @@
+<p-toast />
+
+<div class="ds-page">
+
+    <!-- Cabeçalho -->
+    <div class="ds-page-header">
+        <h2 class="ds-page-title">Listar afastamentos</h2>
+        <p-button label="Novo afastamento" icon="pi pi-calendar-plus" (onClick)="novoAfastamento()" />
+    </div>
+
+    <!-- Identificação -->
+    <div class="ds-id-bar">
+        <span class="ds-id-label"><i class="pi pi-id-card"></i> Identificação</span>
+        <span class="ds-id-item"><strong>Usuário</strong> João da Silva</span>
+        <span class="ds-id-item"><strong>Unidade</strong> 21189 - Gerência de Tecnologia do Estado</span>
+    </div>
+
+    <!-- Filtros — 5 colunas iguais -->
+    <div class="ds-filter-card">
+        <div class="ds-filter-row ds-filter-row--5">
+            <div class="ds-filter-field">
+                <label>Funcionário afastado</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.funcionario" placeholder="Digite aqui" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Tipo de afastamento</label>
+                <p-select [fluid]="true" [(ngModel)]="filtro.tipoAfastamento"
+                          [options]="tiposAfastamento" placeholder="Selecione uma opção" [showClear]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Status do afastamento</label>
+                <p-select [fluid]="true" [(ngModel)]="filtro.status"
+                          [options]="statusOptions" placeholder="Selecione uma opção" [showClear]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Data início</label>
+                <p-datepicker [fluid]="true" [(ngModel)]="filtro.dataInicio"
+                              dateFormat="dd/mm/yy" [showIcon]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Data fim</label>
+                <p-datepicker [fluid]="true" [(ngModel)]="filtro.dataFim"
+                              dateFormat="dd/mm/yy" [showIcon]="true" />
+            </div>
+        </div>
+        <div class="ds-filter-actions">
+            <p-button label="Limpar filtro" severity="secondary" [outlined]="true" (onClick)="limparFiltro()" />
+            <p-button label="Filtrar" icon="pi pi-filter" (onClick)="filtrar()" />
+        </div>
+    </div>
+
+    <!-- Tabela com card/borda -->
+    <div class="ds-table-wrapper">
+        <p-table [value]="afastamentos" styleClass="p-datatable-sm ds-table"
+                 [rows]="10" [paginator]="true" [totalRecords]="afastamentos.length"
+                 [showCurrentPageReport]="true"
+                 currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+                 dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="funcionario">Funcionário afastado <p-sortIcon field="funcionario" /></th>
+                    <th pSortableColumn="tipoAfastamento">Tipo de afastamento <p-sortIcon field="tipoAfastamento" /></th>
+                    <th pSortableColumn="dataInicio">Data início <p-sortIcon field="dataInicio" /></th>
+                    <th pSortableColumn="dataFim">Data fim <p-sortIcon field="dataFim" /></th>
+                    <th pSortableColumn="status">Status <p-sortIcon field="status" /></th>
+                    <th style="width:8rem">Ações</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-a>
+                <tr>
+                    <td>{{ a.funcionario }}</td>
+                    <td>{{ a.tipoAfastamento }}</td>
+                    <td>{{ a.dataInicio }}</td>
+                    <td>{{ a.dataFim }}</td>
+                    <td><p-tag [value]="a.status" [severity]="a.status === 'Ativo' ? 'success' : 'secondary'" /></td>
+                    <td>
+                        <div class="ds-acoes-row">
+                            <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
+                                      [pTooltip]="a.status === 'Ativo' ? 'Detalhes' : 'Ver cancelamento'"
+                                      (onClick)="expandir(a)" />
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
+                                      pTooltip="Editar" [disabled]="a.status !== 'Ativo'"
+                                      (onClick)="editar(a)" />
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true"
+                                      severity="danger" pTooltip="Cancelar"
+                                      [disabled]="a.status !== 'Ativo'"
+                                      (onClick)="abrirCancelar(a)" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="6" class="text-center p-4">Nenhum afastamento encontrado</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- ── Dialog: Detalhes (Ativo) ───────────────────────────────── -->
+<p-dialog [(visible)]="dialogDetalhesVisivel"
+          header="Detalhes do afastamento"
+          [modal]="true" [style]="{'width':'440px'}" [closable]="true">
+    @if (sel) {
+        <div class="af-info-grid">
+            <div class="af-row"><span class="af-lbl">Funcionário afastado</span><span class="af-val">{{ sel.funcionario }}</span></div>
+            <div class="af-row"><span class="af-lbl">Tipo de afastamento</span><span class="af-val">{{ sel.tipoAfastamento }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data início</span><span class="af-val">{{ sel.dataInicio }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data fim</span><span class="af-val">{{ sel.dataFim }}</span></div>
+            <div class="af-row"><span class="af-lbl">Status do afastamento</span><span class="af-val">{{ sel.status }}</span></div>
+            <div class="af-row af-row--full"><span class="af-lbl">Observação</span><span class="af-val">{{ sel.observacao }}</span></div>
+            <div class="af-row"><span class="af-lbl">Usuário executor</span><span class="af-val">{{ sel.usuarioExecutor }}</span></div>
+            <div class="af-row"><span class="af-lbl">Unidade do executor</span><span class="af-val">{{ sel.unidadeExecutor }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data cadastro</span><span class="af-val">{{ sel.dataCadastro }}</span></div>
+        </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Entendi" (onClick)="dialogDetalhesVisivel = false" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Dialog: Detalhes (Cancelado) ──────────────────────────── -->
+<p-dialog [(visible)]="dialogDetalhesCanceladoVisivel"
+          header="Detalhes do cancelamento do afastamento"
+          [modal]="true" [style]="{'width':'440px'}" [closable]="true">
+    @if (sel) {
+        <div class="af-info-grid">
+            <div class="af-row"><span class="af-lbl">Funcionário afastado</span><span class="af-val">{{ sel.funcionario }}</span></div>
+            <div class="af-row"><span class="af-lbl">Tipo de afastamento</span><span class="af-val">{{ sel.tipoAfastamento }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data início</span><span class="af-val">{{ sel.dataInicio }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data fim</span><span class="af-val">{{ sel.dataFim }}</span></div>
+            <div class="af-row"><span class="af-lbl">Status do afastamento</span><span class="af-val">{{ sel.status }}</span></div>
+            <div class="af-row af-row--full"><span class="af-lbl">Observação</span><span class="af-val">{{ sel.observacao }}</span></div>
+            <div class="af-row"><span class="af-lbl">Usuário Executor</span><span class="af-val">{{ sel.usuarioExecutor }}</span></div>
+            <div class="af-row"><span class="af-lbl">Unidade do executor</span><span class="af-val">{{ sel.unidadeExecutor }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data cadastro</span><span class="af-val">{{ sel.dataCadastro }}</span></div>
+
+            <div class="af-divider"></div>
+            <p class="af-section-title">Sobre cancelamento</p>
+
+            <div class="af-row"><span class="af-lbl">Responsável</span><span class="af-val">{{ sel.responsavelCancelamento }}</span></div>
+            <div class="af-row"><span class="af-lbl">Data</span><span class="af-val">{{ sel.dataCancelamento }}</span></div>
+            <div class="af-row af-row--full"><span class="af-lbl">Motivo</span><span class="af-val">{{ sel.motivoCancelamento }}</span></div>
+        </div>
+    }
+    <ng-template pTemplate="footer">
+        <p-button label="Entendi" (onClick)="dialogDetalhesCanceladoVisivel = false" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Dialog: Novo / Editar afastamento ─────────────────────── -->
+<p-dialog [(visible)]="dialogFormVisivel"
+          [header]="modoEdicao ? 'Editar afastamento' : 'Novo afastamento'"
+          [modal]="true" [style]="{'width':'min(95vw, 920px)'}" [closable]="true">
+    <div class="af-form">
+        <div class="af-form-row">
+            <div class="af-form-field">
+                <label>Funcionário a ser afastado <span class="ds-required">*</span></label>
+                <div class="af-search-wrap">
+                    <input pInputText [(ngModel)]="novoForm.funcionario" placeholder="Escolha uma opção" class="af-search-input" />
+                    <i class="pi pi-search af-search-icon"></i>
+                </div>
+                <small class="ds-hint">Procure por nome ou CPF.</small>
+            </div>
+            <div class="af-form-field">
+                <label>Tipo de afastamento <span class="ds-required">*</span></label>
+                <p-select [fluid]="true" [(ngModel)]="novoForm.tipoAfastamento"
+                          [options]="tiposAfastamento" placeholder="Escolha uma opção" />
+            </div>
+            <div class="af-form-field">
+                <label>Início <span class="ds-required">*</span></label>
+                <p-datepicker [fluid]="true" [(ngModel)]="novoForm.dataInicio"
+                              dateFormat="dd/mm/yy" [showIcon]="true" />
+            </div>
+            <div class="af-form-field">
+                <label>Fim <span class="ds-required">*</span></label>
+                <p-datepicker [fluid]="true" [(ngModel)]="novoForm.dataFim"
+                              dateFormat="dd/mm/yy" [showIcon]="true" />
+            </div>
+            <div class="af-form-field">
+                <label>Status de afastamento <span class="ds-required">*</span></label>
+                <p-select [fluid]="true" [(ngModel)]="novoForm.status"
+                          [options]="statusOptions" placeholder="Escolha uma opção" />
+            </div>
+        </div>
+        <div class="af-form-field">
+            <label>Observação</label>
+            <textarea pTextarea [(ngModel)]="novoForm.observacao"
+                      placeholder="Digite uma descrição" rows="4"
+                      style="width:100%;resize:vertical"></textarea>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Voltar" severity="secondary" [outlined]="true"
+                  (onClick)="dialogFormVisivel = false" />
+        <p-button label="Salvar" (onClick)="salvarForm()"
+                  [disabled]="!novoForm.funcionario || !novoForm.tipoAfastamento" />
+    </ng-template>
+</p-dialog>
+
+<!-- ── Dialog: Confirmação de cancelamento ───────────────────── -->
+<p-dialog [(visible)]="dialogCancelarVisivel"
+          header="Confirmação de cancelamento"
+          [modal]="true" [style]="{'width':'480px'}" [closable]="true">
+    <div class="af-form">
+        <p style="margin:0 0 0.75rem;font-size:0.875rem;color:var(--text-color)">
+            Deseja realmente <strong>cancelar o afastamento</strong>?<br>
+            Se sim, digite abaixo o motivo.
+        </p>
+        <div class="af-form-field">
+            <label>Motivo <span class="ds-required">*</span></label>
+            <textarea pTextarea [(ngModel)]="motivoCancelamento"
+                      placeholder="Digite uma descrição" rows="4"
+                      style="width:100%;resize:vertical"></textarea>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Não" severity="secondary" [outlined]="true"
+                  (onClick)="dialogCancelarVisivel = false" />
+        <p-button label="Sim" severity="danger" (onClick)="confirmarCancelamento()"
+                  [disabled]="!motivoCancelamento.trim()" />
+    </ng-template>
+</p-dialog>

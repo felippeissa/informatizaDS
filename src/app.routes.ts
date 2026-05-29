@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/layout/component/app.layout';
-import { DsHome } from './app/pages/ds/ds-home';
+import { DsHome } from './app/ds/ds-home';
 import { Notfound } from './app/pages/notfound/notfound';
 
 export const appRoutes: Routes = [
@@ -16,12 +16,12 @@ export const appRoutes: Routes = [
     {
         path: 'assinago',
         component: AppLayout,
-        loadChildren: () => import('./app/pages/assinago/assinago.routes').then(m => m.assinagoRoutes)
+        loadChildren: () => import('./app/assinago/assinago.routes').then(m => m.assinagoRoutes)
     },
     {
         path: 'dracon',
         component: AppLayout,
-        loadChildren: () => import('./app/pages/dracon/dracon.routes').then(m => m.draconRoutes)
+        loadChildren: () => import('./app/dracon/dracon.routes').then(m => m.draconRoutes)
     },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },

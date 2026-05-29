@@ -1,0 +1,163 @@
+<p-toast />
+
+<div class="ds-page">
+
+    <!-- Cabeçalho -->
+    <div class="ds-page-header">
+        <h2 class="ds-page-title">Listar processos</h2>
+        <p-button label="Novo processo" icon="pi pi-plus" (onClick)="novoProcesso()" />
+    </div>
+
+    <!-- Identificação -->
+    <div class="ds-id-bar">
+        <span class="ds-id-label"><i class="pi pi-id-card"></i> Identificação</span>
+        <span class="ds-id-item"><strong>Usuário</strong> João da Silva</span>
+        <span class="ds-id-item"><strong>Unidade</strong> 21189 - Gerência de Tecnologia do Estado</span>
+    </div>
+
+    <!-- Filtros -->
+    <div class="ds-filter-card">
+        <div class="ds-filter-row ds-filter-row--4">
+            <div class="ds-filter-field">
+                <label>Tipo de processo</label>
+                <p-select [fluid]="true" [(ngModel)]="filtro.tipoProcesso"
+                          [options]="tiposProcesso" placeholder="Selecione uma opção" [showClear]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Processo Drácon</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.processoDracon" placeholder="Digite aqui" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Processo SEI</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.processoSEI" placeholder="Digite aqui" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Andamento</label>
+                <p-select [fluid]="true" [(ngModel)]="filtro.andamento"
+                          [options]="andamentos" placeholder="Selecione uma opção" [showClear]="true" />
+            </div>
+        </div>
+        <div class="ds-filter-actions">
+            <p-button label="Mais filtros" icon="pi pi-sliders-h" [text]="true" severity="secondary" />
+            <p-button label="Limpar filtro" severity="secondary" [outlined]="true" (onClick)="limparFiltro()" />
+            <p-button label="Filtrar" icon="pi pi-filter" (onClick)="filtrar()" />
+        </div>
+    </div>
+
+    <!-- Abas + botão Etiqueta -->
+    <div class="ds-tabs-row">
+        <p-tabs [(value)]="abaAtiva">
+            <p-tablist>
+                <p-tab value="todos">Todos os processos</p-tab>
+                <p-tab value="nao-lidos">Processos não lidos e não atribuídos</p-tab>
+                <p-tab value="meus">Meus processos</p-tab>
+            </p-tablist>
+        </p-tabs>
+        <p-button label="Etiqueta" icon="pi pi-tag" [text]="true" severity="secondary" />
+    </div>
+
+    <!-- Tabela -->
+    <p-table [value]="processos" styleClass="p-datatable-sm ds-table"
+             [rows]="10" [paginator]="true" [totalRecords]="60"
+             [showCurrentPageReport]="true"
+             currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+             [(selection)]="selecionados" dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+                <th pSortableColumn="processoDracon">Processo Drácon <p-sortIcon field="processoDracon" /></th>
+                <th pSortableColumn="processoSEI">Processo SEI <p-sortIcon field="processoSEI" /></th>
+                <th pSortableColumn="criadoPor">Criado por <p-sortIcon field="criadoPor" /></th>
+                <th pSortableColumn="tipoProcesso">Tipo de processo <p-sortIcon field="tipoProcesso" /></th>
+                <th pSortableColumn="assunto">Assunto <p-sortIcon field="assunto" /></th>
+                <th style="width:6rem">Ações</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-p>
+            <tr>
+                <td><p-tableCheckbox [value]="p" /></td>
+                <td>{{ p.processoDracon }}</td>
+                <td>{{ p.processoSEI }}</td>
+                <td>{{ p.criadoPor }}</td>
+                <td>{{ p.tipoProcesso }}</td>
+                <td>{{ p.assunto }}</td>
+                <td>
+                    <div class="ds-acoes-row">
+                        <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
+                                  pTooltip="Expandir" (onClick)="expandir(p)" />
+                        <p-button icon="pi pi-bars" [rounded]="true" [text]="true"
+                                  pTooltip="Ações" (onClick)="abrirMenu($event, p)" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr><td colspan="7" class="text-center p-4">Nenhum processo encontrado</td></tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Menu de ações da linha -->
+<p-menu #globalMenu [model]="menuItens" [popup]="true" />
+
+<!-- Drawer: Detalhes do processo -->
+<p-drawer [(visible)]="drawerVisivel" position="right" [style]="{'width':'480px'}">
+    <ng-template pTemplate="header">
+        <span class="font-semibold text-lg">Detalhes do processo</span>
+    </ng-template>
+
+    @if (processoSel) {
+        <div class="ds-drawer-body">
+            <div class="ds-detail-grid">
+                <div class="ds-detail-item">
+                    <label>Processo Drácon</label>
+                    <span>{{ processoSel.processoDracon }}</span>
+                </div>
+                <div class="ds-detail-item">
+                    <label>Processo SEI</label>
+                    <span>{{ processoSel.processoSEI }}</span>
+                </div>
+                <div class="ds-detail-item">
+                    <label>Tipo de processo</label>
+                    <span>{{ processoSel.tipoProcesso }}</span>
+                </div>
+                <div class="ds-detail-item">
+                    <label>Andamento</label>
+                    <span>{{ processoSel.andamento }}</span>
+                </div>
+                <div class="ds-detail-item full">
+                    <label>Assunto</label>
+                    <span>{{ processoSel.assunto }}</span>
+                </div>
+                <div class="ds-detail-item">
+                    <label>Criado por</label>
+                    <span>{{ processoSel.criadoPor }}</span>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="ds-drawer-actions">
+                <p class="ds-drawer-section-title">Processo</p>
+                <p-button label="Tramitar" icon="pi pi-send" [text]="true" class="w-full" />
+                <p-button label="Editar" icon="pi pi-pencil" [text]="true" class="w-full"
+                          (onClick)="editarProcesso(processoSel)" />
+                <p-button label="Documentos relacionados" icon="pi pi-file" [text]="true" class="w-full"
+                          (onClick)="verDocumentos(processoSel)" />
+                <p-button label="Cancelar processo" icon="pi pi-times" [text]="true" severity="danger"
+                          class="w-full" (onClick)="cancelarProcesso(processoSel)" />
+
+                <p class="ds-drawer-section-title" style="margin-top:0.75rem">Etiquetas</p>
+                <p-button label="Vincular etiquetas" icon="pi pi-tag" [text]="true" class="w-full"
+                          (onClick)="vincularEtiquetas(processoSel)" />
+                <p-button label="Histórico de etiquetas" icon="pi pi-history" [text]="true" class="w-full"
+                          (onClick)="historicoEtiquetas(processoSel)" />
+            </div>
+        </div>
+    }
+
+    <ng-template pTemplate="footer">
+        <p-button label="Fechar" severity="secondary" [outlined]="true"
+                  (onClick)="drawerVisivel = false" class="w-full" />
+    </ng-template>
+</p-drawer>

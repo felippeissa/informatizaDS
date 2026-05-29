@@ -1,0 +1,117 @@
+<p-toast />
+
+<div class="ds-page">
+
+    <!-- Cabeçalho -->
+    <div class="ds-page-header">
+        <h2 class="ds-page-title">Listar auditoria de atos</h2>
+    </div>
+
+    <!-- Identificação -->
+    <div class="ds-id-bar">
+        <span class="ds-id-label"><i class="pi pi-id-card"></i> Identificação</span>
+        <span class="ds-id-item"><strong>Usuário</strong> João da Silva</span>
+        <span class="ds-id-item"><strong>Unidade</strong> 21189 - Gerência de Tecnologia do Estado</span>
+    </div>
+
+    <!-- Filtros -->
+    <div class="ds-filter-card">
+        <div class="ds-filter-row ds-filter-row--4">
+            <div class="ds-filter-field">
+                <label>Processo SEI</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.processoSEI" placeholder="Digite aqui" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Número do ato</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.numeroAto" placeholder="Digite aqui" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Tipo modelo ato</label>
+                <p-select [fluid]="true" [(ngModel)]="filtro.tipoModeloAto"
+                          [options]="tiposModeloAto" placeholder="Selecione uma opção" [showClear]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label>Processo interno</label>
+                <input pInputText [fluid]="true" [(ngModel)]="filtro.processoInterno" placeholder="Digite aqui" />
+            </div>
+        </div>
+        <div class="ds-filter-actions">
+            <p-button label="Mais filtros" icon="pi pi-sliders-h" [text]="true" severity="secondary" />
+            <p-button label="Limpar filtro" severity="secondary" [outlined]="true" (onClick)="limparFiltro()" />
+            <p-button label="Filtrar" icon="pi pi-filter" (onClick)="filtrar()" />
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="ds-table-wrapper">
+        <p-table [value]="registros" styleClass="p-datatable-sm ds-table"
+                 [rows]="10" [paginator]="true" [totalRecords]="registros.length"
+                 [showCurrentPageReport]="true"
+                 currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+                 dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="numeroAto">Nº ato <p-sortIcon field="numeroAto" /></th>
+                    <th pSortableColumn="orgao">Órgão <p-sortIcon field="orgao" /></th>
+                    <th pSortableColumn="unidade">Unidade <p-sortIcon field="unidade" /></th>
+                    <th pSortableColumn="tipoModeloAto">Tipo modelo ato <p-sortIcon field="tipoModeloAto" /></th>
+                    <th style="width:6rem">Ações</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-r>
+                <tr>
+                    <td>{{ r.numeroAto }}</td>
+                    <td>{{ r.orgao }}</td>
+                    <td>{{ r.unidade }}</td>
+                    <td>{{ r.tipoModeloAto }}</td>
+                    <td>
+                        <div class="ds-acoes-row">
+                            <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
+                                      pTooltip="Expandir" (onClick)="expandir(r)" />
+                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true"
+                                      pTooltip="Visualizar" (onClick)="visualizar(r)" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="5" class="text-center p-4">Nenhum registro encontrado</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- Drawer: Detalhes da auditoria -->
+<p-drawer [(visible)]="drawerVisivel" position="right" [style]="{'width':'460px'}">
+    <ng-template pTemplate="header">
+        <span class="font-semibold text-lg">Detalhes da auditoria</span>
+    </ng-template>
+
+    @if (itemSel) {
+        <div class="ds-drawer-body">
+            <div class="ds-detail-grid">
+                <div class="ds-detail-item">
+                    <label>Nº ato</label>
+                    <span>{{ itemSel.numeroAto }}</span>
+                </div>
+                <div class="ds-detail-item">
+                    <label>Órgão</label>
+                    <span>{{ itemSel.orgao }}</span>
+                </div>
+                <div class="ds-detail-item full">
+                    <label>Unidade</label>
+                    <span>{{ itemSel.unidade }}</span>
+                </div>
+                <div class="ds-detail-item full">
+                    <label>Tipo modelo ato</label>
+                    <span>{{ itemSel.tipoModeloAto }}</span>
+                </div>
+            </div>
+        </div>
+    }
+
+    <ng-template pTemplate="footer">
+        <p-button label="Fechar" severity="secondary" [outlined]="true"
+                  (onClick)="drawerVisivel = false" class="w-full" />
+    </ng-template>
+</p-drawer>
