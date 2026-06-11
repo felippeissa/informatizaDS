@@ -39,6 +39,8 @@ export class AppMenu implements OnInit, OnDestroy {
             this.model = this.assinagoMenu;
         } else if (url.startsWith('/dracon')) {
             this.model = this.draconMenu;
+        } else if (url.startsWith('/godev')) {
+            this.model = this.godevMenu;
         } else {
             this.model = this.dsMenu;
         }
@@ -110,6 +112,19 @@ export class AppMenu implements OnInit, OnDestroy {
 
                 // ── 4. Relatórios ─────────────────────────────────────
                 { label: 'Relatórios', routerLink: ['/dracon/relatorios'] },
+            ]
+        },
+    ];
+
+    /* ══════════════════════════════════════════════════════
+       Menu: GO.DEV
+    ══════════════════════════════════════════════════════ */
+    private godevMenu: MenuItem[] = [
+        {
+            items: [
+                { label: 'Página inicial',   icon: 'pi pi-home',      routerLink: ['/godev/pagina-inicial'] },
+                { label: 'Projetos',         icon: 'pi pi-folder',    routerLink: ['/godev/projetos'] },
+                { label: 'Manual Inteligente', icon: 'pi pi-book',    routerLink: ['/godev/pagina-inicial'] },
             ]
         },
     ];

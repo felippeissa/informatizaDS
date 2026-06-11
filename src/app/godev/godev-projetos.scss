@@ -1,0 +1,162 @@
+// Card branco que envolve título, busca e tabela
+.gp-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.gp-card-header { margin: 0; }
+
+// Tabela sem borda própria (o card já tem) e com linhas mais respiradas
+:host ::ng-deep .gp-card .p-datatable {
+    .p-datatable-thead > tr > th {
+        background: var(--surface-ground);
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 0.8125rem;
+        padding: 0.75rem 1rem;
+        border-color: var(--surface-border);
+
+        &:first-child { border-top-left-radius: 8px; }
+        &:last-child  { border-top-right-radius: 8px; }
+    }
+
+    .p-datatable-tbody > tr > td {
+        padding: 0.875rem 1rem;
+        border-color: var(--surface-border);
+        font-size: 0.875rem;
+    }
+
+    .p-datatable-tbody > tr:hover {
+        background: var(--surface-hover);
+    }
+
+    .p-paginator {
+        background: transparent;
+        border: none;
+        padding-top: 1rem;
+    }
+}
+
+.gp-search {
+    position: relative;
+    max-width: 400px;
+
+    .gp-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-color-secondary);
+        font-size: 14px;
+        pointer-events: none;
+    }
+
+    .gp-search-input {
+        width: 100%;
+        padding-left: 36px !important;
+    }
+}
+
+// Linha clicável
+.gp-row {
+    cursor: pointer;
+}
+
+.gp-cell-projeto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.gp-nome {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.gp-desc {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 480px;
+}
+
+.gp-tipo-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.gp-membros {
+    display: flex;
+    align-items: center;
+}
+
+.gp-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--surface-card);
+    cursor: default;
+
+    & + & { margin-left: -8px; }
+
+    &--more {
+        background: var(--surface-border);
+        color: var(--text-color-secondary);
+        font-size: 9px;
+    }
+}
+
+.gp-contagem {
+    font-size: 0.8125rem;
+    color: var(--text-color-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    i { font-size: 12px; color: var(--primary-color); }
+}
+
+.gp-sinc {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+
+    i { font-size: 11px; }
+}
+
+.gp-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    gap: 1rem;
+    color: var(--text-color-secondary);
+
+    i { font-size: 3rem; opacity: 0.3; }
+    p { margin: 0; font-size: 1rem; }
+}

@@ -1,0 +1,99 @@
+<div class="ds-page">
+
+    <!-- Card branco: título + busca + tabela -->
+    <div class="gp-card">
+
+        <div class="ds-page-header gp-card-header">
+            <h2 class="ds-page-title">Projetos</h2>
+            <p-button label="Novo projeto" icon="pi pi-plus" (onClick)="novo()" />
+        </div>
+
+        <!-- Busca rápida -->
+        <div class="gp-search">
+            <i class="pi pi-search gp-search-icon"></i>
+            <input pInputText [ngModel]="busca()" (ngModelChange)="busca.set($event)"
+                   placeholder="Buscar por nome ou descrição..." class="gp-search-input" />
+        </div>
+
+        <!-- Tabela de projetos -->
+        <p-table [value]="filtrados()" styleClass="p-datatable-sm ds-table"
+             [rows]="10" [paginator]="true"
+             [showCurrentPageReport]="true"
+             currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+             dataKey="id">
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="nome">Projeto <p-sortIcon field="nome" /></th>
+                <th pSortableColumn="tipo" style="width:8rem">Tipo <p-sortIcon field="tipo" /></th>
+                <th>Membros</th>
+                <th style="width:7rem">Documentos</th>
+                <th style="width:6rem">Telas</th>
+                <th pSortableColumn="ultimaPublicacao" style="width:11rem">Última publicação <p-sortIcon field="ultimaPublicacao" /></th>
+                <th style="width:6rem">Ações</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-p>
+            <tr class="gp-row" (click)="abrir(p)">
+                <td>
+                    <div class="gp-cell-projeto">
+                        <span class="gp-nome">{{ p.nome }}</span>
+                        <span class="gp-desc">{{ p.descricao }}</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="gp-tipo-badge"
+                          [style.background]="bgTipo(p.tipo)"
+                          [style.color]="corTipo(p.tipo)">
+                        {{ p.tipo }}
+                    </span>
+                </td>
+                <td>
+                    <div class="gp-membros">
+                        @for (m of p.membros.slice(0, 4); track m.id) {
+                            <div class="gp-avatar" [pTooltip]="m.nome + ' · ' + m.papel" tooltipPosition="top">
+                                {{ m.avatar }}
+                            </div>
+                        }
+                        @if (p.membros.length > 4) {
+                            <div class="gp-avatar gp-avatar--more">+{{ p.membros.length - 4 }}</div>
+                        }
+                    </div>
+                </td>
+                <td>
+                    <span class="gp-contagem"><i class="pi pi-file-edit"></i> {{ p.documentos.length }}</span>
+                </td>
+                <td>
+                    <span class="gp-contagem"><i class="pi pi-desktop"></i> {{ p.telas.length }}</span>
+                </td>
+                <td>
+                    <span class="gp-sinc"><i class="pi pi-sync"></i> {{ p.ultimaPublicacao }}</span>
+                </td>
+                <td>
+                    <div class="ds-acoes-row">
+                        <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
+                                  pTooltip="Abrir workspace" tooltipPosition="top"
+                                  (onClick)="$event.stopPropagation(); abrir(p)" />
+                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
+                                  pTooltip="Editar projeto" tooltipPosition="top"
+                                  (onClick)="$event.stopPropagation(); editar(p)" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">
+                    <div class="gp-empty">
+                        <i class="pi pi-folder-open"></i>
+                        <p>Nenhum projeto encontrado</p>
+                        <p-button label="Criar primeiro projeto" icon="pi pi-plus" (onClick)="novo()" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    </div>
+</div>

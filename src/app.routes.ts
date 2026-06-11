@@ -23,6 +23,11 @@ export const appRoutes: Routes = [
         component: AppLayout,
         loadChildren: () => import('./app/dracon/dracon.routes').then(m => m.draconRoutes)
     },
+    {
+        path: 'godev',
+        component: AppLayout,
+        loadChildren: () => import('./app/godev/godev.routes').then(m => m.godevRoutes)
+    },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/auth/login' }
