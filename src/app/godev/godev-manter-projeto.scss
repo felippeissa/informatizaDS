@@ -1,0 +1,165 @@
+.gmp-header-acoes {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.gmp-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    align-items: start;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gmp-section {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.gmp-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gmp-section-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i { color: var(--primary-color); }
+}
+
+.gmp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.gmp-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.gmp-required { color: #ef4444; }
+
+.gmp-input { width: 100% !important; }
+
+.gmp-empty-membros {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+    text-align: center;
+
+    i { font-size: 2.5rem; opacity: 0.25; }
+    p { margin: 0; font-size: 0.9375rem; font-weight: 600; color: var(--text-color); }
+    span { font-size: 0.8125rem; max-width: 320px; }
+}
+
+.gmp-membro-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--surface-border);
+
+    &:last-of-type { border-bottom: none; padding-bottom: 0; }
+}
+
+.gmp-membro-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.gmp-membro-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.gmp-membro-nome {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gmp-membro-email {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gmp-papel-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.gmp-dialog-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.gmp-erro {
+    font-size: 0.8125rem;
+    color: #ef4444;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+}
+
+.gmp-loading-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    color: var(--text-color-secondary);
+    font-size: 0.9375rem;
+}
+
+.gmp-confirm-texto {
+    margin: 0;
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+}

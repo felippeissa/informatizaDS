@@ -98,6 +98,10 @@ import { filter } from 'rxjs/operators';
                     <a class="layout-topbar-logo" routerLink="/dracon">
                         <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:var(--text-color)">DRACON</span>
                     </a>
+                } @else if (activeSystem().id === 'godev') {
+                    <a class="layout-topbar-logo" routerLink="/godev">
+                        <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:#16A34A">GO<span style="color:var(--text-color)">.</span>DEV</span>
+                    </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">
                         <div class="ds-logo-text">
@@ -109,6 +113,12 @@ import { filter } from 'rxjs/operators';
             </div>
 
             <div class="layout-topbar-actions">
+                @if (activeSystem().id === 'godev') {
+                    <button class="sys-btn" style="background:var(--primary-color);color:#fff;border-radius:6px;padding:0 14px;gap:6px;font-weight:600;font-size:13px" routerLink="/godev/projetos/novo">
+                        <i class="pi pi-plus" style="font-size:11px"></i>
+                        Novo projeto
+                    </button>
+                }
                 <div class="layout-config-menu">
 
                     <!-- ── System Switcher ── -->
@@ -225,14 +235,14 @@ export class AppTopbar implements OnInit {
             comingSoon: false
         },
         {
-            id: 'protege',
-            name: 'Protege',
-            desc: 'Sistema de proteção social',
-            icon: 'pi pi-shield',
-            color: '#2563EB',
-            bgColor: 'color-mix(in srgb, #2563EB 12%, transparent)',
-            route: '/protege',
-            comingSoon: true
+            id: 'godev',
+            name: 'GO.DEV',
+            desc: 'Plataforma de desenvolvimento com IA',
+            icon: 'pi pi-code',
+            color: '#16A34A',
+            bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
+            route: '/godev',
+            comingSoon: false
         },
     ];
 
@@ -246,7 +256,7 @@ export class AppTopbar implements OnInit {
     }
 
     private syncSystemFromUrl(url: string) {
-        const matched = this.systems.find(s => !s.comingSoon && url.startsWith(s.route));
+        const matched = this.systems.find(s => !s.comingSoon && url.startsWith('/' + s.id));
         if (matched) this.activeSystem.set(matched);
     }
 

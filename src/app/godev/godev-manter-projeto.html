@@ -1,0 +1,138 @@
+<div class="ds-page">
+
+    <div class="ds-page-header">
+        <h2 class="ds-page-title">{{ isEdicao ? 'Editar projeto' : 'Novo projeto' }}</h2>
+        <div class="gmp-header-acoes">
+            @if (isEdicao) {
+                <p-button label="Inativar" icon="pi pi-trash" severity="danger" [outlined]="true"
+                          (onClick)="inativarModal = true" />
+            }
+            <p-button label="Cancelar" icon="pi pi-times" [outlined]="true" (onClick)="cancelar()" />
+            <p-button [label]="isEdicao ? 'Salvar alterações' : 'Criar projeto'"
+                      icon="pi pi-check" (onClick)="salvar()"
+                      [disabled]="!form.nome.trim()" />
+        </div>
+    </div>
+
+    <div class="gmp-layout">
+
+        <!-- Coluna esquerda: dados do projeto -->
+        <div class="gmp-section">
+            <h3 class="gmp-section-title">
+                <i class="pi pi-info-circle"></i> Informações do projeto
+            </h3>
+
+            <div class="gmp-field">
+                <label class="gmp-label" for="gmp-nome">Nome do projeto <span class="gmp-required">*</span></label>
+                <input id="gmp-nome" pInputText [(ngModel)]="form.nome"
+                       placeholder="Ex: Portal do Cidadão"
+                       class="gmp-input" maxlength="80" />
+            </div>
+
+            <div class="gmp-field">
+                <label class="gmp-label" for="gmp-desc">Descrição</label>
+                <textarea id="gmp-desc" pTextarea [(ngModel)]="form.descricao"
+                          placeholder="Descreva o objetivo e escopo do projeto..."
+                          class="gmp-input" rows="4"></textarea>
+            </div>
+
+            <div class="gmp-field">
+                <label class="gmp-label">Tipo de projeto</label>
+                <p-select [options]="tipoOpcoes" [(ngModel)]="form.tipo"
+                          optionLabel="label" optionValue="value"
+                          placeholder="Selecione o tipo"
+                          styleClass="gmp-input" />
+            </div>
+        </div>
+
+        <!-- Coluna direita: membros -->
+        <div class="gmp-section">
+            <div class="gmp-section-header">
+                <h3 class="gmp-section-title">
+                    <i class="pi pi-users"></i> Membros do projeto
+                </h3>
+                <p-button label="Adicionar membro" icon="pi pi-user-plus" size="small"
+                          [outlined]="true" (onClick)="abrirAddMembro()" />
+            </div>
+
+            @for (m of membros(); track m.id) {
+                <div class="gmp-membro-row">
+                    <div class="gmp-membro-avatar">{{ m.avatar }}</div>
+                    <div class="gmp-membro-info">
+                        <span class="gmp-membro-nome">{{ m.nome }}</span>
+                        <span class="gmp-membro-email">{{ m.email }}</span>
+                    </div>
+                    <span class="gmp-papel-badge"
+                          [style.background]="bgPapel[m.papel]"
+                          [style.color]="corPapel[m.papel]">
+                        {{ m.papel }}
+                    </span>
+                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true" size="small"
+                              severity="danger" pTooltip="Remover membro" tooltipPosition="left"
+                              (onClick)="removerMembro(m.id)" />
+                </div>
+            } @empty {
+                <div class="gmp-empty-membros">
+                    <i class="pi pi-users"></i>
+                    <p>Nenhum membro adicionado</p>
+                    <span>Adicione as pessoas que terão acesso a este projeto e defina o papel de cada uma</span>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal: adicionar membro -->
+<p-dialog header="Adicionar membro" [(visible)]="addMembroModal"
+          [modal]="true" [draggable]="false" [style]="{width:'440px'}">
+
+    <div class="gmp-dialog-body">
+        <div class="gmp-field">
+            <label class="gmp-label">Nome completo <span class="gmp-required">*</span></label>
+            <input pInputText [(ngModel)]="novoMembro.nome"
+                   placeholder="Ex: Ana Souza" class="gmp-input" />
+        </div>
+        <div class="gmp-field">
+            <label class="gmp-label">E-mail <span class="gmp-required">*</span></label>
+            <input pInputText [(ngModel)]="novoMembro.email"
+                   placeholder="nome@goias.gov.br" class="gmp-input" />
+        </div>
+        <div class="gmp-field">
+            <label class="gmp-label">Papel no projeto <span class="gmp-required">*</span></label>
+            <p-select [options]="papelOpcoes" [(ngModel)]="novoMembro.papel"
+                      optionLabel="label" optionValue="value" appendTo="body"
+                      placeholder="Selecione o papel"
+                      styleClass="gmp-input" />
+        </div>
+        @if (membroErro) {
+            <div class="gmp-erro">{{ membroErro }}</div>
+        }
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [text]="true" (onClick)="addMembroModal = false" />
+        <p-button label="Adicionar" icon="pi pi-user-plus" (onClick)="confirmarAddMembro()" />
+    </ng-template>
+</p-dialog>
+
+<!-- Modal: criando/salvando -->
+<p-dialog [visible]="salvando()" [modal]="true" [closable]="false"
+          [draggable]="false" [showHeader]="false" [style]="{width:'320px'}">
+    <div class="gmp-loading-body">
+        <p-progressSpinner />
+        <span>{{ isEdicao ? 'Salvando alterações...' : 'Criando workspace...' }}</span>
+    </div>
+</p-dialog>
+
+<!-- Modal: confirmar inativação -->
+<p-dialog header="Inativar projeto" [(visible)]="inativarModal"
+          [modal]="true" [draggable]="false" [style]="{width:'400px'}">
+    <p class="gmp-confirm-texto">
+        Deseja realmente inativar este projeto? Todos os membros perderão o acesso.
+    </p>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [text]="true" (onClick)="inativarModal = false" />
+        <p-button label="Inativar" icon="pi pi-trash" severity="danger" (onClick)="inativar()" />
+    </ng-template>
+</p-dialog>

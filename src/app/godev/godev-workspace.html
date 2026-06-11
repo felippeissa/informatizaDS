@@ -1,0 +1,515 @@
+<div class="gw-root">
+
+    <!-- Barra superior do workspace -->
+    <div class="gw-topbar">
+        <div class="gw-topbar-left">
+            <p-button icon="pi pi-arrow-left" [text]="true" [rounded]="true"
+                      pTooltip="Voltar para projetos" tooltipPosition="right"
+                      (onClick)="voltar()" />
+            <div class="gw-projeto-info">
+                <span class="gw-projeto-nome">{{ projeto.nome }}</span>
+                <span class="gw-projeto-tipo">{{ projeto.tipo }}</span>
+            </div>
+        </div>
+
+        <!-- Segmented control central -->
+        <div class="gw-seg">
+            @for (a of abas; track a.id) {
+                <button class="gw-seg-btn" [class.gw-seg-btn--ativo]="aba() === a.id"
+                        (click)="aba.set(a.id)">
+                    <i class="pi" [class]="a.icon"></i> {{ a.label }}
+                </button>
+            }
+        </div>
+
+        <div class="gw-topbar-right">
+            <span class="gw-sinc-info" pTooltip="Última publicação" tooltipPosition="bottom">
+                <i class="pi pi-sync"></i> {{ projeto.ultimaPublicacao }}
+            </span>
+            <p-button label="Publicar" icon="pi pi-upload"
+                      pTooltip="Sincroniza a versão atual para todos os membros"
+                      tooltipPosition="bottom"
+                      (onClick)="publicar()" [loading]="publicando()" />
+        </div>
+    </div>
+
+    <!-- Corpo: chat fixo à esquerda + palco do artefato à direita -->
+    <div class="gw-body">
+
+        <!-- ============ CHAT (sempre visível) ============ -->
+        <aside class="gw-chat">
+            <div class="gw-chat-header">
+                <div class="gw-chat-header-row">
+                    <div class="gw-chat-titulo">
+                        <i class="pi pi-sparkles"></i> Assistente IA
+                    </div>
+                    <p-button icon="pi pi-plus" [text]="true" [rounded]="true" size="small"
+                              pTooltip="Novo chat para este contexto" tooltipPosition="left"
+                              (onClick)="novoChat()" />
+                </div>
+                <span class="gw-chat-contexto" pTooltip="O assistente responde no contexto do que está aberto ao lado"
+                      tooltipPosition="bottom">
+                    {{ chatContexto }}
+                </span>
+
+                <!-- Lista de chats deste documento/tela -->
+                @if (sessoesAtuais.length > 1 || sessaoAtiva.msgs.length) {
+                    <div class="gw-chat-sessoes">
+                        @for (s of sessoesAtuais; track s.id) {
+                            <button class="gw-sessao" [class.gw-sessao--ativa]="s.id === sessaoAtiva.id"
+                                    (click)="selecionarChat(s)">
+                                <i class="pi pi-comment"></i>
+                                <span class="gw-sessao-titulo">{{ s.titulo }}</span>
+                                @if (sessoesAtuais.length > 1) {
+                                    <i class="pi pi-times gw-sessao-fechar"
+                                       pTooltip="Excluir chat" tooltipPosition="top"
+                                       (click)="excluirChat(s, $event)"></i>
+                                }
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="gw-chat-msgs" #chatScroll>
+                @if (!chat.length) {
+                    <div class="gw-chat-boasvindas">
+                        <div class="gw-chat-boasvindas-icone"><i class="pi pi-sparkles"></i></div>
+                        <p>Como posso ajudar com este projeto?</p>
+                        <span>O assistente acompanha o que você está vendo ao lado e responde no contexto.</span>
+                    </div>
+                }
+                @for (m of chat; track $index) {
+                    @if (m.autor === 'user') {
+                        <div class="gw-msg gw-msg--user">
+                            @if (m.contexto) {
+                                <span class="gw-msg-contexto">{{ m.contexto }}</span>
+                            }
+                            {{ m.texto }}
+                        </div>
+                    } @else {
+                        <div class="gw-msg gw-msg--ia">
+                            <div class="gw-msg-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                            <div class="gw-msg-ia-texto">{{ m.texto }}</div>
+                        </div>
+                    }
+                }
+                @if (chatDigitando) {
+                    <div class="gw-msg gw-msg--ia">
+                        <div class="gw-msg-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                        <div class="gw-msg-ia-texto gw-typing"><span></span><span></span><span></span></div>
+                    </div>
+                }
+            </div>
+
+            <!-- Sugestões rápidas -->
+            @if (sugestoes.length && !chatDigitando) {
+                <div class="gw-chat-sugestoes">
+                    @for (s of sugestoes; track s) {
+                        <button class="gw-sugestao" (click)="sugestao(s)">{{ s }}</button>
+                    }
+                </div>
+            }
+
+            <div class="gw-chat-input-row">
+                <input pInputText class="gw-chat-input" [(ngModel)]="chatInput"
+                       [placeholder]="chatPlaceholder"
+                       (keydown.enter)="enviarChat()" />
+                <p-button icon="pi pi-send" [rounded]="true"
+                          (onClick)="enviarChat()" [disabled]="!chatInput.trim()" />
+            </div>
+        </aside>
+
+        <!-- ============ PALCO DO ARTEFATO ============ -->
+        <main class="gw-palco">
+
+            <!-- ===== REQUISITOS ===== -->
+            @if (aba() === 'requisitos') {
+                <div class="gw-chips-row">
+                    @for (d of projeto.documentos; track d.id) {
+                        <button class="gw-chip" [class.gw-chip--ativo]="docSelecionado?.id === d.id"
+                                (click)="selecionarDoc(d)">
+                            <i class="pi pi-file-edit"></i> {{ d.titulo }}
+                        </button>
+                    }
+                    <button class="gw-chip gw-chip--add" (click)="novoDocModal = true"
+                            pTooltip="Novo documento" tooltipPosition="top">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                </div>
+
+                @if (docSelecionado) {
+                    <div class="gw-artefato">
+                        <div class="gw-artefato-header">
+                            <div class="gw-artefato-meta">
+                                <span class="gw-artefato-titulo">{{ docSelecionado.titulo }}</span>
+                                <span class="gw-artefato-sub">{{ docSelecionado.criadoPor }} · atualizado {{ docSelecionado.atualizadoEm }}</span>
+                            </div>
+                            <div class="gw-artefato-acoes">
+                                @if (!editandoDoc) {
+                                    <p-button label="Editar" icon="pi pi-pencil" size="small"
+                                              [outlined]="true" (onClick)="editandoDoc = true" />
+                                } @else {
+                                    <p-button label="Cancelar" size="small" [text]="true"
+                                              (onClick)="cancelarEdicaoDoc()" />
+                                    <p-button label="Salvar" icon="pi pi-check" size="small"
+                                              (onClick)="salvarDoc()" />
+                                }
+                            </div>
+                        </div>
+                        @if (editandoDoc) {
+                            <textarea class="gw-md-editor" [(ngModel)]="docConteudo" spellcheck="false"></textarea>
+                        } @else {
+                            <pre class="gw-md-preview">{{ docConteudo }}</pre>
+                        }
+                    </div>
+                } @else {
+                    <div class="gw-vazio">
+                        <i class="pi pi-file-edit"></i>
+                        <p>Nenhum documento ainda</p>
+                        <p-button label="Criar documento" icon="pi pi-plus" (onClick)="novoDocModal = true" />
+                    </div>
+                }
+            }
+
+            <!-- ===== TELAS ===== -->
+            @if (aba() === 'telas') {
+                <div class="gw-chips-row">
+                    @for (t of projeto.telas; track t.id) {
+                        <button class="gw-chip" [class.gw-chip--ativo]="telaSelecionada?.id === t.id"
+                                (click)="selecionarTela(t)">
+                            <i class="pi gw-chip-status" [class]="iconStatus[t.status]"
+                               [style.color]="corStatus[t.status]"></i>
+                            {{ t.nome }}
+                        </button>
+                    }
+                    <button class="gw-chip gw-chip--add" (click)="novaTelaModal = true"
+                            pTooltip="Nova tela" tooltipPosition="top">
+                        <i class="pi pi-plus"></i>
+                    </button>
+                </div>
+
+                @if (telaSelecionada) {
+                    <div class="gw-artefato">
+                        <div class="gw-artefato-header">
+                            <div class="gw-artefato-meta">
+                                <span class="gw-artefato-titulo">{{ telaSelecionada.nome }}</span>
+                                <span class="gw-status-badge"
+                                      [style.background]="bgStatus[telaSelecionada.status]"
+                                      [style.color]="corStatus[telaSelecionada.status]">
+                                    <i class="pi" [class]="iconStatus[telaSelecionada.status]"></i>
+                                    {{ labelStatus[telaSelecionada.status] }}
+                                </span>
+                            </div>
+                            <div class="gw-artefato-acoes">
+                                <p-button icon="pi pi-external-link" [outlined]="true" size="small"
+                                          pTooltip="Abrir em nova aba" tooltipPosition="top"
+                                          (onClick)="abrirPreviewNovaAba(telaSelecionada)" />
+                                @if (telaSelecionada.status !== 'aprovada') {
+                                    <p-button label="Aprovar" icon="pi pi-check" size="small"
+                                              severity="success" (onClick)="aprovarTela(telaSelecionada)" />
+                                }
+                                @if (telaSelecionada.status !== 'reprovada') {
+                                    <p-button label="Reprovar" icon="pi pi-times" size="small"
+                                              severity="danger" [outlined]="true"
+                                              (onClick)="reprovarTela(telaSelecionada)" />
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Editor canvas -->
+                        <div class="gw-editor-area">
+
+                            <!-- Paleta de componentes -->
+                            <div class="gw-paleta">
+                                <span class="gw-paleta-titulo">Componentes</span>
+                                @for (item of paleta; track item.tipo) {
+                                    <button class="gw-paleta-btn" (click)="adicionarComp(item.tipo)"
+                                            [pTooltip]="'Adicionar ' + item.label" tooltipPosition="right">
+                                        <i class="pi" [class]="item.icon"></i>
+                                        <span>{{ item.label }}</span>
+                                    </button>
+                                }
+                            </div>
+
+                            <!-- Canvas -->
+                            <div class="gw-browser" (click)="desselecionarComp()">
+                                <div class="gw-canvas">
+                                    <div class="gw-canvas-card">
+                                        @for (c of telaSelecionada.componentes; track c.id) {
+                                            <div class="gw-comp"
+                                                 [class.gw-comp--sel]="compSelecionado?.id === c.id"
+                                                 [style.width.%]="c.largura"
+                                                 (click)="selecionarComp(c, $event)">
+
+                                                @switch (c.tipo) {
+                                                    @case ('titulo') {
+                                                        <h1 class="gw-c-titulo">{{ c.texto }}</h1>
+                                                    }
+                                                    @case ('texto') {
+                                                        <p class="gw-c-texto">{{ c.texto }}</p>
+                                                    }
+                                                    @case ('campo') {
+                                                        <div class="gw-c-campo">
+                                                            <label>{{ c.texto }}</label>
+                                                            <input type="text" placeholder="Digite aqui" readonly />
+                                                        </div>
+                                                    }
+                                                    @case ('botao') {
+                                                        <button class="gw-c-botao"
+                                                                [class.gw-c-botao--sec]="c.variante === 'secundario'">
+                                                            {{ c.texto }}
+                                                        </button>
+                                                    }
+                                                    @case ('tabela') {
+                                                        <table class="gw-c-tabela">
+                                                            <thead>
+                                                                <tr>
+                                                                    @for (col of colunasDe(c); track $index) {
+                                                                        <th>{{ col }}</th>
+                                                                    }
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @for (linha of c.linhas; track $index) {
+                                                                    <tr>
+                                                                        @for (celula of linha; track $index) {
+                                                                            <td>{{ celula }}</td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    }
+                                                }
+                                            </div>
+                                        } @empty {
+                                            <div class="gw-canvas-vazio">
+                                                <i class="pi pi-objects-column"></i>
+                                                <span>Adicione componentes pela paleta ao lado</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Painel de propriedades -->
+                            <div class="gw-props">
+                                @if (compSelecionado) {
+                                    <span class="gw-props-titulo">
+                                        <i class="pi pi-sliders-h"></i> Propriedades
+                                    </span>
+
+                                    <div class="gw-props-field">
+                                        <label>{{ compSelecionado.tipo === 'tabela' ? 'Colunas (separe com |)' : 'Texto' }}</label>
+                                        <input pInputText [(ngModel)]="compSelecionado.texto" class="gw-props-input" />
+                                    </div>
+
+                                    <div class="gw-props-field">
+                                        <label>Largura — {{ compSelecionado.largura }}%</label>
+                                        <input type="range" min="10" max="100" step="2"
+                                               [(ngModel)]="compSelecionado.largura" class="gw-props-range" />
+                                    </div>
+
+                                    @if (compSelecionado.tipo === 'botao') {
+                                        <div class="gw-props-field">
+                                            <label>Variante</label>
+                                            <div class="gw-props-variantes">
+                                                <button class="gw-props-var"
+                                                        [class.gw-props-var--ativa]="compSelecionado.variante !== 'secundario'"
+                                                        (click)="compSelecionado.variante = 'primario'">Primário</button>
+                                                <button class="gw-props-var"
+                                                        [class.gw-props-var--ativa]="compSelecionado.variante === 'secundario'"
+                                                        (click)="compSelecionado.variante = 'secundario'">Secundário</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="gw-props-field">
+                                        <label>Posição</label>
+                                        <div class="gw-props-variantes">
+                                            <button class="gw-props-var" pTooltip="Mover para cima" tooltipPosition="bottom"
+                                                    (click)="moverComp(compSelecionado, -1)"><i class="pi pi-arrow-up"></i></button>
+                                            <button class="gw-props-var" pTooltip="Mover para baixo" tooltipPosition="bottom"
+                                                    (click)="moverComp(compSelecionado, 1)"><i class="pi pi-arrow-down"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <p-button label="Remover componente" icon="pi pi-trash"
+                                              severity="danger" [outlined]="true" size="small"
+                                              styleClass="gw-props-remover"
+                                              (onClick)="removerComp(compSelecionado)" />
+                                } @else {
+                                    <div class="gw-props-vazio">
+                                        <i class="pi pi-hand-pointer"></i>
+                                        <span>Clique em um componente no canvas para editar texto, largura e posição</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="gw-vazio">
+                        <i class="pi pi-desktop"></i>
+                        <p>Nenhuma tela ainda</p>
+                        <p-button label="Criar tela" icon="pi pi-plus" (onClick)="novaTelaModal = true" />
+                    </div>
+                }
+            }
+
+            <!-- ===== CÓDIGO ===== -->
+            @if (aba() === 'codigo') {
+                <div class="gw-chips-row">
+                    <button class="gw-chip" [class.gw-chip--ativo]="codigoAba() === 'frontend'"
+                            (click)="codigoAba.set('frontend')">
+                        <i class="pi pi-globe"></i> Frontend
+                    </button>
+                    <button class="gw-chip" [class.gw-chip--ativo]="codigoAba() === 'backend'"
+                            (click)="codigoAba.set('backend')">
+                        <i class="pi pi-server"></i> Backend
+                    </button>
+                    <button class="gw-chip" [class.gw-chip--ativo]="codigoAba() === 'json'"
+                            (click)="codigoAba.set('json')">
+                        <i class="pi pi-code"></i> JSON
+                    </button>
+                </div>
+
+                <div class="gw-artefato gw-artefato--code">
+                    <div class="gw-artefato-header gw-artefato-header--dark">
+                        <div class="gw-artefato-meta">
+                            <span class="gw-artefato-titulo gw-artefato-titulo--claro">
+                                {{ codigoAba() === 'frontend' ? 'frontend.html' : codigoAba() === 'backend' ? 'backend.js' : 'projeto.json' }}
+                            </span>
+                            <span class="gw-artefato-sub gw-artefato-sub--claro">gerado a partir das telas aprovadas</span>
+                        </div>
+                        <p-button [label]="copiado() ? 'Copiado!' : 'Copiar'"
+                                  [icon]="copiado() ? 'pi pi-check' : 'pi pi-copy'"
+                                  size="small" [outlined]="true" severity="secondary"
+                                  (onClick)="copiarCodigo()" />
+                    </div>
+                    <pre class="gw-code-block"><code>{{ codigoAtual }}</code></pre>
+                </div>
+            }
+
+            <!-- ===== MEMBROS ===== -->
+            @if (aba() === 'membros') {
+                <div class="gw-membros-header">
+                    <span class="gw-membros-count">
+                        {{ projeto.membros.length }} membro{{ projeto.membros.length !== 1 ? 's' : '' }}
+                    </span>
+                    <p-button label="Adicionar membro" icon="pi pi-user-plus"
+                              [outlined]="true" (onClick)="abrirAddMembro()" />
+                </div>
+
+                <p-table [value]="projeto.membros" styleClass="p-datatable-sm ds-table" dataKey="id">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="nome">Nome <p-sortIcon field="nome" /></th>
+                            <th pSortableColumn="email">E-mail <p-sortIcon field="email" /></th>
+                            <th pSortableColumn="papel" style="width:12rem">Papel <p-sortIcon field="papel" /></th>
+                            <th style="width:5rem">Ações</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-m>
+                        <tr>
+                            <td>
+                                <div class="gw-membro-cell">
+                                    <div class="gw-membro-avatar gw-membro-avatar--sm">{{ m.avatar }}</div>
+                                    <span class="gw-membro-nome">{{ m.nome }}</span>
+                                </div>
+                            </td>
+                            <td><span class="gw-membro-email">{{ m.email }}</span></td>
+                            <td>
+                                <span class="gw-papel-badge"
+                                      [style.background]="bgPapelDe(m.papel)"
+                                      [style.color]="corPapelDe(m.papel)">
+                                    {{ m.papel }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="ds-acoes-row">
+                                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true"
+                                              severity="danger" size="small" pTooltip="Remover"
+                                              tooltipPosition="left" (onClick)="removerMembro(m.id)" />
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr><td colspan="4" class="text-center p-4">Nenhum membro no projeto</td></tr>
+                    </ng-template>
+                </p-table>
+            }
+        </main>
+    </div>
+</div>
+
+<!-- Modal: novo documento -->
+<p-dialog header="Novo documento" [(visible)]="novoDocModal"
+          [modal]="true" [draggable]="false" [style]="{width:'400px'}">
+    <div class="gw-modal-field">
+        <label class="gw-modal-label">Título do documento</label>
+        <input pInputText [(ngModel)]="novoDocTitulo" placeholder="Ex: Requisitos Funcionais"
+               class="gw-modal-input" (keydown.enter)="criarDoc()" />
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [text]="true" (onClick)="novoDocModal = false" />
+        <p-button label="Criar" icon="pi pi-plus" (onClick)="criarDoc()"
+                  [disabled]="!novoDocTitulo.trim()" />
+    </ng-template>
+</p-dialog>
+
+<!-- Modal: nova tela -->
+<p-dialog header="Nova tela" [(visible)]="novaTelaModal"
+          [modal]="true" [draggable]="false" [style]="{width:'400px'}">
+    <div class="gw-modal-field">
+        <label class="gw-modal-label">Nome da tela</label>
+        <input pInputText [(ngModel)]="novaTelaNome" placeholder="Ex: Tela de Login"
+               class="gw-modal-input" (keydown.enter)="criarTela()" />
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [text]="true" (onClick)="novaTelaModal = false" />
+        <p-button label="Criar" icon="pi pi-plus" (onClick)="criarTela()"
+                  [disabled]="!novaTelaNome.trim()" />
+    </ng-template>
+</p-dialog>
+
+<!-- Modal: adicionar membro -->
+<p-dialog header="Adicionar membro" [(visible)]="addMembroModal"
+          [modal]="true" [draggable]="false" [style]="{width:'440px'}">
+    <div class="gw-modal-body">
+        <div class="gw-modal-field">
+            <label class="gw-modal-label">Nome completo</label>
+            <input pInputText [(ngModel)]="novoMembro.nome" placeholder="Ex: Ana Souza"
+                   class="gw-modal-input" />
+        </div>
+        <div class="gw-modal-field">
+            <label class="gw-modal-label">E-mail</label>
+            <input pInputText [(ngModel)]="novoMembro.email" placeholder="nome@goias.gov.br"
+                   class="gw-modal-input" />
+        </div>
+        <div class="gw-modal-field">
+            <label class="gw-modal-label">Papel no projeto</label>
+            <p-select [options]="papelOpcoes" [(ngModel)]="novoMembro.papel"
+                      optionLabel="label" optionValue="value" appendTo="body"
+                      placeholder="Selecione" styleClass="gw-modal-input" />
+        </div>
+        @if (membroErro) {
+            <div class="gw-modal-erro">{{ membroErro }}</div>
+        }
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [text]="true" (onClick)="addMembroModal = false" />
+        <p-button label="Adicionar" icon="pi pi-user-plus" (onClick)="confirmarAddMembro()" />
+    </ng-template>
+</p-dialog>
+
+<!-- Modal: publicando -->
+<p-dialog [visible]="publicando()" [modal]="true" [closable]="false"
+          [draggable]="false" [showHeader]="false" [style]="{width:'300px'}">
+    <div class="gw-publicando-body">
+        <p-progressSpinner />
+        <span>Publicando alterações...</span>
+        <small>Sincronizando com todos os membros</small>
+    </div>
+</p-dialog>
