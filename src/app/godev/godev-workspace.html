@@ -252,34 +252,48 @@
                                                     @case ('campo') {
                                                         <div class="gw-c-campo">
                                                             <label>{{ c.texto }}</label>
-                                                            <input type="text" placeholder="Digite aqui" readonly />
+                                                            <input pInputText placeholder="Digite aqui" [fluid]="true" />
                                                         </div>
                                                     }
                                                     @case ('botao') {
-                                                        <button class="gw-c-botao"
-                                                                [class.gw-c-botao--sec]="c.variante === 'secundario'">
-                                                            {{ c.texto }}
-                                                        </button>
+                                                        @if (c.variante === 'secundario') {
+                                                            <p-button [label]="c.texto" styleClass="w-full"
+                                                                      severity="secondary" [outlined]="true" />
+                                                        } @else {
+                                                            <p-button [label]="c.texto" styleClass="w-full" />
+                                                        }
+                                                    }
+                                                    @case ('checkbox') {
+                                                        <div class="gw-c-checkbox">
+                                                            <p-checkbox [binary]="true" [ngModel]="true" inputId="cb-{{ c.id }}" />
+                                                            <label [attr.for]="'cb-' + c.id">{{ c.texto }}</label>
+                                                        </div>
                                                     }
                                                     @case ('tabela') {
-                                                        <table class="gw-c-tabela">
-                                                            <thead>
+                                                        <p-table [value]="c.linhas ?? []" styleClass="p-datatable-sm ds-table gw-c-ptabela"
+                                                                 [rows]="5" [paginator]="true"
+                                                                 [showCurrentPageReport]="true"
+                                                                 currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
+                                                            <ng-template pTemplate="header">
                                                                 <tr>
                                                                     @for (col of colunasDe(c); track $index) {
-                                                                        <th>{{ col }}</th>
+                                                                        <th>{{ col }} <i class="pi pi-sort-alt gw-th-sort"></i></th>
                                                                     }
+                                                                    <th style="width:5rem">Ações</th>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @for (linha of c.linhas; track $index) {
-                                                                    <tr>
-                                                                        @for (celula of linha; track $index) {
-                                                                            <td>{{ celula }}</td>
-                                                                        }
-                                                                    </tr>
-                                                                }
-                                                            </tbody>
-                                                        </table>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="body" let-linha>
+                                                                <tr>
+                                                                    @for (celula of linha; track $index) {
+                                                                        <td>{{ celula }}</td>
+                                                                    }
+                                                                    <td>
+                                                                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
+                                                                                  size="small" />
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-template>
+                                                        </p-table>
                                                     }
                                                 }
                                             </div>

@@ -18,7 +18,7 @@ export interface Documento {
     atualizadoEm: string;
 }
 
-export type TipoComponente = 'titulo' | 'texto' | 'campo' | 'botao' | 'tabela';
+export type TipoComponente = 'titulo' | 'texto' | 'campo' | 'botao' | 'tabela' | 'checkbox';
 
 export interface ComponenteTela {
     id: number;

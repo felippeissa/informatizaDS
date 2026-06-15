@@ -1,3 +1,22 @@
+:host { display: block; }
+
+// Wrapper estrutural da página: herda os 2rem do .layout-main-container
+// (alinhado com a sidebar). Sem padding declarado, sem 0px.
+.gmp-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+// Barra de topo em estilo bento (título + ações com fundo próprio)
+.gmp-topo {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
 .gmp-header-acoes {
     display: flex;
     gap: 0.5rem;
@@ -7,7 +26,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
-    margin-top: 1.5rem;
     align-items: start;
 
     @media (max-width: 900px) {
@@ -57,7 +75,17 @@
 
 .gmp-required { color: #ef4444; }
 
+// Campos com fundo próprio (bento): cada input se mostra como um campo
 .gmp-input { width: 100% !important; }
+
+:host ::ng-deep .gmp-input {
+    &.p-inputtext,
+    .p-inputtext,
+    .p-select,
+    textarea {
+        background: var(--surface-ground);
+    }
+}
 
 .gmp-empty-membros {
     display: flex;

@@ -1,4 +1,7 @@
-// Card branco que envolve título, busca e tabela
+:host { display: block; }
+
+// Card branco (raiz da página): herda os 2rem do .layout-main-container,
+// alinhado com a sidebar (top/left: 2rem). Sem padding 0 em nenhum lugar.
 .gp-card {
     background: var(--surface-card);
     border: 1px solid var(--surface-border);

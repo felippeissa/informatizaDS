@@ -112,12 +112,13 @@ export const PROJETOS_MOCK: Projeto[] = [
                     { id: 3,  tipo: 'campo',  texto: 'Exercício *',                      largura: 14 },
                     { id: 4,  tipo: 'campo',  texto: 'Unidade orçamentária',             largura: 40 },
                     { id: 5,  tipo: 'campo',  texto: 'Ação orçamentária',                largura: 40 },
-                    { id: 6,  tipo: 'campo',  texto: 'Grupo de despesa',                 largura: 40 },
-                    { id: 7,  tipo: 'campo',  texto: 'Fonte de recurso',                 largura: 40 },
-                    { id: 8,  tipo: 'botao',  texto: 'Limpar',                           largura: 8,  variante: 'secundario' },
-                    { id: 9,  tipo: 'botao',  texto: 'Filtrar',                          largura: 8,  variante: 'primario' },
+                    { id: 6,  tipo: 'campo',    texto: 'Grupo de despesa',   largura: 38 },
+                    { id: 7,  tipo: 'campo',    texto: 'Fonte de recurso',   largura: 38 },
+                    { id: 8,  tipo: 'checkbox', texto: 'Exibir saldo zerado', largura: 18 },
+                    { id: 9,  tipo: 'botao',    texto: 'Limpar',             largura: 8,  variante: 'secundario' },
+                    { id: 10, tipo: 'botao',    texto: 'Filtrar',            largura: 8,  variante: 'primario' },
                     {
-                        id: 10, tipo: 'tabela', largura: 100,
+                        id: 11, tipo: 'tabela', largura: 100,
                         texto: 'Unidade orçamentária | Ação orçamentária | Grupo de despesa | Fonte de recurso | Saldo orçamentário (R$)',
                         linhas: [
                             ['0101 - Gabinete do Presidente da Assembleia Legislativa', '2001 - Ação Legislativa',          '3 - Outras despesas correntes',  '15000100 - Recursos não vinculados de impostos', '100.000,00'],

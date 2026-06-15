@@ -9,6 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
 import { Projeto, Documento, Tela, Papel, ComponenteTela, TipoComponente } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import {
@@ -26,7 +27,7 @@ interface ChatSessao { id: number; titulo: string; msgs: ChatMsg[]; }
     selector: 'app-godev-workspace',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, DialogModule,
-              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule],
+              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule, CheckboxModule],
     templateUrl: './godev-workspace.html',
     styleUrl:    './godev-workspace.scss',
 })
@@ -75,8 +76,9 @@ export class GodevWorkspace implements OnInit, AfterViewChecked {
         { tipo: 'titulo', label: 'Título',         icon: 'pi-heading' },
         { tipo: 'texto',  label: 'Texto',          icon: 'pi-align-left' },
         { tipo: 'campo',  label: 'Campo de texto', icon: 'pi-pencil' },
-        { tipo: 'botao',  label: 'Botão',          icon: 'pi-stop' },
-        { tipo: 'tabela', label: 'Tabela',         icon: 'pi-table' },
+        { tipo: 'botao',    label: 'Botão',          icon: 'pi-stop' },
+        { tipo: 'checkbox', label: 'Checkbox',       icon: 'pi-check-square' },
+        { tipo: 'tabela',   label: 'Tabela',         icon: 'pi-table' },
     ];
 
     // --- Código ---
@@ -279,13 +281,14 @@ export class GodevWorkspace implements OnInit, AfterViewChecked {
         if (!this.telaSelecionada) return;
         const padrao: Record<TipoComponente, string> = {
             titulo: 'Novo título', texto: 'Novo texto', campo: 'Novo campo', botao: 'Novo botão',
-            tabela: 'Coluna 1 | Coluna 2 | Coluna 3',
+            tabela: 'Coluna 1 | Coluna 2 | Coluna 3', checkbox: 'Nova opção',
         };
+        const larguraPadrao: Partial<Record<TipoComponente, number>> = { botao: 16, checkbox: 20 };
         const comp: ComponenteTela = {
             id: this.proximoCompId++,
             tipo,
             texto: padrao[tipo],
-            largura: tipo === 'botao' ? 16 : 100,
+            largura: larguraPadrao[tipo] ?? 100,
             ...(tipo === 'botao'  ? { variante: 'primario' as const } : {}),
             ...(tipo === 'tabela' ? { linhas: [['Dado 1', 'Dado 2', 'Dado 3'], ['Dado 1', 'Dado 2', 'Dado 3']] } : {}),
         };
@@ -320,22 +323,32 @@ export class GodevWorkspace implements OnInit, AfterViewChecked {
             switch (c.tipo) {
                 case 'tabela': {
                     const ths = this.colunasDe(c).map(col =>
-                        `<th style="text-align:left;padding:12px 16px;font-size:13px;color:#374151;background:#f3f4f6;border-bottom:1px solid #e5e7eb">${col}</th>`).join('');
-                    const trs = (c.linhas ?? []).map(linha =>
-                        `<tr>${linha.map(celula => `<td style="padding:14px 16px;font-size:13px;color:#1e293b;border-bottom:1px solid #f1f5f9">${celula}</td>`).join('')}</tr>`).join('');
-                    return `<table style="${w};border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+                        `<th style="text-align:left;padding:14px 18px;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;border-bottom:1px solid #e5e7eb;white-space:nowrap">${col} <span style="color:#94a3b8;font-size:11px">&#8645;</span></th>`).join('');
+                    const thAcoes = `<th style="padding:14px 18px;font-size:13px;font-weight:600;color:#334155;background:#f8fafc;border-bottom:1px solid #e5e7eb;width:70px">Ações</th>`;
+                    const trs = (c.linhas ?? []).map(linha => {
+                        const tds = linha.map(celula => `<td style="padding:15px 18px;font-size:13px;color:#1e293b;border-bottom:1px solid #eef2f6;vertical-align:top;line-height:1.45">${celula}</td>`).join('');
+                        const tdAcoes = `<td style="padding:15px 18px;border-bottom:1px solid #eef2f6;text-align:center"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:7px;border:1px solid #a7f3d0;background:#ecfdf5;color:#10b981">&#9998;</span></td>`;
+                        return `<tr>${tds}${tdAcoes}</tr>`;
+                    }).join('');
+                    const total = (c.linhas ?? []).length;
+                    const seta = (s: string) => `<span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;color:#94a3b8;font-size:14px">${s}</span>`;
+                    const num = (n: string, ativo: boolean) => `<span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;font-size:12px;font-weight:600;${ativo ? 'background:#10b981;color:#fff' : 'color:#475569'}">${n}</span>`;
+                    const pag = `<div style="display:flex;align-items:center;justify-content:center;gap:18px;padding:14px 18px;border-top:1px solid #eef2f6;font-size:13px;color:#64748b"><span>Mostrando <b style="color:#1e293b">1</b> a <b style="color:#1e293b">${total}</b> de <b style="color:#1e293b">${total}</b> registros</span><span style="display:inline-flex;align-items:center;gap:6px">${seta('&#171;')}${seta('&#8249;')}${num('1', true)}${num('2', false)}${num('3', false)}${seta('&#8250;')}${seta('&#187;')}<span style="display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:4px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;color:#475569">05 &#9662;</span></span></div>`;
+                    return `<div style="${w};background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse"><thead><tr>${ths}${thAcoes}</tr></thead><tbody>${trs}</tbody></table>${pag}</div>`;
                 }
+                case 'checkbox':
+                    return `<label style="${w};display:flex;align-items:center;gap:9px;font-size:14px;color:#334155;padding-bottom:10px"><span style="width:19px;height:19px;border:1.5px solid #cbd5e1;border-radius:5px;background:#fff;flex-shrink:0"></span>${c.texto}</label>`;
                 case 'titulo':
-                    return `<h1 style="${w};font-size:24px;color:#1e293b;margin:0">${c.texto}</h1>`;
+                    return `<h1 style="${w};font-size:26px;color:#1e293b;margin:0;font-weight:700;letter-spacing:-0.01em">${c.texto}</h1>`;
                 case 'texto':
                     return `<p style="${w};font-size:14px;color:#64748b;margin:0;line-height:1.6">${c.texto}</p>`;
                 case 'campo':
-                    return `<div style="${w}"><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px">${c.texto}</label><input style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:10px 12px;font-size:14px;box-sizing:border-box" placeholder="Digite aqui"/></div>`;
+                    return `<div style="${w}"><label style="display:block;font-size:14px;font-weight:600;color:#334155;margin-bottom:7px">${c.texto}</label><input style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:11px 14px;font-size:14px;box-sizing:border-box" placeholder="Digite aqui"/></div>`;
                 case 'botao': {
                     const estilo = c.variante === 'secundario'
-                        ? 'background:#fff;color:#374151;border:1px solid #d1d5db'
-                        : 'background:#16a34a;color:#fff;border:none';
-                    return `<button style="${w};${estilo};border-radius:6px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer">${c.texto}</button>`;
+                        ? 'background:#eef2f1;color:#334155;border:1px solid #d7dedb'
+                        : 'background:#10b981;color:#fff;border:none';
+                    return `<button style="${w};${estilo};border-radius:8px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap">${c.texto}</button>`;
                 }
             }
         }).join('\n');
