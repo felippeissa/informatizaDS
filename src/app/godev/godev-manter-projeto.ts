@@ -58,7 +58,7 @@ export class GodevManterProjeto implements OnInit {
         nome: '', descricao: '', tipo: null as TipoProjeto | null,
         // Condicionais conforme o fluxo escolhido
         docOrigem: null as string | null, docUrl: '',
-        repoUrl: '', branch: 'main',
+        repoUrl: '', wikiUrl: '', branch: 'main',
         // Conexões
         banco: null as string | null, dbUsuario: '', dbSenha: '',
     };
@@ -77,24 +77,30 @@ export class GodevManterProjeto implements OnInit {
     ];
     membros = signal<Membro[]>([]);
 
-    // Estados de teste de conexão (GitLab e Banco)
+    // Estados de teste de conexão (GitLab código, WIKI e Banco)
     gitlabStatus = signal<ConexaoStatus>('idle');
+    wikiStatus   = signal<ConexaoStatus>('idle');
     dbStatus     = signal<ConexaoStatus>('idle');
 
     selecionarInicio(id: InicioId) { this.inicioSelecionado.set(id); }
 
     // Mudar a URL invalida o teste anterior — exige testar de novo
     onRepoChange() { this.gitlabStatus.set('idle'); }
+    onWikiChange() { this.wikiStatus.set('idle'); }
     onDbChange()   { this.dbStatus.set('idle'); }
+
+    private urlValida(url: string) { return /^https?:\/\/[^\s]+\.[^\s]+/.test(url.trim()); }
 
     testarGitlab() {
         this.gitlabStatus.set('testando');
-        // Mock: conecta se a URL parecer válida (http/https com host)
-        const url = this.form.repoUrl.trim();
-        setTimeout(() => {
-            const ok = /^https?:\/\/[^\s]+\.[^\s]+/.test(url);
-            this.gitlabStatus.set(ok ? 'conectado' : 'falhou');
-        }, 1500);
+        const url = this.form.repoUrl;
+        setTimeout(() => this.gitlabStatus.set(this.urlValida(url) ? 'conectado' : 'falhou'), 1500);
+    }
+
+    testarWiki() {
+        this.wikiStatus.set('testando');
+        const url = this.form.wikiUrl;
+        setTimeout(() => this.wikiStatus.set(this.urlValida(url) ? 'conectado' : 'falhou'), 1500);
     }
 
     testarBanco() {
@@ -123,12 +129,14 @@ export class GodevManterProjeto implements OnInit {
                 nome: p.nome, descricao: p.descricao, tipo: p.tipo,
                 // Conexões já configuradas (mock) do projeto existente
                 repoUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}.git`,
+                wikiUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}.wiki.git`,
                 banco: 'postgres', dbUsuario: 'svc_godev', dbSenha: 'senha-mock-123',
             };
             // Projeto existente: assume que já tem doc e código
             this.inicioSelecionado.set('doc-cod');
             // Conexões já validadas anteriormente
             this.gitlabStatus.set('conectado');
+            this.wikiStatus.set('conectado');
             this.dbStatus.set('conectado');
             this.membros.set([...p.membros]);
         }
@@ -166,11 +174,17 @@ export class GodevManterProjeto implements OnInit {
 
     get podeSalvar() {
         const f = this.form;
-        const camposOk = !!f.nome.trim() && !!f.repoUrl.trim()
-            && !!f.banco && !!f.dbUsuario.trim() && !!f.dbSenha.trim();
-        const conexoesOk = this.gitlabStatus() === 'conectado' && this.dbStatus() === 'conectado';
         const inicioOk = this.isEdicao || !!this.inicioSelecionado();
-        return camposOk && conexoesOk && inicioOk;
+        // Banco é sempre obrigatório e precisa estar conectado
+        const dbOk = !!f.banco && !!f.dbUsuario.trim() && !!f.dbSenha.trim()
+            && this.dbStatus() === 'conectado';
+        // Código (GitLab) obrigatório só quando o projeto tem código
+        const codigoOk = !this.temCod
+            || (!!f.repoUrl.trim() && this.gitlabStatus() === 'conectado');
+        // WIKI obrigatória só quando o projeto tem documentação
+        const wikiOk = !this.temDoc
+            || (!!f.wikiUrl.trim() && this.wikiStatus() === 'conectado');
+        return !!f.nome.trim() && inicioOk && dbOk && codigoOk && wikiOk;
     }
 
     salvar() {

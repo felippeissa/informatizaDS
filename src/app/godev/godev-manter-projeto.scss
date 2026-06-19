@@ -282,6 +282,7 @@
 }
 
 .gmp-required { color: #ef4444; }
+.gmp-opcional { color: var(--text-color-secondary); font-weight: 400; font-size: 0.75rem; }
 
 // Campos com fundo próprio (bento): cada input se mostra como um campo
 .gmp-input { width: 100% !important; }

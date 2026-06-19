@@ -81,10 +81,13 @@
                 </div>
             }
 
-            <!-- Conexão com o repositório GitLab -->
-            <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório GitLab</div>
+            <!-- Repositório do Código (GitLab) — obrigatório quando o projeto tem código -->
+            <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório do Código (GitLab)</div>
             <div class="gmp-field">
-                <label class="gmp-label">URL do repositório GitLab <span class="gmp-required">*</span></label>
+                <label class="gmp-label">
+                    URL do repositório do código
+                    @if (temCod) { <span class="gmp-required">*</span> } @else { <span class="gmp-opcional">(opcional)</span> }
+                </label>
                 <input pInputText [(ngModel)]="form.repoUrl" (ngModelChange)="onRepoChange()"
                        placeholder="https://gitlab.goias.gov.br/grupo/projeto.git" class="gmp-input" />
             </div>
@@ -94,6 +97,28 @@
                           [disabled]="!form.repoUrl.trim() || gitlabStatus() === 'testando'"
                           (onClick)="testarGitlab()" />
                 @switch (gitlabStatus()) {
+                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
+                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
+                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
+                }
+            </div>
+
+            <!-- Repositório da WIKI (documentação) — obrigatório quando o projeto tem documentação -->
+            <div class="gmp-divisor"><i class="pi pi-book"></i> Repositório da WIKI (documentação)</div>
+            <div class="gmp-field">
+                <label class="gmp-label">
+                    URL do repositório da WIKI
+                    @if (temDoc) { <span class="gmp-required">*</span> } @else { <span class="gmp-opcional">(opcional)</span> }
+                </label>
+                <input pInputText [(ngModel)]="form.wikiUrl" (ngModelChange)="onWikiChange()"
+                       placeholder="https://gitlab.goias.gov.br/grupo/projeto.wiki.git" class="gmp-input" />
+            </div>
+            <div class="gmp-conexao-row">
+                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
+                          [loading]="wikiStatus() === 'testando'"
+                          [disabled]="!form.wikiUrl.trim() || wikiStatus() === 'testando'"
+                          (onClick)="testarWiki()" />
+                @switch (wikiStatus()) {
                     @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
                     @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
                     @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
