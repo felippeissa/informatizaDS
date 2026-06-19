@@ -7,6 +7,7 @@ export const PROJETOS_MOCK: Projeto[] = [
         descricao: 'Sistema de atendimento integrado para serviços estaduais.',
         tipo: 'Web',
         status: 'ativo',
+        sincronizacao: 'sincronizado',
         ultimaPublicacao: 'há 10 min',
         membros: [
             { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br',  papel: 'PO',          avatar: 'FS' },
@@ -73,6 +74,7 @@ export const PROJETOS_MOCK: Projeto[] = [
         descricao: 'API REST para gerenciamento de convênios entre órgãos estaduais.',
         tipo: 'API',
         status: 'ativo',
+        sincronizacao: 'dessincronizado',
         ultimaPublicacao: 'há 2h',
         membros: [
             { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO',          avatar: 'FS' },
@@ -89,6 +91,7 @@ export const PROJETOS_MOCK: Projeto[] = [
         descricao: 'Sistema integrado de administração financeira: IPOF, saldo orçamentário, DAOFs e empenho.',
         tipo: 'Web',
         status: 'ativo',
+        sincronizacao: 'sincronizado',
         ultimaPublicacao: 'há 30 min',
         membros: [
             { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br',  papel: 'PO',            avatar: 'FS' },
@@ -137,7 +140,8 @@ export const PROJETOS_MOCK: Projeto[] = [
         nome: 'App Fiscalização de Campo',
         descricao: 'Aplicativo mobile para agentes de fiscalização em campo.',
         tipo: 'Mobile',
-        status: 'ativo',
+        status: 'inativo',
+        sincronizacao: 'dessincronizado',
         ultimaPublicacao: 'ontem',
         membros: [
             { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },

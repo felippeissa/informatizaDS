@@ -1,96 +1,102 @@
-<!-- Card branco: título + busca + tabela (raiz da página, herda 2rem do container) -->
-<div class="gp-card">
+<div class="gp-page">
 
-        <div class="ds-page-header gp-card-header">
-            <h2 class="ds-page-title">Projetos</h2>
-            <p-button label="Novo projeto" icon="pi pi-plus" (onClick)="novo()" />
+    <!-- Cabeçalho -->
+    <div class="ds-page-header gp-header-bar">
+        <h2 class="ds-page-title">Projetos</h2>
+        <p-button label="Novo projeto" icon="pi pi-plus" (onClick)="novo()" />
+    </div>
+
+    <!-- Card de filtros -->
+    <div class="gp-filtros">
+        <div class="gp-filtros-grid">
+            <div class="gp-filtro-field">
+                <label>Nome do projeto</label>
+                <input pInputText [ngModel]="fNome()" (ngModelChange)="fNome.set($event)"
+                       placeholder="Buscar por nome..." class="gp-filtro-input" />
+            </div>
+            <div class="gp-filtro-field">
+                <label>Status</label>
+                <p-select [options]="statusOpcoes" [ngModel]="fStatus()" (ngModelChange)="fStatus.set($event)"
+                          optionLabel="label" optionValue="value" [showClear]="true"
+                          placeholder="Todos" styleClass="gp-filtro-input" />
+            </div>
+            <div class="gp-filtro-field">
+                <label>Sincronização</label>
+                <p-select [options]="sincOpcoes" [ngModel]="fSinc()" (ngModelChange)="fSinc.set($event)"
+                          optionLabel="label" optionValue="value" [showClear]="true"
+                          placeholder="Todas" styleClass="gp-filtro-input" />
+            </div>
         </div>
-
-        <!-- Busca rápida -->
-        <div class="gp-search">
-            <i class="pi pi-search gp-search-icon"></i>
-            <input pInputText [ngModel]="busca()" (ngModelChange)="busca.set($event)"
-                   placeholder="Buscar por nome ou descrição..." class="gp-search-input" />
+        <div class="gp-filtros-acoes">
+            <p-button label="Limpar filtros" icon="pi pi-times" severity="secondary" [outlined]="true"
+                      (onClick)="limpar()" />
+            <p-button label="Filtrar" icon="pi pi-filter" (onClick)="filtrar()" />
         </div>
+    </div>
 
-        <!-- Tabela de projetos -->
+    <!-- Tabela de projetos -->
+    <div class="gp-card">
         <p-table [value]="filtrados()" styleClass="p-datatable-sm ds-table"
-             [rows]="10" [paginator]="true"
-             [showCurrentPageReport]="true"
-             currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
-             dataKey="id">
-        <ng-template pTemplate="header">
-            <tr>
-                <th pSortableColumn="nome">Projeto <p-sortIcon field="nome" /></th>
-                <th pSortableColumn="tipo" style="width:8rem">Tipo <p-sortIcon field="tipo" /></th>
-                <th>Membros</th>
-                <th style="width:7rem">Documentos</th>
-                <th style="width:6rem">Telas</th>
-                <th pSortableColumn="ultimaPublicacao" style="width:11rem">Última publicação <p-sortIcon field="ultimaPublicacao" /></th>
-                <th style="width:6rem">Ações</th>
-            </tr>
-        </ng-template>
+                 [rows]="10" [paginator]="true"
+                 [showCurrentPageReport]="true"
+                 currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+                 dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="nome">Nome do projeto <p-sortIcon field="nome" /></th>
+                    <th pSortableColumn="status" style="width:10rem">Status <p-sortIcon field="status" /></th>
+                    <th pSortableColumn="sincronizacao" style="width:15rem">Sincronização <p-sortIcon field="sincronizacao" /></th>
+                    <th pSortableColumn="ultimaPublicacao" style="width:12rem">Última publicação <p-sortIcon field="ultimaPublicacao" /></th>
+                    <th style="width:7rem">Ações</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-p>
-            <tr class="gp-row" (click)="abrir(p)">
-                <td>
-                    <div class="gp-cell-projeto">
-                        <span class="gp-nome">{{ p.nome }}</span>
-                        <span class="gp-desc">{{ p.descricao }}</span>
-                    </div>
-                </td>
-                <td>
-                    <span class="gp-tipo-badge"
-                          [style.background]="bgTipo(p.tipo)"
-                          [style.color]="corTipo(p.tipo)">
-                        {{ p.tipo }}
-                    </span>
-                </td>
-                <td>
-                    <div class="gp-membros">
-                        @for (m of p.membros.slice(0, 4); track m.id) {
-                            <div class="gp-avatar" [pTooltip]="m.nome + ' · ' + m.papel" tooltipPosition="top">
-                                {{ m.avatar }}
-                            </div>
-                        }
-                        @if (p.membros.length > 4) {
-                            <div class="gp-avatar gp-avatar--more">+{{ p.membros.length - 4 }}</div>
-                        }
-                    </div>
-                </td>
-                <td>
-                    <span class="gp-contagem"><i class="pi pi-file-edit"></i> {{ p.documentos.length }}</span>
-                </td>
-                <td>
-                    <span class="gp-contagem"><i class="pi pi-desktop"></i> {{ p.telas.length }}</span>
-                </td>
-                <td>
-                    <span class="gp-sinc"><i class="pi pi-sync"></i> {{ p.ultimaPublicacao }}</span>
-                </td>
-                <td>
-                    <div class="ds-acoes-row">
-                        <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
-                                  pTooltip="Abrir workspace" tooltipPosition="top"
-                                  (onClick)="$event.stopPropagation(); abrir(p)" />
-                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
-                                  pTooltip="Editar projeto" tooltipPosition="top"
-                                  (onClick)="$event.stopPropagation(); editar(p)" />
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="body" let-p>
+                <tr class="gp-row" (click)="abrir(p)">
+                    <td>
+                        <div class="gp-cell-projeto">
+                            <span class="gp-nome">{{ p.nome }}</span>
+                            <span class="gp-desc">{{ p.descricao }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="gp-badge" [style.background]="bgStatus(p.status)" [style.color]="corStatus(p.status)">
+                            {{ labelStatus(p.status) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="gp-badge gp-badge--icon"
+                              [style.background]="bgSinc(p.sincronizacao)" [style.color]="corSinc(p.sincronizacao)">
+                            <i class="pi" [class]="iconSinc(p.sincronizacao)"></i> {{ labelSinc(p.sincronizacao) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="gp-sinc"><i class="pi pi-clock"></i> {{ p.ultimaPublicacao }}</span>
+                    </td>
+                    <td>
+                        <div class="ds-acoes-row">
+                            <p-button icon="pi pi-arrow-up-right" [rounded]="true" [text]="true"
+                                      pTooltip="Abrir workspace" tooltipPosition="top"
+                                      (onClick)="$event.stopPropagation(); abrir(p)" />
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
+                                      pTooltip="Editar projeto" tooltipPosition="top"
+                                      (onClick)="$event.stopPropagation(); editar(p)" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7">
-                    <div class="gp-empty">
-                        <i class="pi pi-folder-open"></i>
-                        <p>Nenhum projeto encontrado</p>
-                        <p-button label="Criar primeiro projeto" icon="pi pi-plus" (onClick)="novo()" />
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
-
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">
+                        <div class="gp-empty">
+                            <i class="pi pi-folder-open"></i>
+                            <p>Nenhum projeto encontrado com os filtros aplicados</p>
+                            <p-button label="Limpar filtros" icon="pi pi-times" [outlined]="true" (onClick)="limpar()" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>

@@ -38,12 +38,15 @@ export interface Tela {
     componentes?: ComponenteTela[];
 }
 
+export type Sincronizacao = 'sincronizado' | 'dessincronizado';
+
 export interface Projeto {
     id: number;
     nome: string;
     descricao: string;
     tipo: TipoProjeto;
     status: 'ativo' | 'inativo';
+    sincronizacao: Sincronizacao;
     membros: Membro[];
     documentos: Documento[];
     telas: Tela[];
