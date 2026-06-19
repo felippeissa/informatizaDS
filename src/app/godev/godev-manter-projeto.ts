@@ -9,15 +9,19 @@ import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
+import { PasswordModule } from 'primeng/password';
 import { Membro, Papel, TipoProjeto } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import { BG_PAPEL, COR_PAPEL, PAPEL_OPCOES, TIPO_OPCOES, iniciais } from './godev.ui';
+
+type InicioId = 'doc-cod' | 'doc' | 'cod' | 'zero';
+type ConexaoStatus = 'idle' | 'testando' | 'conectado' | 'falhou';
 
 @Component({
     selector: 'app-godev-manter-projeto',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule,
-              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule],
+              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, PasswordModule],
     templateUrl: './godev-manter-projeto.html',
     styleUrl:    './godev-manter-projeto.scss',
 })
@@ -35,8 +39,70 @@ export class GodevManterProjeto implements OnInit {
     salvando      = signal(false);
     inativarModal = false;
 
-    form = { nome: '', descricao: '', tipo: null as TipoProjeto | null };
+    // Os 4 fluxos de início (matriz: tem documentação? × tem código?)
+    inicios: { id: InicioId; titulo: string; desc: string; icon: string; temDoc: boolean; temCod: boolean }[] = [
+        { id: 'doc-cod', titulo: 'Documentação e código', desc: 'O projeto já existe: possui documentação e código-fonte.',          icon: 'pi-check-circle', temDoc: true,  temCod: true  },
+        { id: 'doc',     titulo: 'Só documentação',        desc: 'Tem documentação, mas o código ainda será desenvolvido.',           icon: 'pi-file-edit',    temDoc: true,  temCod: false },
+        { id: 'cod',     titulo: 'Só código',              desc: 'Tem código-fonte, mas não há documentação formal.',                 icon: 'pi-code',         temDoc: false, temCod: true  },
+        { id: 'zero',    titulo: 'Do zero',                desc: 'Sem documentação e sem código — começar do início no GO.DEV.',       icon: 'pi-sparkles',     temDoc: false, temCod: false },
+    ];
+    inicioSelecionado = signal<InicioId | null>(null);
+
+    get inicioAtual() { return this.inicios.find(i => i.id === this.inicioSelecionado()); }
+    get temDoc() { return this.inicioAtual?.temDoc ?? false; }
+    get temCod() { return this.inicioAtual?.temCod ?? false; }
+
+    form = {
+        nome: '', descricao: '', tipo: null as TipoProjeto | null,
+        // Condicionais conforme o fluxo escolhido
+        docOrigem: null as string | null, docUrl: '',
+        repoUrl: '', branch: 'main',
+        // Conexões
+        banco: null as string | null, dbUsuario: '', dbSenha: '',
+    };
+    origemDocOpcoes = [
+        { label: 'Upload de arquivo (.md / Word)', value: 'upload' },
+        { label: 'Link externo (URL)',            value: 'url' },
+        { label: 'Confluence',                    value: 'confluence' },
+        { label: 'SharePoint',                    value: 'sharepoint' },
+    ];
+    bancoOpcoes = [
+        { label: 'PostgreSQL', value: 'postgres' },
+        { label: 'MySQL',      value: 'mysql' },
+        { label: 'SQL Server', value: 'sqlserver' },
+        { label: 'Oracle',     value: 'oracle' },
+        { label: 'MongoDB',    value: 'mongodb' },
+    ];
     membros = signal<Membro[]>([]);
+
+    // Estados de teste de conexão (GitLab e Banco)
+    gitlabStatus = signal<ConexaoStatus>('idle');
+    dbStatus     = signal<ConexaoStatus>('idle');
+
+    selecionarInicio(id: InicioId) { this.inicioSelecionado.set(id); }
+
+    // Mudar a URL invalida o teste anterior — exige testar de novo
+    onRepoChange() { this.gitlabStatus.set('idle'); }
+    onDbChange()   { this.dbStatus.set('idle'); }
+
+    testarGitlab() {
+        this.gitlabStatus.set('testando');
+        // Mock: conecta se a URL parecer válida (http/https com host)
+        const url = this.form.repoUrl.trim();
+        setTimeout(() => {
+            const ok = /^https?:\/\/[^\s]+\.[^\s]+/.test(url);
+            this.gitlabStatus.set(ok ? 'conectado' : 'falhou');
+        }, 1500);
+    }
+
+    testarBanco() {
+        this.dbStatus.set('testando');
+        // Mock: conecta se banco, usuário e senha estiverem preenchidos
+        setTimeout(() => {
+            const ok = !!this.form.banco && !!this.form.dbUsuario.trim() && !!this.form.dbSenha.trim();
+            this.dbStatus.set(ok ? 'conectado' : 'falhou');
+        }, 1500);
+    }
 
     addMembroModal = false;
     novoMembro = { nome: '', email: '', papel: null as Papel | null };
@@ -50,7 +116,18 @@ export class GodevManterProjeto implements OnInit {
 
         const p = PROJETOS_MOCK.find(x => x.id === +id!);
         if (p) {
-            this.form = { nome: p.nome, descricao: p.descricao, tipo: p.tipo };
+            this.form = {
+                ...this.form,
+                nome: p.nome, descricao: p.descricao, tipo: p.tipo,
+                // Conexões já configuradas (mock) do projeto existente
+                repoUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}.git`,
+                banco: 'postgres', dbUsuario: 'svc_godev', dbSenha: 'senha-mock-123',
+            };
+            // Projeto existente: assume que já tem doc e código
+            this.inicioSelecionado.set('doc-cod');
+            // Conexões já validadas anteriormente
+            this.gitlabStatus.set('conectado');
+            this.dbStatus.set('conectado');
             this.membros.set([...p.membros]);
         }
     }
@@ -85,8 +162,17 @@ export class GodevManterProjeto implements OnInit {
         this.membros.update(lista => lista.filter(m => m.id !== id));
     }
 
+    get podeSalvar() {
+        const f = this.form;
+        const camposOk = !!f.nome.trim() && !!f.repoUrl.trim()
+            && !!f.banco && !!f.dbUsuario.trim() && !!f.dbSenha.trim();
+        const conexoesOk = this.gitlabStatus() === 'conectado' && this.dbStatus() === 'conectado';
+        const inicioOk = this.isEdicao || !!this.inicioSelecionado();
+        return camposOk && conexoesOk && inicioOk;
+    }
+
     salvar() {
-        if (!this.form.nome.trim()) return;
+        if (!this.podeSalvar) return;
         this.salvando.set(true);
         // Mock: simula criação do workspace antes de voltar para a lista
         setTimeout(() => {

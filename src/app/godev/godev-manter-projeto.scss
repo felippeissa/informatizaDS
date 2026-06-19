@@ -22,6 +22,214 @@
     gap: 0.5rem;
 }
 
+.gmp-section-hint {
+    margin: -0.5rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--text-color-secondary);
+}
+
+// Seleção dos 4 fluxos de início
+.gmp-starts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.875rem;
+
+    @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+.gmp-start {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+    padding: 1rem;
+    background: var(--surface-ground);
+    border: 1.5px solid var(--surface-border);
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+
+    &:hover { border-color: color-mix(in srgb, var(--primary-color) 50%, var(--surface-border)); }
+
+    &--ativo {
+        border-color: var(--primary-color);
+        background: color-mix(in srgb, var(--primary-color) 7%, var(--surface-card));
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 14%, transparent);
+
+        .gmp-start-check { opacity: 1; transform: scale(1); }
+        .gmp-start-icone { background: var(--primary-color); color: #fff; }
+    }
+}
+
+.gmp-start-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.gmp-start-icone {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.gmp-start-titulo {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-top: 0.25rem;
+}
+
+.gmp-start-desc {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    line-height: 1.45;
+    flex: 1;
+}
+
+.gmp-start-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 0.5rem;
+}
+
+.gmp-start-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--surface-border);
+    color: var(--text-color-secondary);
+
+    i { font-size: 9px; }
+
+    &--on {
+        background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+        color: var(--primary-color);
+    }
+}
+
+// Divisor de bloco condicional dentro da seção
+.gmp-divisor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-color-secondary);
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--surface-border);
+
+    i { color: var(--primary-color); font-size: 12px; }
+}
+
+.gmp-aviso {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--text-color-secondary);
+    background: var(--surface-ground);
+    border: 1px dashed var(--surface-border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+// Linha do botão "Testar conexão" + status
+.gmp-conexao-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: -0.25rem;
+}
+
+.gmp-conexao {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+
+    i { font-size: 13px; }
+
+    &--load {
+        color: #1d4ed8;
+        background: #eff6ff;
+    }
+    &--ok {
+        color: #15803d;
+        background: #dcfce7;
+    }
+    &--erro {
+        color: #dc2626;
+        background: #fee2e2;
+    }
+}
+
+// Senha ocupa 100% (p-password tem wrapper próprio)
+:host ::ng-deep .gmp-senha-input { width: 100%; }
+:host ::ng-deep p-password { display: block; width: 100%; }
+
+// Mensagem azul de obrigatoriedade
+.gmp-info-azul {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e40af;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 0.875rem 1.125rem;
+
+    i { font-size: 16px; }
+}
+
+// Rodapé com as 3 ações
+.gmp-rodape {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.gmp-rodape-spacer { flex: 1; }
+
 .gmp-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;

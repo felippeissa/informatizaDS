@@ -2,17 +2,38 @@
 
     <div class="ds-page-header gmp-topo">
         <h2 class="ds-page-title">{{ isEdicao ? 'Editar projeto' : 'Novo projeto' }}</h2>
-        <div class="gmp-header-acoes">
-            @if (isEdicao) {
-                <p-button label="Inativar" icon="pi pi-trash" severity="danger" [outlined]="true"
-                          (onClick)="inativarModal = true" />
+    </div>
+
+    <!-- Seleção do fluxo de início (apenas para novos projetos) -->
+    @if (!isEdicao) {
+    <div class="gmp-section">
+        <h3 class="gmp-section-title">
+            <i class="pi pi-flag"></i> Como o projeto começa? <span class="gmp-required">*</span>
+        </h3>
+        <p class="gmp-section-hint">Selecione o ponto de partida — os campos do cadastro se ajustam conforme a opção.</p>
+
+        <div class="gmp-starts">
+            @for (i of inicios; track i.id) {
+                <button type="button" class="gmp-start"
+                        [class.gmp-start--ativo]="inicioSelecionado() === i.id"
+                        (click)="selecionarInicio(i.id)">
+                    <span class="gmp-start-check"><i class="pi pi-check"></i></span>
+                    <span class="gmp-start-icone"><i class="pi" [class]="i.icon"></i></span>
+                    <span class="gmp-start-titulo">{{ i.titulo }}</span>
+                    <span class="gmp-start-desc">{{ i.desc }}</span>
+                    <span class="gmp-start-tags">
+                        <span class="gmp-start-tag" [class.gmp-start-tag--on]="i.temDoc">
+                            <i class="pi" [class]="i.temDoc ? 'pi-check' : 'pi-times'"></i> Documentação
+                        </span>
+                        <span class="gmp-start-tag" [class.gmp-start-tag--on]="i.temCod">
+                            <i class="pi" [class]="i.temCod ? 'pi-check' : 'pi-times'"></i> Código
+                        </span>
+                    </span>
+                </button>
             }
-            <p-button label="Cancelar" icon="pi pi-times" [outlined]="true" (onClick)="cancelar()" />
-            <p-button [label]="isEdicao ? 'Salvar alterações' : 'Criar projeto'"
-                      icon="pi pi-check" (onClick)="salvar()"
-                      [disabled]="!form.nome.trim()" />
         </div>
     </div>
+    }
 
     <div class="gmp-layout">
 
@@ -42,6 +63,72 @@
                           optionLabel="label" optionValue="value"
                           placeholder="Selecione o tipo"
                           styleClass="gmp-input" />
+            </div>
+
+            <!-- Campos condicionais: documentação existente -->
+            @if (!isEdicao && temDoc) {
+                <div class="gmp-divisor"><i class="pi pi-file-edit"></i> Documentação existente</div>
+                <div class="gmp-field">
+                    <label class="gmp-label">Origem da documentação</label>
+                    <p-select [options]="origemDocOpcoes" [(ngModel)]="form.docOrigem"
+                              optionLabel="label" optionValue="value" appendTo="body"
+                              placeholder="Selecione a origem" styleClass="gmp-input" />
+                </div>
+                <div class="gmp-field">
+                    <label class="gmp-label">Link / caminho da documentação</label>
+                    <input pInputText [(ngModel)]="form.docUrl"
+                           placeholder="https://... ou caminho do arquivo" class="gmp-input" />
+                </div>
+            }
+
+            <!-- Conexão com o repositório GitLab -->
+            <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório GitLab</div>
+            <div class="gmp-field">
+                <label class="gmp-label">URL do repositório GitLab <span class="gmp-required">*</span></label>
+                <input pInputText [(ngModel)]="form.repoUrl" (ngModelChange)="onRepoChange()"
+                       placeholder="https://gitlab.goias.gov.br/grupo/projeto.git" class="gmp-input" />
+            </div>
+            <div class="gmp-conexao-row">
+                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
+                          [loading]="gitlabStatus() === 'testando'"
+                          [disabled]="!form.repoUrl.trim() || gitlabStatus() === 'testando'"
+                          (onClick)="testarGitlab()" />
+                @switch (gitlabStatus()) {
+                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
+                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
+                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
+                }
+            </div>
+
+            <!-- Conexão com o banco de dados -->
+            <div class="gmp-divisor"><i class="pi pi-database"></i> Banco de dados</div>
+            <div class="gmp-field">
+                <label class="gmp-label">Banco de dados <span class="gmp-required">*</span></label>
+                <p-select [options]="bancoOpcoes" [(ngModel)]="form.banco" (ngModelChange)="onDbChange()"
+                          optionLabel="label" optionValue="value" appendTo="body"
+                          placeholder="Selecione o banco" styleClass="gmp-input" />
+            </div>
+            <div class="gmp-field">
+                <label class="gmp-label">Usuário do banco <span class="gmp-required">*</span></label>
+                <input pInputText [(ngModel)]="form.dbUsuario" (ngModelChange)="onDbChange()"
+                       placeholder="Ex: svc_godev" class="gmp-input" />
+            </div>
+            <div class="gmp-field">
+                <label class="gmp-label">Senha do banco <span class="gmp-required">*</span></label>
+                <p-password [(ngModel)]="form.dbSenha" (ngModelChange)="onDbChange()"
+                            [feedback]="false" [toggleMask]="true" [fluid]="true"
+                            placeholder="••••••••" styleClass="gmp-input" inputStyleClass="gmp-senha-input" />
+            </div>
+            <div class="gmp-conexao-row">
+                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
+                          [loading]="dbStatus() === 'testando'"
+                          [disabled]="dbStatus() === 'testando'"
+                          (onClick)="testarBanco()" />
+                @switch (dbStatus()) {
+                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
+                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
+                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
+                }
             </div>
         </div>
 
@@ -79,6 +166,25 @@
                 </div>
             }
         </div>
+    </div>
+
+    <!-- Mensagem de obrigatoriedade + ações (rodapé) -->
+    @if (!podeSalvar) {
+        <div class="gmp-info-azul">
+            <i class="pi pi-info-circle"></i>
+            Para continuar é necessário preencher todos os campos obrigatórios (*) e realizar o teste de conexão.
+        </div>
+    }
+
+    <div class="gmp-rodape">
+        @if (isEdicao) {
+            <p-button label="Inativar projeto" icon="pi pi-ban" severity="secondary" [outlined]="true"
+                      (onClick)="inativarModal = true" />
+        }
+        <span class="gmp-rodape-spacer"></span>
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelar()" />
+        <p-button [label]="isEdicao ? 'Salvar' : 'Criar projeto'" icon="pi pi-check"
+                  (onClick)="salvar()" [disabled]="!podeSalvar" />
     </div>
 
 </div>
