@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
+import { MessageService } from 'primeng/api';
 import { Membro, Papel, TipoProjeto } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import { BG_PAPEL, COR_PAPEL, PAPEL_OPCOES, TIPO_OPCOES, iniciais } from './godev.ui';
@@ -28,6 +29,7 @@ type ConexaoStatus = 'idle' | 'testando' | 'conectado' | 'falhou';
 export class GodevManterProjeto implements OnInit {
     private router = inject(Router);
     private route  = inject(ActivatedRoute);
+    private messageService = inject(MessageService);
 
     corPapel = COR_PAPEL;
     bgPapel  = BG_PAPEL;
@@ -174,13 +176,36 @@ export class GodevManterProjeto implements OnInit {
     salvar() {
         if (!this.podeSalvar) return;
         this.salvando.set(true);
+        const nome = this.form.nome.trim();
+        const edicao = this.isEdicao;
         // Mock: simula criação do workspace antes de voltar para a lista
         setTimeout(() => {
             this.salvando.set(false);
-            this.router.navigate(['/godev/projetos']);
+            this.router.navigate(['/godev/projetos']).then(() => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: edicao ? 'Projeto atualizado' : 'Projeto criado',
+                    detail: edicao
+                        ? `As alterações de "${nome}" foram salvas com sucesso.`
+                        : `O projeto "${nome}" foi criado com sucesso.`,
+                    life: 4000,
+                });
+            });
         }, 1800);
     }
 
     cancelar() { this.router.navigate(['/godev/projetos']); }
-    inativar() { this.inativarModal = false; this.router.navigate(['/godev/projetos']); }
+
+    inativar() {
+        this.inativarModal = false;
+        const nome = this.form.nome.trim();
+        this.router.navigate(['/godev/projetos']).then(() => {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Projeto inativado',
+                detail: `O projeto "${nome}" foi inativado.`,
+                life: 4000,
+            });
+        });
+    }
 }
