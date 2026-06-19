@@ -122,9 +122,9 @@ export class AppMenu implements OnInit, OnDestroy {
     private godevMenu: MenuItem[] = [
         {
             items: [
-                { label: 'Página inicial',   icon: 'pi pi-home',      routerLink: ['/godev/pagina-inicial'] },
-                { label: 'Projetos',         icon: 'pi pi-folder',    routerLink: ['/godev/projetos'] },
-                { label: 'Manual Inteligente', icon: 'pi pi-book',    routerLink: ['/godev/pagina-inicial'] },
+                { label: 'Página inicial',     icon: 'pi pi-home',   routerLink: ['/godev/inicio'] },
+                { label: 'Projetos',           icon: 'pi pi-folder', routerLink: ['/godev/projetos'] },
+                { label: 'Manual Inteligente', icon: 'pi pi-book',   routerLink: ['/godev/manual'] },
             ]
         },
     ];

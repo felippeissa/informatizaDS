@@ -283,6 +283,98 @@
 
 .gmp-required { color: #ef4444; }
 .gmp-opcional { color: var(--text-color-secondary); font-weight: 400; font-size: 0.75rem; }
+.gmp-ajuda { font-size: 0.75rem; color: var(--text-color-secondary); margin-top: 0.25rem; line-height: 1.4; }
+
+// Resultado da busca de repositórios na raiz
+.gmp-repos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--surface-ground);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.gmp-repos-titulo {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i { color: #15803d; }
+}
+
+.gmp-repo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+
+    > i { font-size: 14px; color: #15803d; flex-shrink: 0; }
+
+    &--falta > i { color: #b45309; }
+
+    &--excluir {
+        border-color: #fecaca;
+        background: #fef2f2;
+        > i { color: #dc2626; }
+        .gmp-repo-nome { text-decoration: line-through; color: var(--text-color-secondary); }
+    }
+}
+
+.gmp-repo-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.gmp-repo-nome { font-size: 0.8125rem; font-weight: 600; color: var(--text-color); }
+.gmp-repo-path {
+    font-size: 0.6875rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gmp-repo-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    flex-shrink: 0;
+
+    &--ok { background: #dcfce7; color: #15803d; }
+    &--erro { background: #fee2e2; color: #dc2626; }
+}
+
+.gmp-repo-criar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+
+    label { font-size: 0.75rem; font-weight: 600; color: var(--text-color); cursor: pointer; }
+}
+
+.gmp-repos-sugestao {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    line-height: 1.5;
+    padding: 0.25rem;
+
+    i { color: #2563eb; margin-top: 1px; }
+}
+
+.gmp-repos-acoes {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.25rem;
+}
 
 // Campos com fundo próprio (bento): cada input se mostra como um campo
 .gmp-input { width: 100% !important; }

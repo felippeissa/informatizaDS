@@ -1,0 +1,94 @@
+<div class="gm-root">
+
+    <!-- Sidebar de conversas -->
+    <aside class="gm-sidebar">
+        <div class="gm-busca">
+            <i class="pi pi-search"></i>
+            <input pInputText [ngModel]="busca()" (ngModelChange)="busca.set($event)"
+                   placeholder="Buscar conversas..." class="gm-busca-input" />
+        </div>
+
+        <button class="gm-novo" (click)="novoChat()">
+            <i class="pi pi-plus"></i> Novo chat
+        </button>
+
+        <div class="gm-conversas">
+            @for (c of conversasFiltradas; track c.id) {
+                <button class="gm-conversa" [class.gm-conversa--ativa]="conversaAtivaId() === c.id"
+                        (click)="selecionarConversa(c)">
+                    <i class="pi pi-comment"></i>
+                    <span class="gm-conversa-titulo">{{ c.titulo }}</span>
+                </button>
+            } @empty {
+                <div class="gm-conversas-vazio">Nenhuma conversa ainda</div>
+            }
+        </div>
+    </aside>
+
+    <!-- Área principal -->
+    <main class="gm-main">
+
+        @if (!mensagens.length && !digitando()) {
+            <!-- Estado de boas-vindas -->
+            <div class="gm-boasvindas">
+                <h1 class="gm-titulo">Em que posso te ajudar hoje?</h1>
+
+                <div class="gm-barra gm-barra--centro">
+                    <ng-container *ngTemplateOutlet="barra"></ng-container>
+                </div>
+
+                <div class="gm-sugestoes">
+                    @for (s of sugestoes; track s) {
+                        <button class="gm-sugestao" (click)="usarSugestao(s)">{{ s }}</button>
+                    }
+                </div>
+            </div>
+        } @else {
+            <!-- Conversa -->
+            <div class="gm-mensagens" #scrollArea>
+                @for (m of mensagens; track $index) {
+                    @if (m.autor === 'user') {
+                        <div class="gm-msg gm-msg--user">{{ m.texto }}</div>
+                    } @else {
+                        <div class="gm-msg gm-msg--ia">
+                            <div class="gm-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                            <div class="gm-ia-corpo">
+                                <div class="gm-ia-meta">
+                                    <span class="gm-ia-modelo">{{ m.modelo }}</span>
+                                    @if (m.sistema) { <span class="gm-ia-sistema">{{ m.sistema }}</span> }
+                                </div>
+                                <div class="gm-ia-texto" [innerText]="m.texto"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                @if (digitando()) {
+                    <div class="gm-msg gm-msg--ia">
+                        <div class="gm-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                        <div class="gm-ia-corpo">
+                            <div class="gm-typing"><span></span><span></span><span></span></div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="gm-barra gm-barra--rodape">
+                <ng-container *ngTemplateOutlet="barra"></ng-container>
+            </div>
+        }
+    </main>
+</div>
+
+<!-- Barra de input reutilizável -->
+<ng-template #barra>
+    <div class="gm-input-bar">
+        <button class="gm-add" pTooltip="Anexar" tooltipPosition="top"><i class="pi pi-plus"></i></button>
+        <input pInputText [(ngModel)]="input" (keydown.enter)="enviar()"
+               placeholder="Pergunte-me alguma coisa..." class="gm-input" />
+        <p-select [options]="modelos" [ngModel]="modeloSel()" (ngModelChange)="modeloSel.set($event)"
+                  optionLabel="label" optionValue="value" appendTo="body" styleClass="gm-select" />
+        <p-select [options]="sistemas" [ngModel]="sistemaSel()" (ngModelChange)="sistemaSel.set($event)"
+                  optionLabel="label" optionValue="value" appendTo="body" styleClass="gm-select" />
+        <p-button icon="pi pi-send" [rounded]="true" (onClick)="enviar()" [disabled]="!input.trim()" />
+    </div>
+</ng-template>

@@ -81,49 +81,79 @@
                 </div>
             }
 
-            <!-- Repositório do Código (GitLab) — obrigatório quando o projeto tem código -->
-            <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório do Código (GitLab)</div>
+            <!-- Repositório raiz do projeto: busca os sub-repos e sugere criar os que faltam -->
+            <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório do projeto (GitLab)</div>
             <div class="gmp-field">
-                <label class="gmp-label">
-                    URL do repositório do código
-                    @if (temCod) { <span class="gmp-required">*</span> } @else { <span class="gmp-opcional">(opcional)</span> }
-                </label>
-                <input pInputText [(ngModel)]="form.repoUrl" (ngModelChange)="onRepoChange()"
-                       placeholder="https://gitlab.goias.gov.br/grupo/projeto.git" class="gmp-input" />
+                <label class="gmp-label">URL raiz do projeto <span class="gmp-required">*</span></label>
+                <input pInputText [(ngModel)]="form.rootUrl" (ngModelChange)="onRootChange()"
+                       placeholder="https://gitlab.goias.gov.br/nome-do-projeto" class="gmp-input" />
+                <small class="gmp-ajuda">O sistema verifica quais repositórios existem nessa raiz (wiki, design system, código, frontend, backend).</small>
             </div>
             <div class="gmp-conexao-row">
-                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
-                          [loading]="gitlabStatus() === 'testando'"
-                          [disabled]="!form.repoUrl.trim() || gitlabStatus() === 'testando'"
-                          (onClick)="testarGitlab()" />
-                @switch (gitlabStatus()) {
-                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
-                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
-                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
+                <p-button label="Buscar repositórios" icon="pi pi-search" [outlined]="true" size="small"
+                          [loading]="buscaStatus() === 'buscando'"
+                          [disabled]="!form.rootUrl.trim() || buscaStatus() === 'buscando'"
+                          (onClick)="buscarRepos()" />
+                @if (buscaStatus() === 'falhou') {
+                    <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> URL inválida</span>
                 }
             </div>
 
-            <!-- Repositório da WIKI (documentação) — obrigatório quando o projeto tem documentação -->
-            <div class="gmp-divisor"><i class="pi pi-book"></i> Repositório da WIKI (documentação)</div>
-            <div class="gmp-field">
-                <label class="gmp-label">
-                    URL do repositório da WIKI
-                    @if (temDoc) { <span class="gmp-required">*</span> } @else { <span class="gmp-opcional">(opcional)</span> }
-                </label>
-                <input pInputText [(ngModel)]="form.wikiUrl" (ngModelChange)="onWikiChange()"
-                       placeholder="https://gitlab.goias.gov.br/grupo/projeto.wiki.git" class="gmp-input" />
-            </div>
-            <div class="gmp-conexao-row">
-                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
-                          [loading]="wikiStatus() === 'testando'"
-                          [disabled]="!form.wikiUrl.trim() || wikiStatus() === 'testando'"
-                          (onClick)="testarWiki()" />
-                @switch (wikiStatus()) {
-                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
-                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
-                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
-                }
-            </div>
+            <!-- Resultado da busca -->
+            @if (buscaStatus() === 'concluido') {
+                <div class="gmp-repos">
+                    <div class="gmp-repos-titulo">
+                        <i class="pi pi-check-circle"></i>
+                        {{ reposEncontrados.length }} repositório(s) encontrado(s)
+                        @if (reposFaltando.length) { · {{ reposFaltando.length }} faltando }
+                    </div>
+
+                    @for (r of repos(); track r.path) {
+                        <div class="gmp-repo-item"
+                             [class.gmp-repo-item--falta]="!r.encontrado"
+                             [class.gmp-repo-item--excluir]="r.encontrado && r.excluir">
+                            <i class="pi" [class]="!r.encontrado ? 'pi-exclamation-circle' : (r.excluir ? 'pi-trash' : 'pi-check-circle')"></i>
+                            <div class="gmp-repo-info">
+                                <span class="gmp-repo-nome">{{ r.nome }}</span>
+                                <span class="gmp-repo-path">{{ form.rootUrl }}{{ r.path }}</span>
+                            </div>
+
+                            @if (!r.encontrado) {
+                                <div class="gmp-repo-criar">
+                                    <p-checkbox [(ngModel)]="r.criar" [binary]="true" inputId="criar-{{ r.path }}" />
+                                    <label [attr.for]="'criar-' + r.path">Criar</label>
+                                </div>
+                            } @else if (r.excluir) {
+                                <span class="gmp-repo-badge gmp-repo-badge--erro">Será excluído</span>
+                                <p-button icon="pi pi-undo" [text]="true" [rounded]="true" size="small"
+                                          pTooltip="Desfazer" tooltipPosition="left" (onClick)="toggleExcluir(r)" />
+                            } @else {
+                                <span class="gmp-repo-badge gmp-repo-badge--ok">Encontrado</span>
+                                <p-button icon="pi pi-trash" [text]="true" [rounded]="true" size="small"
+                                          severity="danger" pTooltip="Excluir repositório" tooltipPosition="left"
+                                          (onClick)="toggleExcluir(r)" />
+                            }
+                        </div>
+                    }
+
+                    @if (reposFaltando.length || reposParaExcluir.length) {
+                        <div class="gmp-repos-sugestao">
+                            <i class="pi pi-info-circle"></i>
+                            @if (reposFaltando.length) { Sugerimos criar os repositórios faltantes. }
+                            Marque o que aprova (criar/excluir) e confirme para continuar.
+                        </div>
+                    }
+
+                    <div class="gmp-repos-acoes">
+                        @if (confirmado()) {
+                            <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Repositórios confirmados</span>
+                        } @else {
+                            <p-button [label]="labelConfirmar" icon="pi pi-check" size="small"
+                                      (onClick)="confirmarRepos()" />
+                        }
+                    </div>
+                </div>
+            }
 
             <!-- Conexão com o banco de dados -->
             <div class="gmp-divisor"><i class="pi pi-database"></i> Banco de dados</div>

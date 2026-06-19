@@ -10,19 +10,22 @@ import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { PasswordModule } from 'primeng/password';
+import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
-import { Membro, Papel, TipoProjeto } from './godev.models';
+import { Membro, Papel, Projeto, TipoProjeto } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import { BG_PAPEL, COR_PAPEL, PAPEL_OPCOES, TIPO_OPCOES, iniciais } from './godev.ui';
 
 type InicioId = 'doc-cod' | 'doc' | 'cod' | 'zero';
 type ConexaoStatus = 'idle' | 'testando' | 'conectado' | 'falhou';
 
+interface RepoScan { nome: string; path: string; encontrado: boolean; criar: boolean; excluir: boolean; }
+
 @Component({
     selector: 'app-godev-manter-projeto',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule,
-              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, PasswordModule],
+              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, PasswordModule, CheckboxModule],
     templateUrl: './godev-manter-projeto.html',
     styleUrl:    './godev-manter-projeto.scss',
 })
@@ -58,7 +61,7 @@ export class GodevManterProjeto implements OnInit {
         nome: '', descricao: '', tipo: null as TipoProjeto | null,
         // Condicionais conforme o fluxo escolhido
         docOrigem: null as string | null, docUrl: '',
-        repoUrl: '', wikiUrl: '', branch: 'main',
+        rootUrl: '',
         // Conexões
         banco: null as string | null, dbUsuario: '', dbSenha: '',
     };
@@ -77,31 +80,68 @@ export class GodevManterProjeto implements OnInit {
     ];
     membros = signal<Membro[]>([]);
 
-    // Estados de teste de conexão (GitLab código, WIKI e Banco)
-    gitlabStatus = signal<ConexaoStatus>('idle');
-    wikiStatus   = signal<ConexaoStatus>('idle');
-    dbStatus     = signal<ConexaoStatus>('idle');
+    // Sub-repositórios esperados na raiz do projeto
+    private esperados: { nome: string; path: string }[] = [
+        { nome: 'WIKI',          path: '/wiki' },
+        { nome: 'Design System', path: '/designsystem' },
+        { nome: 'Código',        path: '/codigo' },
+        { nome: 'Frontend',      path: '/frontend' },
+        { nome: 'Backend',       path: '/backend' },
+    ];
+
+    // Resultado da busca na raiz
+    buscaStatus = signal<'idle' | 'buscando' | 'concluido' | 'falhou'>('idle');
+    repos = signal<RepoScan[]>([]);
+    confirmado = signal(false);
+
+    get reposEncontrados()  { return this.repos().filter(r => r.encontrado); }
+    get reposFaltando()     { return this.repos().filter(r => !r.encontrado); }
+    get reposParaCriar()    { return this.reposFaltando.filter(r => r.criar); }
+    get reposParaExcluir()  { return this.repos().filter(r => r.encontrado && r.excluir); }
+
+    toggleExcluir(r: RepoScan) { r.excluir = !r.excluir; this.confirmado.set(false); }
+
+    get labelConfirmar() {
+        const partes: string[] = [];
+        if (this.reposParaCriar.length)   partes.push(`criar ${this.reposParaCriar.length}`);
+        if (this.reposParaExcluir.length) partes.push(`excluir ${this.reposParaExcluir.length}`);
+        return partes.length ? `Confirmar (${partes.join(' · ')})` : 'Confirmar repositórios';
+    }
+
+    // Estado de conexão do banco
+    dbStatus = signal<ConexaoStatus>('idle');
 
     selecionarInicio(id: InicioId) { this.inicioSelecionado.set(id); }
 
-    // Mudar a URL invalida o teste anterior — exige testar de novo
-    onRepoChange() { this.gitlabStatus.set('idle'); }
-    onWikiChange() { this.wikiStatus.set('idle'); }
-    onDbChange()   { this.dbStatus.set('idle'); }
-
     private urlValida(url: string) { return /^https?:\/\/[^\s]+\.[^\s]+/.test(url.trim()); }
 
-    testarGitlab() {
-        this.gitlabStatus.set('testando');
-        const url = this.form.repoUrl;
-        setTimeout(() => this.gitlabStatus.set(this.urlValida(url) ? 'conectado' : 'falhou'), 1500);
+    // Mudar a raiz invalida a busca/confirmação anterior
+    onRootChange() {
+        this.buscaStatus.set('idle');
+        this.repos.set([]);
+        this.confirmado.set(false);
     }
 
-    testarWiki() {
-        this.wikiStatus.set('testando');
-        const url = this.form.wikiUrl;
-        setTimeout(() => this.wikiStatus.set(this.urlValida(url) ? 'conectado' : 'falhou'), 1500);
+    buscarRepos() {
+        if (!this.urlValida(this.form.rootUrl)) { this.buscaStatus.set('falhou'); return; }
+        this.buscaStatus.set('buscando');
+        this.confirmado.set(false);
+        // Mock: encontra wiki, código e frontend; faltam design system e backend
+        const encontrados = new Set(['/wiki', '/codigo', '/frontend']);
+        setTimeout(() => {
+            this.repos.set(this.esperados.map(e => ({
+                ...e,
+                encontrado: encontrados.has(e.path),
+                criar: !encontrados.has(e.path), // sugere criar os que faltam
+                excluir: false,
+            })));
+            this.buscaStatus.set('concluido');
+        }, 1500);
     }
+
+    confirmarRepos() { this.confirmado.set(true); }
+
+    onDbChange() { this.dbStatus.set('idle'); }
 
     testarBanco() {
         this.dbStatus.set('testando');
@@ -117,6 +157,8 @@ export class GodevManterProjeto implements OnInit {
     membroErro = '';
     private nextId = 100;
 
+    private projetoEditando: Projeto | null = null;
+
     ngOnInit() {
         const id = this.route.snapshot.paramMap.get('id');
         this.isEdicao = !!id;
@@ -124,19 +166,20 @@ export class GodevManterProjeto implements OnInit {
 
         const p = PROJETOS_MOCK.find(x => x.id === +id!);
         if (p) {
+            this.projetoEditando = p;
             this.form = {
                 ...this.form,
                 nome: p.nome, descricao: p.descricao, tipo: p.tipo,
                 // Conexões já configuradas (mock) do projeto existente
-                repoUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}.git`,
-                wikiUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}.wiki.git`,
+                rootUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}`,
                 banco: 'postgres', dbUsuario: 'svc_godev', dbSenha: 'senha-mock-123',
             };
             // Projeto existente: assume que já tem doc e código
             this.inicioSelecionado.set('doc-cod');
-            // Conexões já validadas anteriormente
-            this.gitlabStatus.set('conectado');
-            this.wikiStatus.set('conectado');
+            // Repositórios já verificados (todos existentes) e banco conectado
+            this.repos.set(this.esperados.map(e => ({ ...e, encontrado: true, criar: false, excluir: false })));
+            this.buscaStatus.set('concluido');
+            this.confirmado.set(true);
             this.dbStatus.set('conectado');
             this.membros.set([...p.membros]);
         }
@@ -178,13 +221,37 @@ export class GodevManterProjeto implements OnInit {
         // Banco é sempre obrigatório e precisa estar conectado
         const dbOk = !!f.banco && !!f.dbUsuario.trim() && !!f.dbSenha.trim()
             && this.dbStatus() === 'conectado';
-        // Código (GitLab) obrigatório só quando o projeto tem código
-        const codigoOk = !this.temCod
-            || (!!f.repoUrl.trim() && this.gitlabStatus() === 'conectado');
-        // WIKI obrigatória só quando o projeto tem documentação
-        const wikiOk = !this.temDoc
-            || (!!f.wikiUrl.trim() && this.wikiStatus() === 'conectado');
-        return !!f.nome.trim() && inicioOk && dbOk && codigoOk && wikiOk;
+        // Raiz do projeto: precisa buscar os repositórios e confirmar
+        const reposOk = !!f.rootUrl.trim() && this.confirmado();
+        return !!f.nome.trim() && inicioOk && dbOk && reposOk;
+    }
+
+    private persistir() {
+        const f = this.form;
+        if (this.isEdicao && this.projetoEditando) {
+            // Atualiza o projeto existente no mock
+            const p = this.projetoEditando;
+            p.nome = f.nome.trim();
+            p.descricao = f.descricao.trim();
+            p.tipo = f.tipo ?? p.tipo;
+            p.membros = this.membros();
+            p.ultimaPublicacao = 'agora mesmo';
+        } else {
+            // Cria um novo projeto e adiciona no topo da lista
+            const novoId = Math.max(0, ...PROJETOS_MOCK.map(p => p.id)) + 1;
+            PROJETOS_MOCK.unshift({
+                id: novoId,
+                nome: f.nome.trim(),
+                descricao: f.descricao.trim(),
+                tipo: f.tipo ?? 'Web',
+                status: 'ativo',
+                sincronizacao: 'sincronizado',
+                membros: this.membros(),
+                documentos: [],
+                telas: [],
+                ultimaPublicacao: 'agora mesmo',
+            });
+        }
     }
 
     salvar() {
@@ -194,6 +261,7 @@ export class GodevManterProjeto implements OnInit {
         const edicao = this.isEdicao;
         // Mock: simula criação do workspace antes de voltar para a lista
         setTimeout(() => {
+            this.persistir();
             this.salvando.set(false);
             this.router.navigate(['/godev/projetos']).then(() => {
                 this.messageService.add({
@@ -213,6 +281,7 @@ export class GodevManterProjeto implements OnInit {
     inativar() {
         this.inativarModal = false;
         const nome = this.form.nome.trim();
+        if (this.projetoEditando) this.projetoEditando.status = 'inativo';
         this.router.navigate(['/godev/projetos']).then(() => {
             this.messageService.add({
                 severity: 'warn',

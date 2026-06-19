@@ -150,4 +150,97 @@ export const PROJETOS_MOCK: Projeto[] = [
         documentos: [],
         telas: [],
     },
+    {
+        id: 5,
+        nome: 'API de Integração gov.br',
+        descricao: 'Camada de autenticação e single sign-on com o gov.br para os sistemas estaduais.',
+        tipo: 'API',
+        status: 'ativo',
+        sincronizacao: 'sincronizado',
+        ultimaPublicacao: 'há 5 min',
+        membros: [
+            { id: 4, nome: 'Ana Pereira',  email: 'ana@go.gov.br',  papel: 'Desenvolvedor', avatar: 'AP' },
+            { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO',         avatar: 'BT' },
+        ],
+        documentos: [
+            { id: 1, titulo: 'Especificação OpenAPI', criadoPor: 'Ana Pereira', atualizadoEm: 'hoje', conteudo: '# API gov.br\n\n## Autenticação\nFluxo OAuth2 com o provedor gov.br.\n' },
+        ],
+        telas: [],
+    },
+    {
+        id: 6,
+        nome: 'Portal de Transparência Estadual',
+        descricao: 'Divulgação de despesas, receitas e contratos do Estado de Goiás.',
+        tipo: 'Web',
+        status: 'ativo',
+        sincronizacao: 'sincronizado',
+        ultimaPublicacao: 'há 1h',
+        membros: [
+            { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO',      avatar: 'FS' },
+            { id: 2, nome: 'Maria Souza',      email: 'maria@go.gov.br',  papel: 'Analista', avatar: 'MS' },
+            { id: 3, nome: 'Carlos Lima',      email: 'carlos@go.gov.br', papel: 'Design',  avatar: 'CL' },
+            { id: 8, nome: 'Renata Dias',      email: 'renata@go.gov.br', papel: 'QA',      avatar: 'RD' },
+        ],
+        documentos: [
+            { id: 1, titulo: 'Requisitos de Transparência', criadoPor: 'Maria Souza', atualizadoEm: 'há 2 dias', conteudo: '# Transparência\n\nLei de Acesso à Informação.\n' },
+            { id: 2, titulo: 'Layout dos Relatórios',       criadoPor: 'Carlos Lima', atualizadoEm: 'ontem',     conteudo: '# Relatórios\n' },
+        ],
+        telas: [
+            { id: 1, nome: 'Painel de Despesas', status: 'aprovada', criadoPor: 'Carlos Lima', html: '', componentes: [{ id: 1, tipo: 'titulo', texto: 'Despesas', largura: 100 }] },
+            { id: 2, nome: 'Consulta de Contratos', status: 'pendente', criadoPor: 'Carlos Lima', html: '', componentes: [{ id: 1, tipo: 'titulo', texto: 'Contratos', largura: 100 }] },
+        ],
+    },
+    {
+        id: 7,
+        nome: 'App Saúde Goiás',
+        descricao: 'Agendamento de consultas e exames na rede estadual de saúde.',
+        tipo: 'Mobile',
+        status: 'ativo',
+        sincronizacao: 'dessincronizado',
+        ultimaPublicacao: 'há 3h',
+        membros: [
+            { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista',      avatar: 'LF' },
+            { id: 4, nome: 'Ana Pereira',      email: 'ana@go.gov.br',     papel: 'Desenvolvedor', avatar: 'AP' },
+        ],
+        documentos: [
+            { id: 1, titulo: 'Jornada do Paciente', criadoPor: 'Luciano Fagundes', atualizadoEm: 'hoje', conteudo: '# Jornada\n' },
+        ],
+        telas: [
+            { id: 1, nome: 'Agendamento', status: 'reprovada', criadoPor: 'Ana Pereira', html: '', componentes: [{ id: 1, tipo: 'titulo', texto: 'Agendar consulta', largura: 100 }] },
+        ],
+    },
+    {
+        id: 8,
+        nome: 'Sistema de Protocolo Digital',
+        descricao: 'Gestão de protocolos e tramitação de documentos entre órgãos.',
+        tipo: 'Web',
+        status: 'inativo',
+        sincronizacao: 'dessincronizado',
+        ultimaPublicacao: 'há 1 semana',
+        membros: [
+            { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO', avatar: 'FS' },
+        ],
+        documentos: [],
+        telas: [],
+    },
+    {
+        id: 9,
+        nome: 'Plataforma de Licitações',
+        descricao: 'Pregão eletrônico e gestão de processos licitatórios do Estado.',
+        tipo: 'Web',
+        status: 'ativo',
+        sincronizacao: 'sincronizado',
+        ultimaPublicacao: 'há 45 min',
+        membros: [
+            { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO',            avatar: 'BT' },
+            { id: 8, nome: 'Renata Dias',    email: 'renata@go.gov.br', papel: 'QA',           avatar: 'RD' },
+            { id: 4, nome: 'Ana Pereira',    email: 'ana@go.gov.br',    papel: 'Desenvolvedor', avatar: 'AP' },
+        ],
+        documentos: [
+            { id: 1, titulo: 'Fluxo do Pregão', criadoPor: 'Bruno Teixeira', atualizadoEm: 'hoje', conteudo: '# Pregão eletrônico\n' },
+        ],
+        telas: [
+            { id: 1, nome: 'Sala de Disputa', status: 'aprovada', criadoPor: 'Ana Pereira', html: '', componentes: [{ id: 1, tipo: 'titulo', texto: 'Sala de disputa', largura: 100 }] },
+        ],
+    },
 ];
