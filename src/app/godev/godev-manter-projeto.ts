@@ -59,18 +59,10 @@ export class GodevManterProjeto implements OnInit {
 
     form = {
         nome: '', descricao: '', tipo: null as TipoProjeto | null,
-        // Condicionais conforme o fluxo escolhido
-        docOrigem: null as string | null, docUrl: '',
         rootUrl: '',
         // Conexões
         banco: null as string | null, dbUsuario: '', dbSenha: '',
     };
-    origemDocOpcoes = [
-        { label: 'Upload de arquivo (.md / Word)', value: 'upload' },
-        { label: 'Link externo (URL)',            value: 'url' },
-        { label: 'Confluence',                    value: 'confluence' },
-        { label: 'SharePoint',                    value: 'sharepoint' },
-    ];
     bancoOpcoes = [
         { label: 'PostgreSQL', value: 'postgres' },
         { label: 'MySQL',      value: 'mysql' },

@@ -100,7 +100,7 @@ import { filter } from 'rxjs/operators';
                     </a>
                 } @else if (activeSystem().id === 'godev') {
                     <a class="layout-topbar-logo" routerLink="/godev">
-                        <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:#16A34A">GO<span style="color:var(--text-color)">.</span>DEV</span>
+                        <img src="assets/logo-godev.svg" alt="GO.DEV" style="height:32px;width:auto" />
                     </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">

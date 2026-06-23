@@ -65,22 +65,6 @@
                           styleClass="gmp-input" />
             </div>
 
-            <!-- Campos condicionais: documentação existente -->
-            @if (!isEdicao && temDoc) {
-                <div class="gmp-divisor"><i class="pi pi-file-edit"></i> Documentação existente</div>
-                <div class="gmp-field">
-                    <label class="gmp-label">Origem da documentação</label>
-                    <p-select [options]="origemDocOpcoes" [(ngModel)]="form.docOrigem"
-                              optionLabel="label" optionValue="value" appendTo="body"
-                              placeholder="Selecione a origem" styleClass="gmp-input" />
-                </div>
-                <div class="gmp-field">
-                    <label class="gmp-label">Link / caminho da documentação</label>
-                    <input pInputText [(ngModel)]="form.docUrl"
-                           placeholder="https://... ou caminho do arquivo" class="gmp-input" />
-                </div>
-            }
-
             <!-- Repositório raiz do projeto: busca os sub-repos e sugere criar os que faltam -->
             <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório do projeto (GitLab)</div>
             <div class="gmp-field">
