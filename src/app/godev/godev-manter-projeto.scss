@@ -1,5 +1,43 @@
 :host { display: block; }
 
+// Tag de tipo do repositório (wiki / front-end / back-end / api)
+.gmp-repo-tipo {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+
+    &--wiki     { background: #ede9fe; color: #7c3aed; }
+    &--frontend { background: #dbeafe; color: #1d4ed8; }
+    &--backend  { background: #fef3c7; color: #b45309; }
+    &--api      { background: #cffafe; color: #0e7490; }
+}
+
+// Opção de usuário no autocomplete da busca
+.gmp-usuario-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.125rem 0;
+}
+
+.gmp-usuario-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
 // Wrapper estrutural da página: herda os 2rem do .layout-main-container
 // (alinhado com a sidebar). Sem padding declarado, sem 0px.
 .gmp-page {

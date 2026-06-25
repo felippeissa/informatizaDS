@@ -1,0 +1,75 @@
+@if (chatMode() !== 'none') {
+
+    <!-- Botão flutuante (apenas no modo Bottom) -->
+    @if (chatMode() === 'bottom' && !aberto()) {
+        <button class="cf-fab" (click)="abrir()" pTooltip="Manual Inteligente" tooltipPosition="left">
+            <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" />
+        </button>
+    }
+
+    <!-- Painel do chat -->
+    @if (aberto()) {
+        <div class="cf-panel"
+             [class.cf-panel--bottom]="chatMode() === 'bottom'"
+             [class.cf-panel--upper]="chatMode() === 'upper'">
+
+            <div class="cf-header">
+                <div class="cf-header-left">
+                    <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" class="cf-header-icon" />
+                    <div class="cf-header-txt">
+                        <span class="cf-title">Manual Inteligente</span>
+                        @if (temSistemaFixo) {
+                            <span class="cf-ctx"><i class="pi pi-bookmark"></i> Sobre o {{ sistemaAtual() }}</span>
+                        } @else {
+                            <span class="cf-ctx">Assistente dos sistemas</span>
+                        }
+                    </div>
+                </div>
+                <button class="cf-close" (click)="fechar()" aria-label="Fechar"><i class="pi pi-times"></i></button>
+            </div>
+
+            <div class="cf-msgs" #scrollArea>
+                @if (!msgs().length) {
+                    <div class="cf-vazio">
+                        <div class="cf-vazio-icone"><i class="pi pi-sparkles"></i></div>
+                        <p>{{ temSistemaFixo ? 'Pergunte sobre o ' + sistemaAtual() : 'Como posso te ajudar?' }}</p>
+                        <span>{{ temSistemaFixo ? 'Respondo com base na documentação deste sistema.' : 'Selecione um sistema ou pergunte sobre todos.' }}</span>
+                    </div>
+                }
+                @for (m of msgs(); track $index) {
+                    @if (m.autor === 'user') {
+                        <div class="cf-msg cf-msg--user">{{ m.texto }}</div>
+                    } @else {
+                        <div class="cf-msg cf-msg--ia">
+                            <div class="cf-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                            <div class="cf-ia-texto">{{ m.texto }}</div>
+                        </div>
+                    }
+                }
+                @if (digitando()) {
+                    <div class="cf-msg cf-msg--ia">
+                        <div class="cf-ia-avatar"><i class="pi pi-sparkles"></i></div>
+                        <div class="cf-typing"><span></span><span></span><span></span></div>
+                    </div>
+                }
+            </div>
+
+            <div class="cf-footer">
+                @if (msgs().length) {
+                    <button class="cf-continuar" (click)="abrirManual()">
+                        <i class="pi pi-external-link"></i> Continuar conversa no Manual Inteligente
+                    </button>
+                }
+                @if (!temSistemaFixo) {
+                    <p-select [options]="sistemasFiltro" [ngModel]="sistemaSel()" (ngModelChange)="sistemaSel.set($event)"
+                              optionLabel="label" optionValue="value" appendTo="body" styleClass="cf-select" />
+                }
+                <div class="cf-input-row">
+                    <input pInputText [(ngModel)]="input" (keydown.enter)="enviar()"
+                           placeholder="Pergunte-me alguma coisa..." class="cf-input" />
+                    <p-button icon="pi pi-send" [rounded]="true" size="small" (onClick)="enviar()" [disabled]="!input.trim()" />
+                </div>
+            </div>
+        </div>
+    }
+}

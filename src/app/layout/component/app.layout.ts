@@ -5,16 +5,18 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { ToastModule } from 'primeng/toast';
+import { ChatFlutuante } from '@/app/chat/chat-flutuante';
 import { LayoutService } from '@/app/layout/service/layout.service';
 
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, ToastModule],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, ToastModule, ChatFlutuante],
     template: `<div class="layout-wrapper" [ngClass]="containerClass()">
         <p-toast position="top-right" />
         <app-topbar></app-topbar>
         <app-sidebar></app-sidebar>
+        <app-chat-flutuante></app-chat-flutuante>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>

@@ -1,11 +1,14 @@
 import { Injectable, effect, signal, computed } from '@angular/core';
 
+export type ChatMode = 'none' | 'bottom' | 'upper';
+
 export interface LayoutConfig {
     preset: string;
     primary: string;
     surface: string | undefined | null;
     darkTheme: boolean;
     menuMode: string;
+    chatMode: ChatMode;
 }
 
 interface LayoutState {
@@ -26,8 +29,15 @@ export class LayoutService {
         primary: 'emerald',
         surface: null,
         darkTheme: false,
-        menuMode: 'static'
+        menuMode: 'static',
+        chatMode: 'none'
     });
+
+    // Estado do chat flutuante (Manual Inteligente acoplável)
+    chatAberto = signal<boolean>(false);
+    chatMode = computed(() => this.layoutConfig().chatMode);
+
+    toggleChat() { this.chatAberto.update((v) => !v); }
 
     layoutState = signal<LayoutState>({
         staticMenuDesktopInactive: false,

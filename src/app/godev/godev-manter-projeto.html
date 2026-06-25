@@ -4,37 +4,6 @@
         <h2 class="ds-page-title">{{ isEdicao ? 'Editar projeto' : 'Novo projeto' }}</h2>
     </div>
 
-    <!-- Seleção do fluxo de início (apenas para novos projetos) -->
-    @if (!isEdicao) {
-    <div class="gmp-section">
-        <h3 class="gmp-section-title">
-            <i class="pi pi-flag"></i> Como o projeto começa? <span class="gmp-required">*</span>
-        </h3>
-        <p class="gmp-section-hint">Selecione o ponto de partida — os campos do cadastro se ajustam conforme a opção.</p>
-
-        <div class="gmp-starts">
-            @for (i of inicios; track i.id) {
-                <button type="button" class="gmp-start"
-                        [class.gmp-start--ativo]="inicioSelecionado() === i.id"
-                        (click)="selecionarInicio(i.id)">
-                    <span class="gmp-start-check"><i class="pi pi-check"></i></span>
-                    <span class="gmp-start-icone"><i class="pi" [class]="i.icon"></i></span>
-                    <span class="gmp-start-titulo">{{ i.titulo }}</span>
-                    <span class="gmp-start-desc">{{ i.desc }}</span>
-                    <span class="gmp-start-tags">
-                        <span class="gmp-start-tag" [class.gmp-start-tag--on]="i.temDoc">
-                            <i class="pi" [class]="i.temDoc ? 'pi-check' : 'pi-times'"></i> Documentação
-                        </span>
-                        <span class="gmp-start-tag" [class.gmp-start-tag--on]="i.temCod">
-                            <i class="pi" [class]="i.temCod ? 'pi-check' : 'pi-times'"></i> Código
-                        </span>
-                    </span>
-                </button>
-            }
-        </div>
-    </div>
-    }
-
     <div class="gmp-layout">
 
         <!-- Coluna esquerda: dados do projeto -->
@@ -71,7 +40,7 @@
                 <label class="gmp-label">URL raiz do projeto <span class="gmp-required">*</span></label>
                 <input pInputText [(ngModel)]="form.rootUrl" (ngModelChange)="onRootChange()"
                        placeholder="https://gitlab.goias.gov.br/nome-do-projeto" class="gmp-input" />
-                <small class="gmp-ajuda">O sistema verifica quais repositórios existem nessa raiz (wiki, design system, código, frontend, backend).</small>
+                <small class="gmp-ajuda">O sistema verifica quais repositórios existem nessa raiz (wiki, frontend e back-ends) e sugere criar os que faltam.</small>
             </div>
             <div class="gmp-conexao-row">
                 <p-button label="Buscar repositórios" icon="pi pi-search" [outlined]="true" size="small"
@@ -96,11 +65,13 @@
                         <div class="gmp-repo-item"
                              [class.gmp-repo-item--falta]="!r.encontrado"
                              [class.gmp-repo-item--excluir]="r.encontrado && r.excluir">
-                            <i class="pi" [class]="!r.encontrado ? 'pi-exclamation-circle' : (r.excluir ? 'pi-trash' : 'pi-check-circle')"></i>
+                            <i class="pi" [class]="!r.encontrado ? 'pi-exclamation-circle' : (r.excluir ? 'pi-minus-circle' : 'pi-check-circle')"></i>
                             <div class="gmp-repo-info">
                                 <span class="gmp-repo-nome">{{ r.nome }}</span>
                                 <span class="gmp-repo-path">{{ form.rootUrl }}{{ r.path }}</span>
                             </div>
+
+                            <span class="gmp-repo-tipo" [class]="'gmp-repo-tipo--' + r.tipo">{{ tipoLabel[r.tipo] }}</span>
 
                             @if (!r.encontrado) {
                                 <div class="gmp-repo-criar">
@@ -108,13 +79,13 @@
                                     <label [attr.for]="'criar-' + r.path">Criar</label>
                                 </div>
                             } @else if (r.excluir) {
-                                <span class="gmp-repo-badge gmp-repo-badge--erro">Será excluído</span>
+                                <span class="gmp-repo-badge gmp-repo-badge--erro">Será desvinculado</span>
                                 <p-button icon="pi pi-undo" [text]="true" [rounded]="true" size="small"
                                           pTooltip="Desfazer" tooltipPosition="left" (onClick)="toggleExcluir(r)" />
                             } @else {
                                 <span class="gmp-repo-badge gmp-repo-badge--ok">Encontrado</span>
-                                <p-button icon="pi pi-trash" [text]="true" [rounded]="true" size="small"
-                                          severity="danger" pTooltip="Excluir repositório" tooltipPosition="left"
+                                <p-button icon="pi pi-minus-circle" [text]="true" [rounded]="true" size="small"
+                                          severity="warn" pTooltip="Desvincular repositório" tooltipPosition="left"
                                           (onClick)="toggleExcluir(r)" />
                             }
                         </div>
@@ -124,7 +95,7 @@
                         <div class="gmp-repos-sugestao">
                             <i class="pi pi-info-circle"></i>
                             @if (reposFaltando.length) { Sugerimos criar os repositórios faltantes. }
-                            Marque o que aprova (criar/excluir) e confirme para continuar.
+                            Marque o que aprova (criar/desvincular) e confirme para continuar.
                         </div>
                     }
 
@@ -201,7 +172,7 @@
                 <div class="gmp-empty-membros">
                     <i class="pi pi-users"></i>
                     <p>Nenhum membro adicionado</p>
-                    <span>Adicione as pessoas que terão acesso a este projeto e defina o papel de cada uma</span>
+                    <span>Adicione as pessoas que terão acesso a este projeto e defina o perfil de cada uma</span>
                 </div>
             }
         </div>
@@ -234,20 +205,24 @@
 
     <div class="gmp-dialog-body">
         <div class="gmp-field">
-            <label class="gmp-label">Nome completo <span class="gmp-required">*</span></label>
-            <input pInputText [(ngModel)]="novoMembro.nome"
-                   placeholder="Ex: Ana Souza" class="gmp-input" />
+            <label class="gmp-label">Buscar usuário <span class="gmp-required">*</span></label>
+            <p-autoComplete [(ngModel)]="usuarioSel" [suggestions]="sugestoesUsuarios"
+                            (completeMethod)="buscarUsuarios($event)" optionLabel="display"
+                            [forceSelection]="true" [delay]="150" appendTo="body" [fluid]="true"
+                            placeholder="Busque por CPF, nome, login ou e-mail" styleClass="gmp-input">
+                <ng-template let-u pTemplate="item">
+                    <div class="gmp-usuario-opt">
+                        <div class="gmp-usuario-avatar">{{ iniciais(u.nome) }}</div>
+                        <span>{{ u.display }}</span>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
         </div>
         <div class="gmp-field">
-            <label class="gmp-label">E-mail <span class="gmp-required">*</span></label>
-            <input pInputText [(ngModel)]="novoMembro.email"
-                   placeholder="nome@goias.gov.br" class="gmp-input" />
-        </div>
-        <div class="gmp-field">
-            <label class="gmp-label">Papel no projeto <span class="gmp-required">*</span></label>
+            <label class="gmp-label">Perfil <span class="gmp-required">*</span></label>
             <p-select [options]="papelOpcoes" [(ngModel)]="novoMembro.papel"
                       optionLabel="label" optionValue="value" appendTo="body"
-                      placeholder="Selecione o papel"
+                      placeholder="Selecione o perfil"
                       styleClass="gmp-input" />
         </div>
         @if (membroErro) {

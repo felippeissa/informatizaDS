@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
+import { PopoverModule } from 'primeng/popover';
 import { Projeto, Documento, Tela, Papel, ComponenteTela, TipoComponente } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import {
@@ -23,17 +24,38 @@ interface ChatMsg { autor: 'user' | 'ia'; texto: string; contexto?: string; }
 
 interface ChatSessao { id: number; titulo: string; msgs: ChatMsg[]; }
 
+interface StatusAgente { texto: string; icon: string; cor: string; }
+
 @Component({
     selector: 'app-godev-workspace',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, DialogModule,
-              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule, CheckboxModule],
+              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule, CheckboxModule, PopoverModule],
     templateUrl: './godev-workspace.html',
     styleUrl:    './godev-workspace.scss',
 })
-export class GodevWorkspace implements OnInit, AfterViewChecked {
+export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
     private router = inject(Router);
     private route  = inject(ActivatedRoute);
+
+    // ===================== Status do agente (o que o GO.DEV está fazendo) =====================
+    atividades: StatusAgente[] = [
+        { texto: 'Criando repositório do projeto...',                                  icon: 'pi-server',          cor: '#2563eb' },
+        { texto: 'Criando arquivo da wiki...',                                         icon: 'pi-book',            cor: '#2563eb' },
+        { texto: 'Criando arquivo do Design System...',                                icon: 'pi-palette',         cor: '#7c3aed' },
+        { texto: 'Sincronizando com o GitLab...',                                      icon: 'pi-sync',            cor: '#2563eb' },
+        { texto: 'Analisando o documento de requisitos...',                            icon: 'pi-file-edit',       cor: '#0e7490' },
+        { texto: 'Gerando componentes a partir da tela aprovada...',                   icon: 'pi-objects-column',  cor: '#15803d' },
+        { texto: 'Gerando código do frontend...',                                      icon: 'pi-code',            cor: '#15803d' },
+        { texto: 'Gerando endpoints do backend...',                                    icon: 'pi-server',          cor: '#15803d' },
+        { texto: 'Aguardando Renildo finalizar o documento de requisitos...',          icon: 'pi-clock',           cor: '#b45309' },
+        { texto: 'Aguardando aprovação da tela de Login...',                           icon: 'pi-clock',           cor: '#b45309' },
+        { texto: 'Atualizando a documentação no repositório...',                       icon: 'pi-book',            cor: '#0e7490' },
+    ];
+    statusAtual = signal<StatusAgente>(this.atividades[0]);
+    statusAtivo = signal(true);
+    atividadeIdx = signal(0);
+    private statusTimer?: ReturnType<typeof setInterval>;
 
     corPapel = COR_PAPEL;   bgPapel  = BG_PAPEL;
     corStatus = COR_STATUS; bgStatus = BG_STATUS;
@@ -104,6 +126,26 @@ export class GodevWorkspace implements OnInit, AfterViewChecked {
         this.projeto = p;
         if (p.documentos.length) this.selecionarDoc(p.documentos[0]);
         if (p.telas.length)      this.selecionarTela(p.telas[0]);
+        this.iniciarStatus();
+    }
+
+    // Rotaciona as atividades simulando o agente trabalhando; ao final, fica "Tudo sincronizado"
+    private iniciarStatus() {
+        this.statusTimer = setInterval(() => {
+            const prox = this.atividadeIdx() + 1;
+            if (prox >= this.atividades.length) {
+                this.atividadeIdx.set(this.atividades.length);
+                this.statusAtivo.set(false);
+                clearInterval(this.statusTimer);
+                return;
+            }
+            this.atividadeIdx.set(prox);
+            this.statusAtual.set(this.atividades[prox]);
+        }, 3500);
+    }
+
+    ngOnDestroy() {
+        if (this.statusTimer) clearInterval(this.statusTimer);
     }
 
     ngAfterViewChecked() {

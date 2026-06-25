@@ -89,6 +89,10 @@ declare type SurfacesType = {
                 <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
                 <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
             </div>
+            <div class="flex flex-col gap-2">
+                <span class="text-sm text-muted-color font-semibold">Chat</span>
+                <p-selectbutton [ngModel]="chatMode()" (ngModelChange)="onChatModeChange($event)" [options]="chatModeOptions" [allowEmpty]="false" size="small" />
+            </div>
         </div>
     `,
     host: {
@@ -114,6 +118,19 @@ export class AppConfigurator {
         { label: 'Static', value: 'static' },
         { label: 'Overlay', value: 'overlay' }
     ];
+
+    chatModeOptions = [
+        { label: 'None', value: 'none' },
+        { label: 'Bottom', value: 'bottom' },
+        { label: 'Upper', value: 'upper' }
+    ];
+
+    chatMode = computed(() => this.layoutService.layoutConfig().chatMode);
+
+    onChatModeChange(event: string) {
+        this.layoutService.chatAberto.set(false);
+        this.layoutService.layoutConfig.update((prev) => ({ ...prev, chatMode: event as any }));
+    }
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {

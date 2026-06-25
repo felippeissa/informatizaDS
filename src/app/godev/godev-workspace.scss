@@ -13,6 +13,7 @@
 }
 
 .gw-topbar {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,19 +40,100 @@
 }
 .gw-projeto-tipo { font-size: 0.6875rem; color: var(--text-color-secondary); }
 
-.gw-sinc-info {
-    font-size: 0.8125rem;
-    color: var(--text-color-secondary);
+// Área de status do agente (o que o GO.DEV está fazendo)
+.gw-status {
     display: flex;
     align-items: center;
-    gap: 0.375rem;
-    cursor: default;
+    gap: 0.5rem;
+    width: 280px;            // largura fixa: o texto trunca, não empurra o layout
+    padding: 0.4rem 0.875rem;
+    border: 1px solid var(--surface-border);
+    border-radius: 20px;
+    background: var(--surface-ground);
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
 
-    i { font-size: 11px; }
+    &:hover { border-color: var(--primary-color); background: var(--surface-card); }
+    &--idle { opacity: 0.9; }
+}
+
+.gw-status-chevron { font-size: 10px; color: var(--text-color-secondary); margin-left: auto; flex-shrink: 0; }
+
+// Lista de atividades (popover)
+.gw-status-lista { min-width: 320px; max-width: 380px; display: flex; flex-direction: column; gap: 2px; }
+
+.gw-status-lista-titulo {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.5rem 0.625rem;
+    border-bottom: 1px solid var(--surface-border);
+    margin-bottom: 0.375rem;
+
+    i { color: var(--primary-color); font-size: 13px; }
+}
+
+.gw-status-linha {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 7px;
+    font-size: 0.8125rem;
+    color: var(--text-color-secondary);
+    line-height: 1.4;
+
+    > i { font-size: 13px; margin-top: 1px; flex-shrink: 0; color: var(--surface-border); }
+
+    &--feita {
+        color: var(--text-color);
+        > i { color: #15803d; }
+    }
+
+    &--atual {
+        background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+        color: var(--text-color);
+        font-weight: 600;
+        > i { color: var(--primary-color); }
+    }
+}
+
+.gw-status-final { margin-top: 0.25rem; border-top: 1px solid var(--surface-border); padding-top: 0.625rem; }
+
+.gw-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: gw-pulse 1.4s ease-in-out infinite;
+}
+
+.gw-status-icon { font-size: 12px; flex-shrink: 0; color: var(--text-color-secondary); }
+
+.gw-status-texto {
+    font-size: 0.8125rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@keyframes gw-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.4; transform: scale(0.7); }
 }
 
 // Segmented control central
 .gw-seg {
+    // Centralizado de forma absoluta: não se move quando o status muda de largura
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     gap: 2px;
     background: var(--surface-ground);
@@ -59,6 +141,7 @@
     border-radius: 10px;
     padding: 3px;
     flex-shrink: 0;
+    z-index: 1;
 }
 
 .gw-seg-btn {

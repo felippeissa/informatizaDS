@@ -3,6 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
+import { TooltipModule } from 'primeng/tooltip';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '@/app/layout/service/layout.service';
 import { filter } from 'rxjs/operators';
@@ -10,7 +11,7 @@ import { filter } from 'rxjs/operators';
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, StyleClassModule, TooltipModule, AppConfigurator],
     styles: [`
         .ds-logo-text {
             display: flex; flex-direction: column; line-height: 1.1;
@@ -102,6 +103,11 @@ import { filter } from 'rxjs/operators';
                     <a class="layout-topbar-logo" routerLink="/godev">
                         <img src="assets/logo-godev.svg" alt="GO.DEV" style="height:32px;width:auto" />
                     </a>
+                } @else if (activeSystem().id === 'manual') {
+                    <a class="layout-topbar-logo" routerLink="/manual" style="gap:9px">
+                        <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" style="height:30px;width:auto" />
+                        <span style="font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--text-color);white-space:nowrap">Manual Inteligente</span>
+                    </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">
                         <div class="ds-logo-text">
@@ -117,6 +123,12 @@ import { filter } from 'rxjs/operators';
                     <button class="sys-btn" style="background:var(--primary-color);color:#fff;border-radius:6px;padding:0 14px;gap:6px;font-weight:600;font-size:13px" routerLink="/godev/projetos/novo">
                         <i class="pi pi-plus" style="font-size:11px"></i>
                         Novo projeto
+                    </button>
+                }
+                @if (layoutService.layoutConfig().chatMode === 'upper') {
+                    <button class="layout-topbar-action" (click)="layoutService.toggleChat()"
+                            pTooltip="Manual Inteligente" tooltipPosition="bottom">
+                        <i class="pi pi-comments"></i>
                     </button>
                 }
                 <div class="layout-config-menu">
@@ -242,6 +254,16 @@ export class AppTopbar implements OnInit {
             color: '#16A34A',
             bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
             route: '/godev',
+            comingSoon: false
+        },
+        {
+            id: 'manual',
+            name: 'Manual Inteligente',
+            desc: 'Assistente com IA sobre os sistemas',
+            icon: 'pi pi-comments',
+            color: '#16A34A',
+            bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
+            route: '/manual',
             comingSoon: false
         },
     ];

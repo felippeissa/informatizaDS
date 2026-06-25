@@ -23,9 +23,49 @@
         </div>
 
         <div class="gw-topbar-right">
-            <span class="gw-sinc-info" pTooltip="Última publicação" tooltipPosition="bottom">
-                <i class="pi pi-sync"></i> {{ projeto.ultimaPublicacao }}
-            </span>
+            <!-- Área de status do agente: clique para ver o histórico de atividades -->
+            <button class="gw-status" [class.gw-status--idle]="!statusAtivo()"
+                    (click)="statusPanel.toggle($event)"
+                    pTooltip="Ver atividades do agente" tooltipPosition="bottom">
+                @if (statusAtivo()) {
+                    <span class="gw-status-dot" [style.background]="statusAtual().cor"></span>
+                    <i class="pi gw-status-icon" [class]="statusAtual().icon" [style.color]="statusAtual().cor"></i>
+                    <span class="gw-status-texto">{{ statusAtual().texto }}</span>
+                } @else {
+                    <i class="pi pi-check-circle gw-status-icon" style="color:#15803d"></i>
+                    <span class="gw-status-texto">Tudo sincronizado</span>
+                }
+                <i class="pi pi-chevron-down gw-status-chevron"></i>
+            </button>
+
+            <p-popover #statusPanel>
+                <div class="gw-status-lista">
+                    <div class="gw-status-lista-titulo">
+                        <i class="pi pi-bolt"></i> Atividades do agente
+                    </div>
+                    @for (a of atividades; track $index) {
+                        <div class="gw-status-linha"
+                             [class.gw-status-linha--feita]="$index < atividadeIdx()"
+                             [class.gw-status-linha--atual]="$index === atividadeIdx() && statusAtivo()">
+                            @if ($index < atividadeIdx()) {
+                                <i class="pi pi-check-circle"></i>
+                            } @else if ($index === atividadeIdx() && statusAtivo()) {
+                                <i class="pi pi-spin pi-spinner"></i>
+                            } @else {
+                                <i class="pi pi-circle"></i>
+                            }
+                            <span>{{ a.texto }}</span>
+                        </div>
+                    }
+                    @if (!statusAtivo()) {
+                        <div class="gw-status-linha gw-status-linha--feita gw-status-final">
+                            <i class="pi pi-check-circle"></i>
+                            <span>Tudo sincronizado · nenhuma tarefa em andamento</span>
+                        </div>
+                    }
+                </div>
+            </p-popover>
+
             <p-button label="Publicar" icon="pi pi-upload"
                       pTooltip="Sincroniza a versão atual para todos os membros"
                       tooltipPosition="bottom"
@@ -420,7 +460,7 @@
                         <tr>
                             <th pSortableColumn="nome">Nome <p-sortIcon field="nome" /></th>
                             <th pSortableColumn="email">E-mail <p-sortIcon field="email" /></th>
-                            <th pSortableColumn="papel" style="width:12rem">Papel <p-sortIcon field="papel" /></th>
+                            <th pSortableColumn="papel" style="width:12rem">Perfil <p-sortIcon field="papel" /></th>
                             <th style="width:5rem">Ações</th>
                         </tr>
                     </ng-template>
@@ -503,7 +543,7 @@
                    class="gw-modal-input" />
         </div>
         <div class="gw-modal-field">
-            <label class="gw-modal-label">Papel no projeto</label>
+            <label class="gw-modal-label">Perfil</label>
             <p-select [options]="papelOpcoes" [(ngModel)]="novoMembro.papel"
                       optionLabel="label" optionValue="value" appendTo="body"
                       placeholder="Selecione" styleClass="gw-modal-input" />

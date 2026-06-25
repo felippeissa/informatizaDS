@@ -1,10 +1,11 @@
-import { AfterViewChecked, Component, ElementRef, signal, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
+import { ChatBridgeService } from '@/app/chat/chat-bridge.service';
 
 interface Msg { autor: 'user' | 'ia'; texto: string; sistema?: string; modelo?: string; }
 interface Conversa { id: number; titulo: string; msgs: Msg[]; }
@@ -16,11 +17,16 @@ interface Conversa { id: number; titulo: string; msgs: Msg[]; }
     templateUrl: './godev-manual.html',
     styleUrl:    './godev-manual.scss',
 })
-export class GodevManual implements AfterViewChecked {
+export class GodevManual implements OnInit, AfterViewChecked {
+    private bridge = inject(ChatBridgeService);
+
     sistemas = [
         { label: 'Todos os sistemas', value: 'Todos os sistemas' },
-        { label: 'SISLOG',           value: 'SISLOG' },
+        { label: 'Drácon',           value: 'Drácon' },
+        { label: 'GO.DEV',           value: 'GO.DEV' },
+        { label: 'ASSINAGO',         value: 'ASSINAGO' },
         { label: 'SIAFIC',           value: 'SIAFIC' },
+        { label: 'SISLOG',           value: 'SISLOG' },
         { label: 'Portal Goiás',     value: 'Portal Goiás' },
     ];
     modelos = [
@@ -88,6 +94,24 @@ export class GodevManual implements AfterViewChecked {
         return lista.filter(c => c.titulo.toLowerCase().includes(t));
     }
 
+    ngOnInit() {
+        // Veio do chat flutuante? Abre já com a conversa anterior em vez de tela em branco.
+        const t = this.bridge.consumir();
+        if (!t) return;
+        if (t.sistema && this.sistemas.some(s => s.value === t.sistema)) {
+            this.sistemaSel.set(t.sistema);
+        }
+        if (t.msgs.length) {
+            const primeira = t.msgs.find(m => m.autor === 'user');
+            const titulo = primeira ? this.resumo(primeira.texto) : 'Conversa';
+            const conversa: Conversa = { id: this.nextId++, titulo, msgs: t.msgs.map(m => ({ ...m })) };
+            this.conversas.update(l => [conversa, ...l]);
+            this.conversaAtivaId.set(conversa.id);
+            this.deveRolar = true;
+        }
+        if (t.draft) this.input = t.draft;
+    }
+
     ngAfterViewChecked() {
         if (!this.deveRolar || !this.scrollArea) return;
         this.deveRolar = false;
@@ -146,7 +170,8 @@ export class GodevManual implements AfterViewChecked {
     }
 
     private modeloEfetivo() {
-        return this.modeloSel() === 'Automático' ? 'Gemini 3' : this.modeloSel();
+        // "Automático" mostra como Automático; ao escolher um agente, usa o selecionado
+        return this.modeloSel();
     }
 
     // Identifica o sistema pela seleção ou por palavras-chave da pergunta
