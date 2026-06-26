@@ -157,3 +157,20 @@
     overflow: hidden;
     transition: max-height 1s ease-in-out;
 }
+
+// ── Menu Type: Tiered / Mega ───────────────────────────────────
+// Os submenus/painéis abrem para o lado; libera o overflow da
+// sidebar (que os cortava) quando o menu tiered ou mega está ativo.
+.layout-sidebar:has(.layout-menu-tiered),
+.layout-sidebar:has(.layout-menu-mega) {
+    overflow: visible;
+}
+
+.p-tieredmenu .p-tieredmenu-submenu,
+.p-tieredmenu-submenu,
+.p-megamenu .p-megamenu-panel,
+.p-megamenu-panel,
+.p-megamenu .p-megamenu-submenu,
+.p-megamenu-submenu {
+    z-index: 1200;
+}

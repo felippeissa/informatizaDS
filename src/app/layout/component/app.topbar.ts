@@ -108,6 +108,10 @@ import { filter } from 'rxjs/operators';
                         <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" style="height:30px;width:auto" />
                         <span style="font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--text-color);white-space:nowrap">Manual Inteligente</span>
                     </a>
+                } @else if (activeSystem().id === 'siafic') {
+                    <a class="layout-topbar-logo" routerLink="/siafic">
+                        <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:#0D6E4F">SIAFIC</span>
+                    </a>
                 } @else {
                     <a class="layout-topbar-logo" routerLink="/ds">
                         <div class="ds-logo-text">
@@ -264,6 +268,16 @@ export class AppTopbar implements OnInit {
             color: '#16A34A',
             bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
             route: '/manual',
+            comingSoon: false
+        },
+        {
+            id: 'siafic',
+            name: 'SIAFIC',
+            desc: 'Sistema de administração financeira',
+            icon: 'pi pi-wallet',
+            color: '#0D6E4F',
+            bgColor: 'color-mix(in srgb, #0D6E4F 12%, transparent)',
+            route: '/siafic',
             comingSoon: false
         },
     ];

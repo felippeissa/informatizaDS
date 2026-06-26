@@ -1,6 +1,7 @@
 import { Injectable, effect, signal, computed } from '@angular/core';
 
 export type ChatMode = 'none' | 'bottom' | 'upper';
+export type MenuType = 'dropdown' | 'tiered' | 'mega';
 
 export interface LayoutConfig {
     preset: string;
@@ -9,6 +10,7 @@ export interface LayoutConfig {
     darkTheme: boolean;
     menuMode: string;
     chatMode: ChatMode;
+    menuType: MenuType;
 }
 
 interface LayoutState {
@@ -30,7 +32,8 @@ export class LayoutService {
         surface: null,
         darkTheme: false,
         menuMode: 'static',
-        chatMode: 'none'
+        chatMode: 'none',
+        menuType: 'dropdown'
     });
 
     // Estado do chat flutuante (Manual Inteligente acoplável)

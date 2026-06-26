@@ -32,6 +32,11 @@ export const appRoutes: Routes = [
         path: 'manual',
         loadChildren: () => import('./app/manual/manual.routes').then(m => m.manualRoutes)
     },
+    {
+        path: 'siafic',
+        component: AppLayout,
+        loadChildren: () => import('./app/siafic/siafic.routes').then(m => m.siaficRoutes)
+    },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/auth/login' }
