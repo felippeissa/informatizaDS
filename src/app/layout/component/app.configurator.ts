@@ -93,16 +93,8 @@ declare type SurfacesType = {
                 <span class="text-sm text-muted-color font-semibold">Chat</span>
                 <p-selectbutton [ngModel]="chatMode()" (ngModelChange)="onChatModeChange($event)" [options]="chatModeOptions" [allowEmpty]="false" size="small" />
             </div>
-            <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Type</span>
-                <p-selectbutton [ngModel]="menuType()" (ngModelChange)="onMenuTypeChange($event)" [options]="menuTypeOptions" [allowEmpty]="false" size="small" styleClass="menutype-sb" />
-            </div>
         </div>
     `,
-    styles: [`
-        :host ::ng-deep .menutype-sb .p-togglebutton-label { white-space: nowrap; }
-        :host ::ng-deep .menutype-sb .p-togglebutton { padding-left: 0.5rem; padding-right: 0.5rem; }
-    `],
     host: {
         class: 'hidden absolute top-13 right-0 w-72 p-4 bg-surface-0 dark:bg-surface-900 border border-surface rounded-border origin-top shadow-[0px_3px_5px_rgba(0,0,0,0.02),0px_0px_2px_rgba(0,0,0,0.05),0px_1px_4px_rgba(0,0,0,0.08)]'
     }
@@ -138,18 +130,6 @@ export class AppConfigurator {
     onChatModeChange(event: string) {
         this.layoutService.chatAberto.set(false);
         this.layoutService.layoutConfig.update((prev) => ({ ...prev, chatMode: event as any }));
-    }
-
-    menuTypeOptions = [
-        { label: 'Dropdown', value: 'dropdown' },
-        { label: 'Tiered', value: 'tiered' },
-        { label: 'Mega Menu', value: 'mega' }
-    ];
-
-    menuType = computed(() => this.layoutService.layoutConfig().menuType);
-
-    onMenuTypeChange(event: string) {
-        this.layoutService.layoutConfig.update((prev) => ({ ...prev, menuType: event as any }));
     }
 
     ngOnInit() {

@@ -2,96 +2,28 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MenuItem } from 'primeng/api';
-import { TieredMenuModule } from 'primeng/tieredmenu';
-import { MegaMenuModule } from 'primeng/megamenu';
 import { AppMenuitem } from './app.menuitem';
-import { LayoutService } from '@/app/layout/service/layout.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule, TieredMenuModule, MegaMenuModule],
-    styles: [`
-        :host ::ng-deep .layout-menu-tiered.p-tieredmenu,
-        :host ::ng-deep .layout-menu-mega.p-megamenu {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 0;
-        }
-        :host ::ng-deep .layout-menu-mega.p-megamenu .p-megamenu-root-list { width: 100%; }
-    `],
-    template: `
-        @switch (menuType) {
-            @case ('tiered') {
-                <p-tieredmenu [model]="itens" [popup]="false" styleClass="layout-menu-tiered" />
-            }
-            @case ('mega') {
-                <p-megamenu [model]="itensMega" orientation="vertical" styleClass="layout-menu-mega" />
-            }
-            @default {
-                <ul class="layout-menu">
-                    @for (item of model; track item.label) {
-                        @if (!item.separator) {
-                            <li app-menuitem [item]="item" [root]="true"></li>
-                        } @else {
-                            <li class="menu-separator"></li>
-                        }
-                    }
-                </ul>
+    imports: [CommonModule, AppMenuitem, RouterModule],
+    template: `<ul class="layout-menu">
+        @for (item of model; track item.label) {
+            @if (!item.separator) {
+                <li app-menuitem [item]="item" [root]="true"></li>
+            } @else {
+                <li class="menu-separator"></li>
             }
         }
-    `
+    </ul>`
 })
 export class AppMenu implements OnInit, OnDestroy {
     model: MenuItem[] = [];
     private router = inject(Router);
-    private layoutService = inject(LayoutService);
     private sub!: Subscription;
-
-    get menuType(): string { return this.layoutService.layoutConfig().menuType; }
-
-    // Itens reais (sem o wrapper) para TieredMenu / MegaMenu
-    get itens(): MenuItem[] { return this.model[0]?.items ?? []; }
-
-    // MegaMenu espera os filhos como colunas (array de arrays de grupos).
-    // O menu do SIAFIC tem 5-6 níveis, então adaptamos: módulo → colunas
-    // (cada grupo vira uma coluna) → itens (níveis mais profundos achatados).
-    get itensMega(): any[] {
-        return this.itens.map((top) => ({
-            label: top.label,
-            icon: top.icon,
-            routerLink: top.routerLink,
-            items: top.items ? this.megaColunas(top.items) : undefined,
-        }));
-    }
-
-    private megaColunas(filhos: MenuItem[]): any[][] {
-        // Pula wrappers de filho único (ex.: Financeiro → Execução Orçamentária)
-        let nivel = filhos;
-        if (nivel.length === 1 && nivel[0].items?.length) nivel = nivel[0].items!;
-        // Cada grupo do nível vira uma coluna com cabeçalho + itens
-        return nivel.map((grupo) => [
-            {
-                label: grupo.label,
-                items: (grupo.items ?? []).map((it) => this.megaItem(it)),
-            },
-        ]);
-    }
-
-    private megaItem(it: MenuItem): any {
-        if (it.items?.length) {
-            return {
-                label: it.label,
-                items: it.items.map((c) =>
-                    c.items?.length ? { label: c.label, items: c.items.map((x) => ({ label: x.label })) } : { label: c.label },
-                ),
-            };
-        }
-        return { label: it.label, routerLink: it.routerLink };
-    }
 
     ngOnInit() {
         this.buildMenu(this.router.url);
@@ -109,234 +41,10 @@ export class AppMenu implements OnInit, OnDestroy {
             this.model = this.draconMenu;
         } else if (url.startsWith('/godev')) {
             this.model = this.godevMenu;
-        } else if (url.startsWith('/siafic')) {
-            this.model = this.siaficMenu;
         } else {
             this.model = this.dsMenu;
         }
     }
-
-    /* ══════════════════════════════════════════════════════
-       Menu: SIAFIC — menu extenso (até 5/6 níveis) p/ validação
-    ══════════════════════════════════════════════════════ */
-    private siaficMenu: MenuItem[] = [
-        {
-            items: [
-                { label: 'Página inicial', icon: 'pi pi-home', routerLink: ['/siafic'] },
-
-                {
-                    label: 'Financeiro', icon: 'pi pi-dollar', path: '/financeiro',
-                    items: [
-                        {
-                            label: 'Execução Orçamentária', path: '/exec',
-                            items: [
-                                {
-                                    label: 'Consultas', path: '/consultas',
-                                    items: [
-                                        { label: 'Consultar Empenhos' },
-                                        { label: 'Consultar Natureza de Despesa' },
-                                        { label: 'Consultar Elemento/Subelemento' },
-                                    ],
-                                },
-                                {
-                                    label: 'Empenhos', path: '/empenhos',
-                                    items: [
-                                        { label: 'Efetuar Empenho' },
-                                        { label: 'Pré-Empenho' },
-                                        { label: 'Anular Empenho' },
-                                        { label: 'Excluir Anulação de Empenho' },
-                                        { label: 'Cancelar Empenho' },
-                                        { label: 'Reserva de Dotação' },
-                                        { label: 'Manutenção de Critério' },
-                                        { label: 'Alteração de Critério' },
-                                    ],
-                                },
-                                {
-                                    label: 'Restos a Pagar', path: '/restos',
-                                    items: [
-                                        { label: 'Cancelar Empenho' },
-                                        { label: 'Anulação de Cancelamento' },
-                                    ],
-                                },
-                                {
-                                    label: 'Natureza da Despesa', path: '/natureza',
-                                    items: [
-                                        { label: 'Inclusão de Elemento/Subelemento' },
-                                        { label: 'Manter Item x Natureza' },
-                                        { label: 'Declaração de Adequação' },
-                                    ],
-                                },
-                                {
-                                    label: 'Créditos Orçamentários', path: '/cred-orc',
-                                    items: [
-                                        { label: 'Crédito' },
-                                        { label: 'Débito' },
-                                    ],
-                                },
-                                {
-                                    label: 'Créditos Adicionais', path: '/cred-add',
-                                    items: [
-                                        {
-                                            label: 'Crédito Suplementar', path: '/cred-supl',
-                                            items: [
-                                                { label: 'Solicitar Crédito Suplementar' },
-                                                { label: 'Reabertura de Solicitação' },
-                                                { label: 'Ajustar Solicitação' },
-                                                { label: 'Aprovar Solicitação' },
-                                                { label: 'Revisar Decreto' },
-                                                { label: 'Autorizar Crédito' },
-                                                { label: 'Indeferir Solicitação' },
-                                                { label: 'Excluir Crédito' },
-                                                {
-                                                    label: 'Agregadores de Créditos Suplementares', path: '/agreg',
-                                                    items: [
-                                                        { label: 'Agregar Créditos Suplementares' },
-                                                        { label: 'Autorizar Agregador de Crédito' },
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                        {
-                                            label: 'Crédito Especial', path: '/cred-esp',
-                                            items: [
-                                                { label: 'Solicitar' },
-                                                { label: 'Aprovar' },
-                                                { label: 'Consultar' },
-                                            ],
-                                        },
-                                    ],
-                                },
-                                {
-                                    label: 'Migração de Saldos', path: '/migracao',
-                                    items: [
-                                        { label: 'Elemento → Subelemento' },
-                                        { label: 'Fonte → Modalidade' },
-                                        { label: 'Modalidade → Aplicação' },
-                                        { label: 'Função → Subfunção' },
-                                        { label: 'Código de Acompanhamento' },
-                                        { label: 'Entre Fontes' },
-                                    ],
-                                },
-                                {
-                                    label: 'Pessoas', path: '/pessoas',
-                                    items: [
-                                        { label: 'Manter Pessoa' },
-                                    ],
-                                },
-                                {
-                                    label: 'Relatórios', path: '/rel-exec',
-                                    items: [
-                                        { label: 'Execução' },
-                                        { label: 'Empenhos' },
-                                        { label: 'Créditos' },
-                                        { label: 'Restos a Pagar' },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-
-                {
-                    label: 'Contabilidade', icon: 'pi pi-book', path: '/contabilidade',
-                    items: [
-                        {
-                            label: 'Lançamentos Contábeis', path: '/lancamentos',
-                            items: [
-                                { label: 'Incluir Lançamento' },
-                                { label: 'Estornar Lançamento' },
-                                {
-                                    label: 'Consultar Lançamentos', path: '/cons-lanc',
-                                    items: [
-                                        { label: 'Por Conta Contábil' },
-                                        { label: 'Por Período' },
-                                    ],
-                                },
-                            ],
-                        },
-                        {
-                            label: 'Conformidade Contábil', path: '/conformidade',
-                            items: [
-                                { label: 'Registrar Conformidade' },
-                                { label: 'Consultar Conformidade' },
-                            ],
-                        },
-                        {
-                            label: 'Encerramento do Exercício', path: '/encerramento',
-                            items: [
-                                { label: 'Apuração de Resultado' },
-                                { label: 'Fechamento de Balanço' },
-                            ],
-                        },
-                    ],
-                },
-
-                {
-                    label: 'Planejamento', icon: 'pi pi-chart-line', path: '/planejamento',
-                    items: [
-                        {
-                            label: 'PPA', path: '/ppa',
-                            items: [
-                                { label: 'Manter Programa' },
-                                { label: 'Manter Ação' },
-                                { label: 'Consultar PPA' },
-                            ],
-                        },
-                        {
-                            label: 'LDO', path: '/ldo',
-                            items: [
-                                { label: 'Metas Fiscais' },
-                                { label: 'Consultar LDO' },
-                            ],
-                        },
-                        {
-                            label: 'LOA', path: '/loa',
-                            items: [
-                                { label: 'Elaborar Proposta' },
-                                { label: 'Consultar LOA' },
-                            ],
-                        },
-                    ],
-                },
-
-                {
-                    label: 'Cadastros', icon: 'pi pi-folder', path: '/cadastros',
-                    items: [
-                        {
-                            label: 'Unidades Orçamentárias', path: '/unidades',
-                            items: [
-                                { label: 'Incluir Unidade' },
-                                { label: 'Consultar Unidades' },
-                            ],
-                        },
-                        {
-                            label: 'Fontes de Recurso', path: '/fontes',
-                            items: [
-                                { label: 'Manter Fonte' },
-                                { label: 'Consultar Fontes' },
-                            ],
-                        },
-                        {
-                            label: 'Credores', path: '/credores',
-                            items: [
-                                { label: 'Manter Credor' },
-                                { label: 'Consultar Credores' },
-                            ],
-                        },
-                    ],
-                },
-
-                {
-                    label: 'Relatórios Gerenciais', icon: 'pi pi-file', path: '/rel-ger',
-                    items: [
-                        { label: 'Balancetes' },
-                        { label: 'Demonstrativos' },
-                        { label: 'Exportações' },
-                    ],
-                },
-            ],
-        },
-    ];
 
     /* ══════════════════════════════════════════════════════
        Menu: ASSINAGO
