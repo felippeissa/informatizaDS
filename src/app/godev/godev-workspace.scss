@@ -25,7 +25,10 @@
 }
 
 .gw-topbar-left  { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
-.gw-topbar-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+.gw-topbar-right { display: flex; align-items: center; gap: 0.875rem; flex-shrink: 0; }
+
+// Seletor de spec na topbar (p-select padrão do DS)
+:host ::ng-deep .gw-spec-select { min-width: 200px; }
 
 .gw-projeto-info { display: flex; flex-direction: column; min-width: 0; }
 .gw-projeto-nome {
@@ -41,26 +44,48 @@
 .gw-projeto-tipo { font-size: 0.6875rem; color: var(--text-color-secondary); }
 
 // Área de status do agente (o que o GO.DEV está fazendo)
+// Status como label/notificação (não tem cara de dropdown)
+.gw-status-wrap { position: relative; }
+
 .gw-status {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     width: 280px;            // largura fixa: o texto trunca, não empurra o layout
-    padding: 0.4rem 0.875rem;
-    border: 1px solid var(--surface-border);
-    border-radius: 20px;
-    background: var(--surface-ground);
+    // mesma altura/padding vertical do botão Publicar
+    padding: 0.5rem 0.875rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--primary-color) 7%, transparent);
     font-family: inherit;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+    cursor: default;
 
-    &:hover { border-color: var(--primary-color); background: var(--surface-card); }
-    &--idle { opacity: 0.9; }
+    &--idle { background: var(--surface-ground); }
 }
 
-.gw-status-chevron { font-size: 10px; color: var(--text-color-secondary); margin-left: auto; flex-shrink: 0; }
+// Painel com o caminho completo — aparece no hover do status
+.gw-status-pop {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 1100;
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    padding: 0.875rem 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+}
 
-// Lista de atividades (popover)
+.gw-status-wrap:hover .gw-status-pop {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+// Lista de atividades
 .gw-status-lista { min-width: 320px; max-width: 380px; display: flex; flex-direction: column; gap: 2px; }
 
 .gw-status-lista-titulo {
@@ -112,10 +137,13 @@
     animation: gw-pulse 1.4s ease-in-out infinite;
 }
 
-.gw-status-icon { font-size: 12px; flex-shrink: 0; color: var(--text-color-secondary); }
+.gw-status-icon { font-size: 14px; flex-shrink: 0; color: var(--text-color-secondary); }
 
 .gw-status-texto {
-    font-size: 0.8125rem;
+    // mesmo tamanho/peso da label dos botões (Aura: 1rem / 500)
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
     color: var(--text-color);
     white-space: nowrap;
     overflow: hidden;

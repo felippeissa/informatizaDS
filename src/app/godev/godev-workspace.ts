@@ -10,8 +10,7 @@ import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
-import { PopoverModule } from 'primeng/popover';
-import { Projeto, Documento, Tela, Papel, ComponenteTela, TipoComponente } from './godev.models';
+import { Projeto, Spec, Tela, Papel, ComponenteTela, TipoComponente } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
 import {
     BG_PAPEL, BG_STATUS, COR_PAPEL, COR_STATUS,
@@ -22,15 +21,13 @@ type Aba = 'requisitos' | 'telas' | 'codigo' | 'membros';
 
 interface ChatMsg { autor: 'user' | 'ia'; texto: string; contexto?: string; }
 
-interface ChatSessao { id: number; titulo: string; msgs: ChatMsg[]; }
-
 interface StatusAgente { texto: string; icon: string; cor: string; }
 
 @Component({
     selector: 'app-godev-workspace',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, DialogModule,
-              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule, CheckboxModule, PopoverModule],
+              InputTextModule, TooltipModule, SelectModule, ProgressSpinnerModule, TableModule, CheckboxModule],
     templateUrl: './godev-workspace.html',
     styleUrl:    './godev-workspace.scss',
 })
@@ -67,30 +64,28 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
     aba = signal<Aba>('requisitos');
 
     abas: { id: Aba; label: string; icon: string }[] = [
-        { id: 'requisitos', label: 'Requisitos', icon: 'pi-file-edit' },
-        { id: 'telas',      label: 'Telas',      icon: 'pi-desktop' },
-        { id: 'codigo',     label: 'Código',     icon: 'pi-code' },
-        { id: 'membros',    label: 'Membros',    icon: 'pi-users' },
+        { id: 'requisitos', label: 'Specs',  icon: 'pi-file-edit' },
+        { id: 'telas',      label: 'Telas',  icon: 'pi-desktop' },
+        { id: 'codigo',     label: 'Código', icon: 'pi-code' },
     ];
 
-    // --- Chats (vários por documento/tela) ---
-    private sessoes: Record<string, ChatSessao[]> = {};
-    private sessaoAtivaPorChave: Record<string, number> = {};
-    private proximaSessaoId = 1;
+    // --- Chat único do workspace ---
+    chat: ChatMsg[] = [];
     chatInput = '';
     chatDigitando = false;
 
-    // --- Requisitos ---
-    docSelecionado: Documento | null = null;
+    // --- Specs ---
+    specAtiva = signal<Spec | null>(null);
+    novaSpecModal = false;
+    novaSpecNome  = '';
+    private proximoSpecId = 100;
+
+    // --- Requisito (da spec ativa) ---
     editandoDoc = false;
     docConteudo = '';
-    novoDocModal  = false;
-    novoDocTitulo = '';
 
-    // --- Telas (canvas) ---
+    // --- Tela (canvas) da spec ativa ---
     telaSelecionada: Tela | null = null;
-    novaTelaModal = false;
-    novaTelaNome  = '';
     compSelecionado: ComponenteTela | null = null;
     private proximoCompId = 1000;
 
@@ -107,10 +102,6 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
     codigoAba = signal<'frontend' | 'backend' | 'json'>('frontend');
     copiado   = signal(false);
 
-    // --- Membros ---
-    addMembroModal = false;
-    novoMembro = { nome: '', email: '', papel: null as Papel | null };
-    membroErro = '';
     private nextId = 200;
 
     // --- Publicar ---
@@ -124,8 +115,7 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
         const p  = PROJETOS_MOCK.find(x => x.id === Number(id));
         if (!p) { this.router.navigate(['/godev/projetos']); return; }
         this.projeto = p;
-        if (p.documentos.length) this.selecionarDoc(p.documentos[0]);
-        if (p.telas.length)      this.selecionarTela(p.telas[0]);
+        if (p.specs.length) this.selecionarSpec(p.specs[0]);
         this.iniciarStatus();
     }
 
@@ -166,61 +156,41 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
         }, 2000);
     }
 
-    // ===================== Chat contextual =====================
-    // Chave que identifica o contexto atual: cada documento e cada tela tem seus próprios chats
-    private get chaveContexto(): string {
-        switch (this.aba()) {
-            case 'requisitos': return this.docSelecionado ? `doc-${this.docSelecionado.id}` : 'requisitos';
-            case 'telas':      return this.telaSelecionada ? `tela-${this.telaSelecionada.id}` : 'telas';
-            default:           return this.aba();
-        }
+    // ===================== Specs =====================
+    get specs(): Spec[] { return this.projeto?.specs ?? []; }
+
+    get specOpcoes() { return this.specs.map(s => ({ label: s.nome, value: s.id })); }
+
+    selecionarSpec(spec: Spec) {
+        this.specAtiva.set(spec);
+        this.docConteudo = spec.requisito;
+        this.editandoDoc = false;
+        this.telaSelecionada = spec.tela;
+        this.compSelecionado = null;
     }
 
-    get sessoesAtuais(): ChatSessao[] {
-        const chave = this.chaveContexto;
-        if (!this.sessoes[chave]) {
-            this.sessoes[chave] = [{ id: this.proximaSessaoId++, titulo: 'Chat 1', msgs: [] }];
-            this.sessaoAtivaPorChave[chave] = this.sessoes[chave][0].id;
-        }
-        return this.sessoes[chave];
+    selecionarSpecPorId(id: number) {
+        const s = this.specs.find(x => x.id === id);
+        if (s) this.selecionarSpec(s);
     }
 
-    get sessaoAtiva(): ChatSessao {
-        const lista = this.sessoesAtuais;
-        const ativaId = this.sessaoAtivaPorChave[this.chaveContexto];
-        return lista.find(s => s.id === ativaId) ?? lista[0];
+    criarSpec() {
+        const nome = this.novaSpecNome.trim();
+        if (!nome) return;
+        const spec: Spec = { id: this.proximoSpecId++, nome, requisito: `# ${nome}\n\nDescreva o requisito aqui...\n`, tela: null };
+        this.projeto.specs.push(spec);
+        this.selecionarSpec(spec);
+        this.editandoDoc = true;
+        this.novaSpecModal = false;
+        this.novaSpecNome = '';
     }
 
-    get chat(): ChatMsg[] { return this.sessaoAtiva.msgs; }
-
-    novoChat() {
-        const lista = this.sessoesAtuais;
-        const nova: ChatSessao = { id: this.proximaSessaoId++, titulo: `Chat ${lista.length + 1}`, msgs: [] };
-        lista.push(nova);
-        this.sessaoAtivaPorChave[this.chaveContexto] = nova.id;
-    }
-
-    selecionarChat(s: ChatSessao) {
-        this.sessaoAtivaPorChave[this.chaveContexto] = s.id;
-        this.deveRolarChat = true;
-    }
-
-    excluirChat(s: ChatSessao, event: Event) {
-        event.stopPropagation();
-        const chave = this.chaveContexto;
-        this.sessoes[chave] = this.sessoes[chave].filter(x => x.id !== s.id);
-        if (!this.sessoes[chave].length) {
-            this.sessoes[chave] = [{ id: this.proximaSessaoId++, titulo: 'Chat 1', msgs: [] }];
-        }
-        if (this.sessaoAtivaPorChave[chave] === s.id) {
-            this.sessaoAtivaPorChave[chave] = this.sessoes[chave][0].id;
-        }
-    }
-
+    // ===================== Chat único =====================
     get chatContexto(): string {
+        const spec = this.specAtiva()?.nome ?? 'Projeto';
         switch (this.aba()) {
-            case 'requisitos': return this.docSelecionado ? `Documento: ${this.docSelecionado.titulo}` : 'Requisitos';
-            case 'telas':      return this.telaSelecionada ? `Tela: ${this.telaSelecionada.nome}` : 'Telas';
+            case 'requisitos': return `Spec: ${spec}`;
+            case 'telas':      return this.telaSelecionada ? `Tela: ${this.telaSelecionada.nome}` : `Spec: ${spec}`;
             case 'codigo':     return 'Código gerado';
             default:           return 'Projeto';
         }
@@ -228,7 +198,7 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
 
     get chatPlaceholder(): string {
         switch (this.aba()) {
-            case 'requisitos': return 'Peça melhorias no documento...';
+            case 'requisitos': return 'Peça melhorias no requisito...';
             case 'telas':      return '"Adicione um botão", "mude o campo"...';
             case 'codigo':     return 'Pergunte sobre o código gerado...';
             default:           return 'Pergunte algo sobre o projeto...';
@@ -238,17 +208,12 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
     enviarChat() {
         const txt = this.chatInput.trim();
         if (!txt || this.chatDigitando) return;
-        const sessao = this.sessaoAtiva;
-        // A primeira mensagem vira o título do chat
-        if (!sessao.msgs.length) {
-            sessao.titulo = txt.length > 28 ? txt.slice(0, 28) + '…' : txt;
-        }
-        sessao.msgs.push({ autor: 'user', texto: txt, contexto: this.chatContexto });
+        this.chat.push({ autor: 'user', texto: txt, contexto: this.chatContexto });
         this.chatInput = '';
         this.chatDigitando = true;
         this.deveRolarChat = true;
         setTimeout(() => {
-            sessao.msgs.push({ autor: 'ia', texto: this.respostaMock() });
+            this.chat.push({ autor: 'ia', texto: this.respostaMock() });
             this.chatDigitando = false;
             this.deveRolarChat = true;
         }, 1200);
@@ -261,48 +226,23 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
 
     get sugestoes(): string[] {
         switch (this.aba()) {
-            case 'requisitos': return ['Resuma este documento', 'Sugira critérios de aceite', 'Identifique requisitos faltantes'];
+            case 'requisitos': return ['Resuma este requisito', 'Sugira critérios de aceite', 'Identifique requisitos faltantes'];
             case 'telas':      return ['Adicione um botão de voltar', 'Melhore o contraste dos textos', 'Deixe o layout responsivo'];
             case 'codigo':     return ['Explique este código', 'Gere testes unitários'];
             default:           return [];
         }
     }
 
-    // ===================== Requisitos =====================
-    selecionarDoc(d: Documento) {
-        this.docSelecionado = d;
-        this.docConteudo = d.conteudo;
-        this.editandoDoc = false;
-    }
-
+    // ===================== Requisito da spec ativa =====================
     cancelarEdicaoDoc() {
         this.editandoDoc = false;
-        if (this.docSelecionado) this.docConteudo = this.docSelecionado.conteudo;
+        this.docConteudo = this.specAtiva()?.requisito ?? '';
     }
 
     salvarDoc() {
-        if (this.docSelecionado) {
-            this.docSelecionado.conteudo = this.docConteudo;
-            this.docSelecionado.atualizadoEm = 'agora mesmo';
-        }
+        const spec = this.specAtiva();
+        if (spec) spec.requisito = this.docConteudo;
         this.editandoDoc = false;
-    }
-
-    criarDoc() {
-        const titulo = this.novoDocTitulo.trim();
-        if (!titulo) return;
-        const doc: Documento = {
-            id: this.nextId++,
-            titulo,
-            conteudo: `# ${titulo}\n\nDescreva os requisitos aqui...\n`,
-            criadoPor: 'Você',
-            atualizadoEm: 'agora mesmo',
-        };
-        this.projeto.documentos.push(doc);
-        this.selecionarDoc(doc);
-        this.editandoDoc = true;
-        this.novoDocModal = false;
-        this.novoDocTitulo = '';
     }
 
     // ===================== Telas (canvas) =====================
@@ -405,28 +345,13 @@ export class GodevWorkspace implements OnInit, AfterViewChecked, OnDestroy {
     aprovarTela(t: Tela)  { t.status = 'aprovada'; }
     reprovarTela(t: Tela) { t.status = 'reprovada'; }
 
-    criarTela() {
-        const nome = this.novaTelaNome.trim();
-        if (!nome) return;
-        const tela: Tela = {
-            id: this.nextId++,
-            nome,
-            status: 'pendente',
-            criadoPor: 'Você',
-            html: '',
-            componentes: [
-                { id: this.proximoCompId++, tipo: 'titulo', texto: nome, largura: 100 },
-            ],
-        };
-        this.projeto.telas.push(tela);
-        this.selecionarTela(tela);
-        this.novaTelaModal = false;
-        this.novaTelaNome = '';
-    }
+    // Tela única da spec ativa
+    get telaSpec(): Tela | null { return this.specAtiva()?.tela ?? null; }
 
     // ===================== Código =====================
     get telasAprovadas(): Tela[] {
-        return this.projeto.telas.filter(t => t.status === 'aprovada');
+        const t = this.telaSpec;
+        return t && t.status === 'aprovada' ? [t] : [];
     }
 
     get codigoFrontend(): string {
@@ -461,7 +386,8 @@ module.exports = router;`;
         return JSON.stringify({
             projeto:  this.projeto.nome,
             tipo:     this.projeto.tipo,
-            telas:    this.projeto.telas.map(t => ({ id: t.id, nome: t.nome, status: t.status })),
+            spec:     this.specAtiva()?.nome ?? null,
+            tela:     this.telaSpec ? { id: this.telaSpec.id, nome: this.telaSpec.nome, status: this.telaSpec.status } : null,
             membros:  this.projeto.membros.map(m => ({ nome: m.nome, papel: m.papel })),
             ultimaPublicacao: this.projeto.ultimaPublicacao,
         }, null, 2);
@@ -480,36 +406,6 @@ module.exports = router;`;
             this.copiado.set(true);
             setTimeout(() => this.copiado.set(false), 2000);
         });
-    }
-
-    // ===================== Membros =====================
-    corPapelDe(p: Papel) { return COR_PAPEL[p]; }
-    bgPapelDe(p: Papel)  { return BG_PAPEL[p]; }
-
-    abrirAddMembro() {
-        this.novoMembro = { nome: '', email: '', papel: null };
-        this.membroErro = '';
-        this.addMembroModal = true;
-    }
-
-    confirmarAddMembro() {
-        const { nome, email, papel } = this.novoMembro;
-        if (!nome.trim() || !email.trim() || !papel) {
-            this.membroErro = 'Preencha todos os campos.';
-            return;
-        }
-        this.projeto.membros.push({
-            id: this.nextId++,
-            nome:   nome.trim(),
-            email:  email.trim(),
-            papel,
-            avatar: iniciais(nome),
-        });
-        this.addMembroModal = false;
-    }
-
-    removerMembro(id: number) {
-        this.projeto.membros = this.projeto.membros.filter(m => m.id !== id);
     }
 
     // ===================== Helpers =====================

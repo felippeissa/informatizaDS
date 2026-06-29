@@ -343,8 +343,7 @@ export class GodevManterProjeto implements OnInit {
             status: 'ativo',
             sincronizacao: 'sincronizado',
             membros: this.membros(),
-            documentos: [],
-            telas: [],
+            specs: [],
             ultimaPublicacao: 'agora mesmo',
         };
         PROJETOS_MOCK.unshift(novo);

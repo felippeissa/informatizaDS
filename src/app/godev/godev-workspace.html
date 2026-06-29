@@ -23,48 +23,55 @@
         </div>
 
         <div class="gw-topbar-right">
-            <!-- Área de status do agente: clique para ver o histórico de atividades -->
-            <button class="gw-status" [class.gw-status--idle]="!statusAtivo()"
-                    (click)="statusPanel.toggle($event)"
-                    pTooltip="Ver atividades do agente" tooltipPosition="bottom">
-                @if (statusAtivo()) {
-                    <span class="gw-status-dot" [style.background]="statusAtual().cor"></span>
-                    <i class="pi gw-status-icon" [class]="statusAtual().icon" [style.color]="statusAtual().cor"></i>
-                    <span class="gw-status-texto">{{ statusAtual().texto }}</span>
-                } @else {
-                    <i class="pi pi-check-circle gw-status-icon" style="color:#15803d"></i>
-                    <span class="gw-status-texto">Tudo sincronizado</span>
-                }
-                <i class="pi pi-chevron-down gw-status-chevron"></i>
-            </button>
+            <!-- Seletor de Spec: troca todo o workspace para a spec escolhida -->
+            <p-select [options]="specOpcoes" [ngModel]="specAtiva()?.id ?? null"
+                      (ngModelChange)="selecionarSpecPorId($event)"
+                      optionLabel="label" optionValue="value" appendTo="body"
+                      placeholder="Selecione a spec" styleClass="gw-spec-select" />
+            <p-button label="Nova spec" icon="pi pi-plus" [outlined]="true"
+                      (onClick)="novaSpecModal = true" />
 
-            <p-popover #statusPanel>
-                <div class="gw-status-lista">
-                    <div class="gw-status-lista-titulo">
-                        <i class="pi pi-bolt"></i> Atividades do agente
-                    </div>
-                    @for (a of atividades; track $index) {
-                        <div class="gw-status-linha"
-                             [class.gw-status-linha--feita]="$index < atividadeIdx()"
-                             [class.gw-status-linha--atual]="$index === atividadeIdx() && statusAtivo()">
-                            @if ($index < atividadeIdx()) {
-                                <i class="pi pi-check-circle"></i>
-                            } @else if ($index === atividadeIdx() && statusAtivo()) {
-                                <i class="pi pi-spin pi-spinner"></i>
-                            } @else {
-                                <i class="pi pi-circle"></i>
-                            }
-                            <span>{{ a.texto }}</span>
-                        </div>
-                    }
-                    @if (!statusAtivo()) {
-                        <div class="gw-status-linha gw-status-linha--feita gw-status-final">
-                            <i class="pi pi-check-circle"></i>
-                            <span>Tudo sincronizado · nenhuma tarefa em andamento</span>
-                        </div>
+            <!-- Status do agente: label/notificação; mostra o caminho completo no hover -->
+            <div class="gw-status-wrap">
+                <div class="gw-status" [class.gw-status--idle]="!statusAtivo()">
+                    @if (statusAtivo()) {
+                        <span class="gw-status-dot" [style.background]="statusAtual().cor"></span>
+                        <i class="pi gw-status-icon" [class]="statusAtual().icon" [style.color]="statusAtual().cor"></i>
+                        <span class="gw-status-texto">{{ statusAtual().texto }}</span>
+                    } @else {
+                        <i class="pi pi-check-circle gw-status-icon" style="color:#15803d"></i>
+                        <span class="gw-status-texto">Tudo sincronizado</span>
                     }
                 </div>
-            </p-popover>
+
+                <div class="gw-status-pop">
+                    <div class="gw-status-lista">
+                        <div class="gw-status-lista-titulo">
+                            <i class="pi pi-bolt"></i> Atividades do agente
+                        </div>
+                        @for (a of atividades; track $index) {
+                            <div class="gw-status-linha"
+                                 [class.gw-status-linha--feita]="$index < atividadeIdx()"
+                                 [class.gw-status-linha--atual]="$index === atividadeIdx() && statusAtivo()">
+                                @if ($index < atividadeIdx()) {
+                                    <i class="pi pi-check-circle"></i>
+                                } @else if ($index === atividadeIdx() && statusAtivo()) {
+                                    <i class="pi pi-spin pi-spinner"></i>
+                                } @else {
+                                    <i class="pi pi-circle"></i>
+                                }
+                                <span>{{ a.texto }}</span>
+                            </div>
+                        }
+                        @if (!statusAtivo()) {
+                            <div class="gw-status-linha gw-status-linha--feita gw-status-final">
+                                <i class="pi pi-check-circle"></i>
+                                <span>Tudo sincronizado · nenhuma tarefa em andamento</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
 
             <p-button label="Publicar" icon="pi pi-upload"
                       pTooltip="Sincroniza a versão atual para todos os membros"
@@ -83,32 +90,11 @@
                     <div class="gw-chat-titulo">
                         <i class="pi pi-sparkles"></i> Assistente IA
                     </div>
-                    <p-button icon="pi pi-plus" [text]="true" [rounded]="true" size="small"
-                              pTooltip="Novo chat para este contexto" tooltipPosition="left"
-                              (onClick)="novoChat()" />
                 </div>
                 <span class="gw-chat-contexto" pTooltip="O assistente responde no contexto do que está aberto ao lado"
                       tooltipPosition="bottom">
                     {{ chatContexto }}
                 </span>
-
-                <!-- Lista de chats deste documento/tela -->
-                @if (sessoesAtuais.length > 1 || sessaoAtiva.msgs.length) {
-                    <div class="gw-chat-sessoes">
-                        @for (s of sessoesAtuais; track s.id) {
-                            <button class="gw-sessao" [class.gw-sessao--ativa]="s.id === sessaoAtiva.id"
-                                    (click)="selecionarChat(s)">
-                                <i class="pi pi-comment"></i>
-                                <span class="gw-sessao-titulo">{{ s.titulo }}</span>
-                                @if (sessoesAtuais.length > 1) {
-                                    <i class="pi pi-times gw-sessao-fechar"
-                                       pTooltip="Excluir chat" tooltipPosition="top"
-                                       (click)="excluirChat(s, $event)"></i>
-                                }
-                            </button>
-                        }
-                    </div>
-                }
             </div>
 
             <div class="gw-chat-msgs" #chatScroll>
@@ -163,27 +149,14 @@
         <!-- ============ PALCO DO ARTEFATO ============ -->
         <main class="gw-palco">
 
-            <!-- ===== REQUISITOS ===== -->
+            <!-- ===== SPECS (requisito) ===== -->
             @if (aba() === 'requisitos') {
-                <div class="gw-chips-row">
-                    @for (d of projeto.documentos; track d.id) {
-                        <button class="gw-chip" [class.gw-chip--ativo]="docSelecionado?.id === d.id"
-                                (click)="selecionarDoc(d)">
-                            <i class="pi pi-file-edit"></i> {{ d.titulo }}
-                        </button>
-                    }
-                    <button class="gw-chip gw-chip--add" (click)="novoDocModal = true"
-                            pTooltip="Novo documento" tooltipPosition="top">
-                        <i class="pi pi-plus"></i>
-                    </button>
-                </div>
-
-                @if (docSelecionado) {
+                @if (specAtiva()) {
                     <div class="gw-artefato">
                         <div class="gw-artefato-header">
                             <div class="gw-artefato-meta">
-                                <span class="gw-artefato-titulo">{{ docSelecionado.titulo }}</span>
-                                <span class="gw-artefato-sub">{{ docSelecionado.criadoPor }} · atualizado {{ docSelecionado.atualizadoEm }}</span>
+                                <span class="gw-artefato-titulo">{{ specAtiva()!.nome }}</span>
+                                <span class="gw-artefato-sub">Requisito da spec</span>
                             </div>
                             <div class="gw-artefato-acoes">
                                 @if (!editandoDoc) {
@@ -205,30 +178,15 @@
                     </div>
                 } @else {
                     <div class="gw-vazio">
-                        <i class="pi pi-file-edit"></i>
-                        <p>Nenhum documento ainda</p>
-                        <p-button label="Criar documento" icon="pi pi-plus" (onClick)="novoDocModal = true" />
+                        <i class="pi pi-bookmark"></i>
+                        <p>Nenhuma spec ainda</p>
+                        <p-button label="Nova spec" icon="pi pi-plus" (onClick)="novaSpecModal = true" />
                     </div>
                 }
             }
 
-            <!-- ===== TELAS ===== -->
+            <!-- ===== TELA (única da spec) ===== -->
             @if (aba() === 'telas') {
-                <div class="gw-chips-row">
-                    @for (t of projeto.telas; track t.id) {
-                        <button class="gw-chip" [class.gw-chip--ativo]="telaSelecionada?.id === t.id"
-                                (click)="selecionarTela(t)">
-                            <i class="pi gw-chip-status" [class]="iconStatus[t.status]"
-                               [style.color]="corStatus[t.status]"></i>
-                            {{ t.nome }}
-                        </button>
-                    }
-                    <button class="gw-chip gw-chip--add" (click)="novaTelaModal = true"
-                            pTooltip="Nova tela" tooltipPosition="top">
-                        <i class="pi pi-plus"></i>
-                    </button>
-                </div>
-
                 @if (telaSelecionada) {
                     <div class="gw-artefato">
                         <div class="gw-artefato-header">
@@ -405,8 +363,7 @@
                 } @else {
                     <div class="gw-vazio">
                         <i class="pi pi-desktop"></i>
-                        <p>Nenhuma tela ainda</p>
-                        <p-button label="Criar tela" icon="pi pi-plus" (onClick)="novaTelaModal = true" />
+                        <p>{{ specAtiva() ? 'Esta spec ainda não tem tela' : 'Selecione uma spec' }}</p>
                     </div>
                 }
             }
@@ -445,116 +402,22 @@
                 </div>
             }
 
-            <!-- ===== MEMBROS ===== -->
-            @if (aba() === 'membros') {
-                <div class="gw-membros-header">
-                    <span class="gw-membros-count">
-                        {{ projeto.membros.length }} membro{{ projeto.membros.length !== 1 ? 's' : '' }}
-                    </span>
-                    <p-button label="Adicionar membro" icon="pi pi-user-plus"
-                              [outlined]="true" (onClick)="abrirAddMembro()" />
-                </div>
-
-                <p-table [value]="projeto.membros" styleClass="p-datatable-sm ds-table" dataKey="id">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th pSortableColumn="nome">Nome <p-sortIcon field="nome" /></th>
-                            <th pSortableColumn="email">E-mail <p-sortIcon field="email" /></th>
-                            <th pSortableColumn="papel" style="width:12rem">Perfil <p-sortIcon field="papel" /></th>
-                            <th style="width:5rem">Ações</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-m>
-                        <tr>
-                            <td>
-                                <div class="gw-membro-cell">
-                                    <div class="gw-membro-avatar gw-membro-avatar--sm">{{ m.avatar }}</div>
-                                    <span class="gw-membro-nome">{{ m.nome }}</span>
-                                </div>
-                            </td>
-                            <td><span class="gw-membro-email">{{ m.email }}</span></td>
-                            <td>
-                                <span class="gw-papel-badge"
-                                      [style.background]="bgPapelDe(m.papel)"
-                                      [style.color]="corPapelDe(m.papel)">
-                                    {{ m.papel }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="ds-acoes-row">
-                                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true"
-                                              severity="danger" size="small" pTooltip="Remover"
-                                              tooltipPosition="left" (onClick)="removerMembro(m.id)" />
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr><td colspan="4" class="text-center p-4">Nenhum membro no projeto</td></tr>
-                    </ng-template>
-                </p-table>
-            }
         </main>
     </div>
 </div>
 
-<!-- Modal: novo documento -->
-<p-dialog header="Novo documento" [(visible)]="novoDocModal"
+<!-- Modal: nova spec -->
+<p-dialog header="Nova spec" [(visible)]="novaSpecModal"
           [modal]="true" [draggable]="false" [style]="{width:'400px'}">
     <div class="gw-modal-field">
-        <label class="gw-modal-label">Título do documento</label>
-        <input pInputText [(ngModel)]="novoDocTitulo" placeholder="Ex: Requisitos Funcionais"
-               class="gw-modal-input" (keydown.enter)="criarDoc()" />
+        <label class="gw-modal-label">Nome da spec</label>
+        <input pInputText [(ngModel)]="novaSpecNome" placeholder="Ex: Requisitos Funcionais"
+               class="gw-modal-input" (keydown.enter)="criarSpec()" />
     </div>
     <ng-template pTemplate="footer">
-        <p-button label="Cancelar" [text]="true" (onClick)="novoDocModal = false" />
-        <p-button label="Criar" icon="pi pi-plus" (onClick)="criarDoc()"
-                  [disabled]="!novoDocTitulo.trim()" />
-    </ng-template>
-</p-dialog>
-
-<!-- Modal: nova tela -->
-<p-dialog header="Nova tela" [(visible)]="novaTelaModal"
-          [modal]="true" [draggable]="false" [style]="{width:'400px'}">
-    <div class="gw-modal-field">
-        <label class="gw-modal-label">Nome da tela</label>
-        <input pInputText [(ngModel)]="novaTelaNome" placeholder="Ex: Tela de Login"
-               class="gw-modal-input" (keydown.enter)="criarTela()" />
-    </div>
-    <ng-template pTemplate="footer">
-        <p-button label="Cancelar" [text]="true" (onClick)="novaTelaModal = false" />
-        <p-button label="Criar" icon="pi pi-plus" (onClick)="criarTela()"
-                  [disabled]="!novaTelaNome.trim()" />
-    </ng-template>
-</p-dialog>
-
-<!-- Modal: adicionar membro -->
-<p-dialog header="Adicionar membro" [(visible)]="addMembroModal"
-          [modal]="true" [draggable]="false" [style]="{width:'440px'}">
-    <div class="gw-modal-body">
-        <div class="gw-modal-field">
-            <label class="gw-modal-label">Nome completo</label>
-            <input pInputText [(ngModel)]="novoMembro.nome" placeholder="Ex: Ana Souza"
-                   class="gw-modal-input" />
-        </div>
-        <div class="gw-modal-field">
-            <label class="gw-modal-label">E-mail</label>
-            <input pInputText [(ngModel)]="novoMembro.email" placeholder="nome@goias.gov.br"
-                   class="gw-modal-input" />
-        </div>
-        <div class="gw-modal-field">
-            <label class="gw-modal-label">Perfil</label>
-            <p-select [options]="papelOpcoes" [(ngModel)]="novoMembro.papel"
-                      optionLabel="label" optionValue="value" appendTo="body"
-                      placeholder="Selecione" styleClass="gw-modal-input" />
-        </div>
-        @if (membroErro) {
-            <div class="gw-modal-erro">{{ membroErro }}</div>
-        }
-    </div>
-    <ng-template pTemplate="footer">
-        <p-button label="Cancelar" [text]="true" (onClick)="addMembroModal = false" />
-        <p-button label="Adicionar" icon="pi pi-user-plus" (onClick)="confirmarAddMembro()" />
+        <p-button label="Cancelar" [text]="true" (onClick)="novaSpecModal = false" />
+        <p-button label="Criar" icon="pi pi-plus" (onClick)="criarSpec()"
+                  [disabled]="!novaSpecNome.trim()" />
     </ng-template>
 </p-dialog>
 

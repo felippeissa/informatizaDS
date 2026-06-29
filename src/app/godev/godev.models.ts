@@ -40,6 +40,15 @@ export interface Tela {
 
 export type Sincronizacao = 'sincronizado' | 'dessincronizado';
 
+// Uma Spec reúne, para um mesmo assunto, o requisito (funcional, história de
+// usuário, caso de uso...), as telas e o código gerado.
+export interface Spec {
+    id: number;
+    nome: string;
+    requisito: string;   // markdown do requisito
+    tela: Tela | null;   // cada spec tem exatamente 1 tela (ou nenhuma ainda)
+}
+
 export interface Projeto {
     id: number;
     nome: string;
@@ -48,7 +57,6 @@ export interface Projeto {
     status: 'ativo' | 'inativo';
     sincronizacao: Sincronizacao;
     membros: Membro[];
-    documentos: Documento[];
-    telas: Tela[];
+    specs: Spec[];
     ultimaPublicacao: string;
 }
