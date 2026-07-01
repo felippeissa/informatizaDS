@@ -1,5 +1,289 @@
 :host { display: block; }
 
 .gh-page {
-    min-height: calc(100vh - 160px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.gh-header-bar {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.gh-header-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.gh-subtitulo {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+}
+
+// Card do feed
+.gh-feed-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.gh-feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    h3 { margin: 0; font-size: 1rem; font-weight: 700; color: var(--text-color); }
+}
+
+.gh-feed-total { font-size: 0.8125rem; color: var(--text-color-secondary); }
+
+// ===================== Projetos mais populares =====================
+.gh-populares-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.gh-populares-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+.gh-popular-card {
+    background: var(--surface-ground);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    transition: background 0.15s ease, transform 0.15s ease;
+
+    &:hover { background: var(--surface-hover); transform: translateY(-2px); }
+}
+
+.gh-popular-topo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.gh-popular-topo-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.gh-popular-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.gh-popular-nome {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gh-popular-secretaria {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gh-popular-chart {
+    display: block;
+    width: 100%;
+    height: 56px;
+}
+
+:host ::ng-deep .gh-popular-chart canvas {
+    width: 100% !important;
+}
+
+.gh-popular-consumo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 0.625rem;
+}
+
+.gh-popular-consumo-valor { font-size: 1.125rem; font-weight: 800; color: var(--text-color); }
+.gh-popular-consumo-label { font-size: 0.6875rem; color: var(--text-color-secondary); }
+
+// ===================== Duas colunas: Portfólio + Ações recentes =====================
+.gh-duas-colunas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+// ===================== Ações recentes (ticker) =====================
+.gh-ticker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.gh-ticker-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--surface-border);
+
+    &:last-child { border-bottom: none; }
+}
+
+.gh-ticker-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    i { font-size: 0.8125rem; color: #fff; }
+}
+
+.gh-ticker-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.gh-ticker-texto {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+.gh-ticker-agente { font-weight: 700; margin-right: 0.25rem; }
+
+.gh-ticker-hora { font-size: 0.6875rem; color: var(--text-color-secondary); }
+
+// ===================== Principais assuntos do Manual Inteligente =====================
+.gh-assuntos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.gh-assunto-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--surface-border);
+
+    &:last-child { border-bottom: none; padding-bottom: 0; }
+}
+
+.gh-assunto-posicao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--surface-ground);
+    border: 1px solid var(--surface-border);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-color-secondary);
+    flex-shrink: 0;
+}
+
+.gh-assunto-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.gh-assunto-topo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.gh-assunto-pergunta {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.4;
+}
+
+.gh-assunto-contagem {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.gh-assunto-rodape {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+:host ::ng-deep .gh-assunto-barra {
+    flex: 1;
+    height: 6px;
+
+    .p-progressbar-value { border-radius: 3px; }
 }

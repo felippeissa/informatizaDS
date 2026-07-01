@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export interface ChatTransferMsg { autor: 'user' | 'ia'; texto: string; sistema?: string; modelo?: string; }
+export interface ChatTransferMsg { autor: 'user' | 'ia'; texto: string; sistema?: string; }
 
 export interface ChatTransfer {
     msgs: ChatTransferMsg[];

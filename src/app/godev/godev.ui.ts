@@ -1,4 +1,4 @@
-import { Papel, StatusTela, TipoProjeto } from './godev.models';
+import { AgenteTipo, Papel, StatusTela, TipoProjeto } from './godev.models';
 
 // Paleta compartilhada do módulo GO.DEV — cores de papéis, status e tipos de projeto.
 
@@ -50,6 +50,32 @@ export const TIPO_OPCOES: { label: string; value: TipoProjeto }[] = [
     { label: 'API', value: 'API' }, { label: 'Desktop', value: 'Desktop' },
     { label: 'Outro', value: 'Outro' },
 ];
+
+export const LABEL_AGENTE: Record<AgenteTipo, string> = {
+    spec: 'Spec Agent', task: 'Task Agent', code: 'Code Agent', test: 'Test Agent', review: 'Review Agent',
+};
+
+export const ICON_AGENTE: Record<AgenteTipo, string> = {
+    spec: 'pi-file-edit', task: 'pi-list-check', code: 'pi-code', test: 'pi-verified', review: 'pi-eye',
+};
+
+export const COR_AGENTE: Record<AgenteTipo, string> = {
+    spec: '#2563eb', task: '#b45309', code: '#15803d', test: '#0e7490', review: '#7c3aed',
+};
+
+export const BG_AGENTE: Record<AgenteTipo, string> = {
+    spec: '#dbeafe', task: '#fef3c7', code: '#dcfce7', test: '#cffafe', review: '#ede9fe',
+};
+
+// Sistemas cobertos pelo Manual Inteligente (mesmas cores do switcher de sistemas / chat flutuante).
+export const COR_SISTEMA_MANUAL: Record<string, string> = {
+    'Drácon':       '#1755A3',
+    'GO.DEV':       '#16A34A',
+    'ASSINAGO':     '#7C3AED',
+    'SIAFIC':       '#B45309',
+    'SISLOG':       '#0E7490',
+    'Portal Goiás': '#DB2777',
+};
 
 export function iniciais(nome: string): string {
     return nome.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();

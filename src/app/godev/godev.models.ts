@@ -49,6 +49,23 @@ export interface Spec {
     tela: Tela | null;   // cada spec tem exatamente 1 tela (ou nenhuma ainda)
 }
 
+// Agentes do orquestrador (SDLC): Spec → Task → Code → Test → Review.
+export type AgenteTipo = 'spec' | 'task' | 'code' | 'test' | 'review';
+
+export type PeriodoUso = 'semana' | 'mes' | 'tresMeses';
+
+// Série de atualizações do projeto num período (dias na semana, semanas no mês, meses no trimestre).
+export interface SerieUso {
+    serie: number[];
+    media: number; // consumo médio de atualizações no período
+}
+
+export interface UsoProjeto {
+    semana:    SerieUso;
+    mes:       SerieUso;
+    tresMeses: SerieUso;
+}
+
 export interface Projeto {
     id: number;
     nome: string;
@@ -59,4 +76,6 @@ export interface Projeto {
     membros: Membro[];
     specs: Spec[];
     ultimaPublicacao: string;
+    secretaria?: string;  // preenchido em godev.mock.ts (dados de uso/portfólio da home)
+    uso?: UsoProjeto;
 }

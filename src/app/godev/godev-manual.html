@@ -53,10 +53,11 @@
                         <div class="gm-msg gm-msg--ia">
                             <div class="gm-ia-avatar"><i class="pi pi-sparkles"></i></div>
                             <div class="gm-ia-corpo">
-                                <div class="gm-ia-meta">
-                                    <span class="gm-ia-modelo">{{ m.modelo }}</span>
-                                    @if (m.sistema) { <span class="gm-ia-sistema">{{ m.sistema }}</span> }
-                                </div>
+                                @if (m.sistema) {
+                                    <div class="gm-ia-meta">
+                                        <span class="gm-ia-sistema">{{ m.sistema }}</span>
+                                    </div>
+                                }
                                 <div class="gm-ia-texto" [innerText]="m.texto"></div>
                             </div>
                         </div>
@@ -85,10 +86,10 @@
         <button class="gm-add" pTooltip="Anexar" tooltipPosition="top"><i class="pi pi-plus"></i></button>
         <input pInputText [(ngModel)]="input" (keydown.enter)="enviar()"
                placeholder="Pergunte-me alguma coisa..." class="gm-input" />
-        <p-select [options]="modelos" [ngModel]="modeloSel()" (ngModelChange)="modeloSel.set($event)"
-                  optionLabel="label" optionValue="value" appendTo="body" styleClass="gm-select" />
         <p-select [options]="sistemas" [ngModel]="sistemaSel()" (ngModelChange)="sistemaSel.set($event)"
-                  optionLabel="label" optionValue="value" appendTo="body" styleClass="gm-select" />
+                  optionLabel="label" optionValue="value" appendTo="body" styleClass="gm-select"
+                  [disabled]="mensagens.length > 0"
+                  [pTooltip]="mensagens.length > 0 ? 'Inicie um novo chat para trocar de sistema' : ''" tooltipPosition="top" />
         <p-button icon="pi pi-send" [rounded]="true" (onClick)="enviar()" [disabled]="!input.trim()" />
     </div>
 </ng-template>

@@ -7,7 +7,7 @@ import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChatBridgeService } from '@/app/chat/chat-bridge.service';
 
-interface Msg { autor: 'user' | 'ia'; texto: string; sistema?: string; modelo?: string; }
+interface Msg { autor: 'user' | 'ia'; texto: string; sistema?: string; }
 interface Conversa { id: number; titulo: string; msgs: Msg[]; }
 
 @Component({
@@ -29,13 +29,6 @@ export class GodevManual implements OnInit, AfterViewChecked {
         { label: 'SISLOG',           value: 'SISLOG' },
         { label: 'Portal Goiás',     value: 'Portal Goiás' },
     ];
-    modelos = [
-        { label: 'Automático',  value: 'Automático' },
-        { label: 'Lhama',       value: 'Lhama' },
-        { label: 'Gemini 3',    value: 'Gemini 3' },
-        { label: 'Claude Code', value: 'Claude Code' },
-    ];
-
     sugestoes = [
         'Como consultar o saldo orçamentário no SIAFIC?',
         'Como rastrear uma entrega no SISLOG?',
@@ -48,7 +41,7 @@ export class GodevManual implements OnInit, AfterViewChecked {
             id: 1, titulo: 'Como consultar o saldo orçamentário?',
             msgs: [
                 { autor: 'user', texto: 'Como consultar o saldo orçamentário no SIAFIC?' },
-                { autor: 'ia', sistema: 'SIAFIC', modelo: 'Gemini 3',
+                { autor: 'ia', sistema: 'SIAFIC',
                   texto: 'Identifiquei que sua pergunta é sobre o SIAFIC.\n\nNo SIAFIC, acesse Planejamento e execução orçamentária → IPOF → Manutenção de saldo orçamentário. Informe o Exercício (obrigatório) e use os filtros de Unidade, Ação, Grupo de despesa e Fonte de recurso.' },
             ],
         },
@@ -56,7 +49,7 @@ export class GodevManual implements OnInit, AfterViewChecked {
             id: 2, titulo: 'Rastreamento de entrega no SISLOG',
             msgs: [
                 { autor: 'user', texto: 'Como rastrear uma entrega no SISLOG?' },
-                { autor: 'ia', sistema: 'SISLOG', modelo: 'Claude Code',
+                { autor: 'ia', sistema: 'SISLOG',
                   texto: 'Identifiquei que sua pergunta é sobre o SISLOG.\n\nO rastreamento fica em Operações → Entregas. Busque pelo número do romaneio ou da carga para acompanhar o status em tempo real.' },
             ],
         },
@@ -64,7 +57,7 @@ export class GodevManual implements OnInit, AfterViewChecked {
             id: 3, titulo: 'Serviços do Portal Goiás',
             msgs: [
                 { autor: 'user', texto: 'Quais serviços estão disponíveis no Portal Goiás?' },
-                { autor: 'ia', sistema: 'Portal Goiás', modelo: 'Lhama',
+                { autor: 'ia', sistema: 'Portal Goiás',
                   texto: 'Identifiquei que sua pergunta é sobre o Portal Goiás.\n\nApós login com gov.br ou ID Goiás, é possível buscar serviços por nome, categoria ou órgão e abrir solicitações com anexo de documentos.' },
             ],
         },
@@ -73,7 +66,6 @@ export class GodevManual implements OnInit, AfterViewChecked {
     busca = signal('');
     input = '';
     sistemaSel = signal('Todos os sistemas');
-    modeloSel  = signal('Automático');
     digitando  = signal(false);
 
     private nextId = 4;
@@ -157,7 +149,6 @@ export class GodevManual implements OnInit, AfterViewChecked {
                 autor: 'ia',
                 texto: this.respostaMock(texto, sistema),
                 sistema,
-                modelo: this.modeloEfetivo(),
             });
             this.digitando.set(false);
             this.deveRolar = true;
@@ -167,11 +158,6 @@ export class GodevManual implements OnInit, AfterViewChecked {
     // ===================== Helpers / mock =====================
     private resumo(texto: string) {
         return texto.length > 40 ? texto.slice(0, 40) + '…' : texto;
-    }
-
-    private modeloEfetivo() {
-        // "Automático" mostra como Automático; ao escolher um agente, usa o selecionado
-        return this.modeloSel();
     }
 
     // Identifica o sistema pela seleção ou por palavras-chave da pergunta

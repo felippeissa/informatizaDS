@@ -1,1 +1,102 @@
-<div class="gh-page"></div>
+<div class="gh-page">
+
+    <!-- Cabeçalho -->
+    <div class="ds-page-header gh-header-bar">
+        <div class="gh-header-texto">
+            <h2 class="ds-page-title">Central de Agentes</h2>
+            <p class="gh-subtitulo">Acompanhe em tempo real o que os agentes de IA estão fazendo em cada projeto</p>
+        </div>
+        <p-button label="Ver todos os projetos" icon="pi pi-folder" severity="secondary" [outlined]="true" (onClick)="irProjetos()" />
+    </div>
+
+    <!-- ===================== Projetos mais populares ===================== -->
+    <div class="gh-populares-card">
+        <div class="gh-feed-header">
+            <h3>Projetos mais populares</h3>
+            <p-selectButton [options]="periodoOpcoes" optionLabel="label" optionValue="value"
+                            [ngModel]="periodoSel()" (ngModelChange)="periodoSel.set($event)" [allowEmpty]="false" />
+        </div>
+
+        <div class="gh-populares-grid">
+            @for (item of projetosPopulares(); track item.projeto.id) {
+                <div class="gh-popular-card" (click)="abrirProjeto(item.projeto.id)">
+                    <div class="gh-popular-topo">
+                        <span class="gh-popular-icone" [style.background]="bgTipo[item.projeto.tipo]" [style.color]="corTipo[item.projeto.tipo]">
+                            {{ iniciais(item.projeto.nome) }}
+                        </span>
+                        <div class="gh-popular-topo-texto">
+                            <div class="gh-popular-nome" [pTooltip]="item.projeto.nome" tooltipPosition="top">{{ item.projeto.nome }}</div>
+                            <div class="gh-popular-secretaria">{{ item.projeto.secretaria }}</div>
+                        </div>
+                    </div>
+                    <p-chart type="line" [data]="item.chartData" [options]="item.chartOptions" class="gh-popular-chart" />
+                    <div class="gh-popular-consumo">
+                        <span class="gh-popular-consumo-valor">{{ item.media }}</span>
+                        <span class="gh-popular-consumo-label">atualizações / {{ periodoSel() === 'semana' ? 'semana' : periodoSel() === 'mes' ? 'mês' : '3 meses' }} (média)</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="gh-duas-colunas">
+        <!-- ===================== Portfólio de projetos ===================== -->
+        <div class="gh-feed-card">
+            <div class="gh-feed-header">
+                <h3>Portfólio de projetos</h3>
+                <span class="gh-feed-total">{{ portfolioItems().length }} projetos</span>
+            </div>
+            <p-meterGroup [value]="portfolioItems()" />
+        </div>
+
+        <!-- ===================== Ações recentes (ticker) ===================== -->
+        <div class="gh-feed-card">
+            <div class="gh-feed-header">
+                <h3>Ações recentes</h3>
+                <span class="gh-feed-total">ao vivo</span>
+            </div>
+            <div class="gh-ticker">
+                @for (a of feed(); track a.id) {
+                    <div class="gh-ticker-item">
+                        <span class="gh-ticker-icone" [style.background]="corAgenteDe(a.agente)">
+                            <i class="pi" [class]="iconAgente(a.agente)"></i>
+                        </span>
+                        <div class="gh-ticker-corpo">
+                            <p class="gh-ticker-texto">
+                                <span class="gh-ticker-agente" [style.color]="corAgenteDe(a.agente)">{{ labelAgente(a.agente) }}</span>
+                                {{ a.texto }}
+                            </p>
+                            <span class="gh-ticker-hora">{{ a.hora }}</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== Principais assuntos do Manual Inteligente ===================== -->
+    <div class="gh-feed-card">
+        <div class="gh-feed-header">
+            <h3>Principais assuntos do Manual Inteligente</h3>
+            <p-button label="Abrir Manual Inteligente" icon="pi pi-comments" severity="secondary" [outlined]="true" size="small" (onClick)="abrirManual()" />
+        </div>
+
+        <div class="gh-assuntos-lista">
+            @for (a of assuntosManual(); track a.id) {
+                <div class="gh-assunto-item">
+                    <span class="gh-assunto-posicao">{{ a.posicao }}</span>
+                    <div class="gh-assunto-corpo">
+                        <div class="gh-assunto-topo">
+                            <p class="gh-assunto-pergunta">{{ a.pergunta }}</p>
+                            <span class="gh-assunto-contagem">{{ a.perguntas }} perguntas</span>
+                        </div>
+                        <div class="gh-assunto-rodape">
+                            <p-tag [value]="a.sistema" [style]="{ background: corSistema(a.sistema) + '1a', color: corSistema(a.sistema) }" />
+                            <p-progressBar [value]="a.percentual" [showValue]="false" styleClass="gh-assunto-barra" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Projeto } from './godev.models';
+import { AgenteTipo, Projeto, SerieUso, UsoProjeto } from './godev.models';
 
 export const PROJETOS_MOCK: Projeto[] = [
     {
@@ -237,4 +237,227 @@ export const PROJETOS_MOCK: Projeto[] = [
             },
         ],
     },
+
+    // ── +30 projetos (volume para listas, ranking e portfólio da home) ──────
+    { id: 10, nome: 'Portal de Educação a Distância', descricao: 'Cursos e trilhas de capacitação a distância para a rede estadual.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 5 min', secretaria: 'Secretaria de Estado da Educação (SEDUC)',
+      membros: [
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+      ], specs: [] },
+    { id: 11, nome: 'App Merenda Escolar', descricao: 'Controle de estoque e cardápio da alimentação escolar.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 2h', secretaria: 'Secretaria de Estado da Educação (SEDUC)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+      ], specs: [] },
+    { id: 12, nome: 'Sistema de Matrícula Online', descricao: 'Matrícula e rematrícula digital para a rede estadual de ensino.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 20 min', secretaria: 'Secretaria de Estado da Educação (SEDUC)',
+      membros: [
+          { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO', avatar: 'FS' },
+          { id: 5, nome: 'João Alves', email: 'joao@go.gov.br', papel: 'QA', avatar: 'JA' },
+      ], specs: [] },
+    { id: 13, nome: 'API de Prontuário Eletrônico', descricao: 'Integração de prontuários entre unidades da rede estadual de saúde.', tipo: 'API', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 8 min', secretaria: 'Secretaria de Estado da Saúde (SES)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+          { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO', avatar: 'BT' },
+      ], specs: [] },
+    { id: 14, nome: 'App Agendamento de Vacinas', descricao: 'Agendamento de doses e histórico vacinal do cidadão.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 1h', secretaria: 'Secretaria de Estado da Saúde (SES)',
+      membros: [
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+      ], specs: [] },
+    { id: 15, nome: 'Sistema de Regulação de Leitos', descricao: 'Gestão de vagas e regulação de leitos hospitalares em tempo real.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 15 min', secretaria: 'Secretaria de Estado da Saúde (SES)',
+      membros: [
+          { id: 8, nome: 'Renata Dias', email: 'renata@go.gov.br', papel: 'QA', avatar: 'RD' },
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+      ], specs: [] },
+    { id: 16, nome: 'Painel de Ocorrências Policiais', descricao: 'Painel gerencial de boletins de ocorrência por região.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 3 min', secretaria: 'Secretaria de Segurança Pública (SSP)',
+      membros: [
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+      ], specs: [] },
+    { id: 17, nome: 'App Segurança Cidadã', descricao: 'Canal de denúncias e alertas de segurança para o cidadão.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 4h', secretaria: 'Secretaria de Segurança Pública (SSP)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+          { id: 5, nome: 'João Alves', email: 'joao@go.gov.br', papel: 'QA', avatar: 'JA' },
+      ], specs: [] },
+    { id: 18, nome: 'Sistema de Gestão Prisional', descricao: 'Controle de vagas, transferências e ocorrências no sistema prisional.', tipo: 'Desktop', status: 'inativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 2 semanas', secretaria: 'Secretaria de Segurança Pública (SSP)',
+      membros: [
+          { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO', avatar: 'FS' },
+      ], specs: [] },
+    { id: 19, nome: 'Portal de Licenciamento Ambiental', descricao: 'Solicitação e acompanhamento de licenças ambientais.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 40 min', secretaria: 'Secretaria de Meio Ambiente (SEMAD)',
+      membros: [
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+      ], specs: [] },
+    { id: 20, nome: 'API de Monitoramento Ambiental', descricao: 'Integração com sensores de qualidade do ar e da água.', tipo: 'API', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 6h', secretaria: 'Secretaria de Meio Ambiente (SEMAD)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+      ], specs: [] },
+    { id: 21, nome: 'Sistema de Habitação Popular', descricao: 'Cadastro e seleção de famílias para programas habitacionais.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 12 min', secretaria: 'Agência Goiana de Habitação (AGEHAB)',
+      membros: [
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+          { id: 8, nome: 'Renata Dias', email: 'renata@go.gov.br', papel: 'QA', avatar: 'RD' },
+      ], specs: [] },
+    { id: 22, nome: 'App Minha Casa Goiás', descricao: 'Acompanhamento de obras e entrega de unidades habitacionais.', tipo: 'Mobile', status: 'inativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 3 dias', secretaria: 'Agência Goiana de Habitação (AGEHAB)',
+      membros: [
+          { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO', avatar: 'BT' },
+      ], specs: [] },
+    { id: 23, nome: 'Portal de Editais Culturais', descricao: 'Inscrição e prestação de contas de editais de fomento à cultura.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 25 min', secretaria: 'Secretaria de Estado da Cultura',
+      membros: [
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+          { id: 5, nome: 'João Alves', email: 'joao@go.gov.br', papel: 'QA', avatar: 'JA' },
+      ], specs: [] },
+    { id: 24, nome: 'Sistema de Gestão de Rodovias', descricao: 'Cadastro e monitoramento de manutenção da malha rodoviária estadual.', tipo: 'Desktop', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 50 min', secretaria: 'Agência Goiana de Infraestrutura (GOINFRA)',
+      membros: [
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+      ], specs: [] },
+    { id: 25, nome: 'API de Tráfego em Tempo Real', descricao: 'Dados de tráfego e ocorrências nas rodovias estaduais.', tipo: 'API', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 2h', secretaria: 'Agência Goiana de Infraestrutura (GOINFRA)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+      ], specs: [] },
+    { id: 26, nome: 'Portal do Empreendedor', descricao: 'Abertura, alteração e baixa de empresas de forma simplificada.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 18 min', secretaria: 'Secretaria de Desenvolvimento Econômico',
+      membros: [
+          { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO', avatar: 'FS' },
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+      ], specs: [] },
+    { id: 27, nome: 'Sistema de Crédito Rural', descricao: 'Solicitação e acompanhamento de linhas de crédito para produtores rurais.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 33 min', secretaria: 'Secretaria de Agricultura, Pecuária e Abastecimento',
+      membros: [
+          { id: 8, nome: 'Renata Dias', email: 'renata@go.gov.br', papel: 'QA', avatar: 'RD' },
+      ], specs: [] },
+    { id: 28, nome: 'App Defesa Agropecuária', descricao: 'Notificação e rastreamento de ocorrências sanitárias no campo.', tipo: 'Mobile', status: 'inativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 1 semana', secretaria: 'Secretaria de Agricultura, Pecuária e Abastecimento',
+      membros: [
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+      ], specs: [] },
+    { id: 29, nome: 'Sistema de Habilitação Digital', descricao: 'Emissão e renovação digital da Carteira Nacional de Habilitação.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 7 min', secretaria: 'Departamento Estadual de Trânsito (DETRAN-GO)',
+      membros: [
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+          { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO', avatar: 'BT' },
+      ], specs: [] },
+    { id: 30, nome: 'App Multas e Infrações', descricao: 'Consulta e pagamento de multas de trânsito pelo celular.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 5h', secretaria: 'Departamento Estadual de Trânsito (DETRAN-GO)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+      ], specs: [] },
+    { id: 31, nome: 'Portal de Processos Judiciais', descricao: 'Acompanhamento de processos de interesse da Procuradoria.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 22 min', secretaria: 'Procuradoria-Geral do Estado (PGE)',
+      membros: [
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+          { id: 5, nome: 'João Alves', email: 'joao@go.gov.br', papel: 'QA', avatar: 'JA' },
+      ], specs: [] },
+    { id: 32, nome: 'Sistema de Atendimento à Defensoria', descricao: 'Marcação e triagem de atendimentos jurídicos gratuitos.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 45 min', secretaria: 'Defensoria Pública do Estado de Goiás',
+      membros: [
+          { id: 1, nome: 'Felipe Santiago', email: 'felipe@go.gov.br', papel: 'PO', avatar: 'FS' },
+      ], specs: [] },
+    { id: 33, nome: 'Painel de Indicadores Criminais', descricao: 'Painel gerencial de indicadores de segurança pública por município.', tipo: 'Web', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 3h', secretaria: 'Polícia Civil do Estado de Goiás',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+          { id: 8, nome: 'Renata Dias', email: 'renata@go.gov.br', papel: 'QA', avatar: 'RD' },
+      ], specs: [] },
+    { id: 34, nome: 'App Ocorrência Online', descricao: 'Registro digital de boletim de ocorrência sem deslocamento.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 10 min', secretaria: 'Polícia Militar do Estado de Goiás',
+      membros: [
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+      ], specs: [] },
+    { id: 35, nome: 'Sistema de Gestão de Viaturas', descricao: 'Controle de frota, manutenção e escalas do Corpo de Bombeiros.', tipo: 'Desktop', status: 'inativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 4 dias', secretaria: 'Corpo de Bombeiros Militar de Goiás',
+      membros: [
+          { id: 7, nome: 'Bruno Teixeira', email: 'bruno@go.gov.br', papel: 'PO', avatar: 'BT' },
+      ], specs: [] },
+    { id: 36, nome: 'Portal do Empresário — Junta Comercial', descricao: 'Registro mercantil e certidões emitidas pela Junta Comercial.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 28 min', secretaria: 'Junta Comercial do Estado de Goiás (JUCEG)',
+      membros: [
+          { id: 2, nome: 'Maria Souza', email: 'maria@go.gov.br', papel: 'Analista', avatar: 'MS' },
+      ], specs: [] },
+    { id: 37, nome: 'Painel de Indicadores Socioeconômicos', descricao: 'Painel público de indicadores econômicos e sociais do Estado.', tipo: 'Web', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 55 min', secretaria: 'Instituto Mauro Borges de Estatísticas e Estudos (IMB)',
+      membros: [
+          { id: 4, nome: 'Ana Pereira', email: 'ana@go.gov.br', papel: 'Desenvolvedor', avatar: 'AP' },
+          { id: 5, nome: 'João Alves', email: 'joao@go.gov.br', papel: 'QA', avatar: 'JA' },
+      ], specs: [] },
+    { id: 38, nome: 'Sistema de Obras Públicas', descricao: 'Acompanhamento físico-financeiro de obras públicas estaduais.', tipo: 'Web', status: 'ativo', sincronizacao: 'dessincronizado', ultimaPublicacao: 'há 1h', secretaria: 'Agência Goiana de Infraestrutura (GOINFRA)',
+      membros: [
+          { id: 6, nome: 'Luciano Fagundes', email: 'luciano@go.gov.br', papel: 'Analista', avatar: 'LF' },
+      ], specs: [] },
+    { id: 39, nome: 'App Saneamento Goiás', descricao: 'Solicitações, faturas e ocorrências da rede de saneamento.', tipo: 'Mobile', status: 'ativo', sincronizacao: 'sincronizado', ultimaPublicacao: 'há 14 min', secretaria: 'Saneamento de Goiás (SANEAGO)',
+      membros: [
+          { id: 3, nome: 'Carlos Lima', email: 'carlos@go.gov.br', papel: 'Design', avatar: 'CL' },
+          { id: 8, nome: 'Renata Dias', email: 'renata@go.gov.br', papel: 'QA', avatar: 'RD' },
+      ], specs: [] },
+];
+
+// ===================== Secretaria + uso (home: Projetos populares / Portfólio) =====================
+// Gerador pseudoaleatório determinístico (mesmo projeto sempre gera a mesma série).
+function mulberry32(seed: number) {
+    let a = seed;
+    return () => {
+        a |= 0; a = (a + 0x6d2b79f5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+function gerarSerie(rand: () => number, n: number, min: number, max: number): SerieUso {
+    const serie = Array.from({ length: n }, () => Math.round(min + rand() * (max - min)));
+    const media = Math.round((serie.reduce((a, b) => a + b, 0) / serie.length) * 10) / 10;
+    return { serie, media };
+}
+
+function gerarUso(seed: number): UsoProjeto {
+    const rand = mulberry32(seed * 97 + 13);
+    return {
+        semana:    gerarSerie(rand, 7, 0, 12), // 7 dias
+        mes:       gerarSerie(rand, 4, 5, 40), // 4 semanas
+        tresMeses: gerarSerie(rand, 3, 20, 120), // 3 meses
+    };
+}
+
+const SECRETARIAS: Record<number, string> = {
+    1: 'Secretaria de Estado da Administração (SEAD)',
+    2: 'Secretaria da Fazenda (SEFAZ)',
+    3: 'Secretaria de Meio Ambiente (SEMAD)',
+    4: 'Secretaria da Fazenda (SEFAZ)',
+    5: 'Secretaria de Gestão e Planejamento (SEGPLAN)',
+    6: 'Controladoria-Geral do Estado (CGE)',
+    7: 'Secretaria de Estado da Saúde (SES)',
+    8: 'Secretaria de Estado da Administração (SEAD)',
+    9: 'Secretaria de Gestão e Planejamento (SEGPLAN)',
+};
+
+for (const p of PROJETOS_MOCK) {
+    p.secretaria = p.secretaria ?? SECRETARIAS[p.id] ?? 'Secretaria de Estado';
+    p.uso = gerarUso(p.id);
+}
+
+// ===================== Pool de ações do ticker "Ações recentes" =====================
+// Gerado a partir das specs/telas reais dos projetos, para soar plausível.
+function gerarAcoesTicker(): { agente: AgenteTipo; texto: string }[] {
+    const acoes: { agente: AgenteTipo; texto: string }[] = [];
+    for (const p of PROJETOS_MOCK) {
+        for (const s of p.specs) {
+            acoes.push({ agente: 'spec', texto: `detalhou o requisito "${s.nome}" no projeto ${p.nome}` });
+            acoes.push({ agente: 'task', texto: `quebrou o requisito "${s.nome}" em tarefas técnicas no projeto ${p.nome}` });
+            if (s.tela) {
+                acoes.push({ agente: 'code', texto: `criou a tela "${s.tela.nome}" para o projeto ${p.nome}` });
+                acoes.push({ agente: 'test', texto: `gerou testes para a tela "${s.tela.nome}" no projeto ${p.nome}` });
+                const acaoReview = s.tela.status === 'aprovada'
+                    ? `aprovou a tela "${s.tela.nome}"`
+                    : s.tela.status === 'reprovada'
+                        ? `solicitou ajustes na tela "${s.tela.nome}"`
+                        : `está revisando a tela "${s.tela.nome}"`;
+                acoes.push({ agente: 'review', texto: `${acaoReview} no projeto ${p.nome}` });
+            }
+        }
+    }
+    return acoes;
+}
+
+export const ACOES_TICKER_MOCK = gerarAcoesTicker();
+
+// ===================== Principais assuntos do Manual Inteligente (home) =====================
+export interface AssuntoManual { id: number; pergunta: string; sistema: string; perguntas: number; }
+
+export const ASSUNTOS_MANUAL_MOCK: AssuntoManual[] = [
+    { id: 1, pergunta: 'Como consultar o saldo orçamentário no SIAFIC?',        sistema: 'SIAFIC',       perguntas: 128 },
+    { id: 2, pergunta: 'Como rastrear uma entrega no SISLOG?',                  sistema: 'SISLOG',       perguntas: 96 },
+    { id: 3, pergunta: 'Quais serviços estão disponíveis no Portal Goiás?',     sistema: 'Portal Goiás', perguntas: 84 },
+    { id: 4, pergunta: 'Como incluir um IPOF no SIAFIC?',                      sistema: 'SIAFIC',       perguntas: 77 },
+    { id: 5, pergunta: 'Como emitir uma certidão negativa pelo Portal Goiás?',  sistema: 'Portal Goiás', perguntas: 65 },
+    { id: 6, pergunta: 'Como tramitar um processo no Drácon?',                  sistema: 'Drácon',       perguntas: 58 },
+    { id: 7, pergunta: 'Como assinar um documento no ASSINAGO?',                sistema: 'ASSINAGO',     perguntas: 51 },
+    { id: 8, pergunta: 'Como criar uma nova spec no GO.DEV?',                   sistema: 'GO.DEV',       perguntas: 43 },
+    { id: 9, pergunta: 'Como consultar o status de uma carga no SISLOG?',       sistema: 'SISLOG',       perguntas: 39 },
+    { id: 10, pergunta: 'Como recusar a assinatura de um documento no ASSINAGO?', sistema: 'ASSINAGO',   perguntas: 28 },
 ];
