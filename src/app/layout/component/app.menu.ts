@@ -140,6 +140,17 @@ export class AppMenu implements OnInit, OnDestroy {
                 ]
             },
 
+            /* ══════════════ TEMPLATES DE TELA ══════════════ */
+            {
+                label: 'Templates',
+                items: [
+                    { label: 'Lista com filtros',   icon: 'pi pi-fw pi-list',          routerLink: ['/ds/templates/lista'] },
+                    { label: 'Formulário em card',  icon: 'pi pi-fw pi-pencil',        routerLink: ['/ds/templates/formulario'] },
+                    { label: 'Dashboard',           icon: 'pi pi-fw pi-chart-line',    routerLink: ['/ds/templates/dashboard'] },
+                    { label: 'Detalhe / Workspace', icon: 'pi pi-fw pi-window-maximize', routerLink: ['/ds/templates/detalhe'] }
+                ]
+            },
+
             /* ══════════════ ÁTOMOS ══════════════ */
             {
                 label: 'Átomos',

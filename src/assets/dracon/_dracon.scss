@@ -25,6 +25,51 @@
     color: var(--text-color);
 }
 
+// ── Card branco padrão (bento) · reutilizável em qualquer tela ──
+.ds-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.ds-card-titulo {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i { color: var(--primary-color); font-size: 14px; }
+}
+
+.ds-card-sub {
+    margin: -0.5rem 0 1.25rem;
+    font-size: 0.8125rem;
+    color: var(--text-color-secondary);
+}
+
+// Grade responsiva para KPIs / campos lado a lado
+.ds-grid {
+    display: grid;
+    gap: 1rem;
+
+    &--kpi { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    &--form { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+
+.ds-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label { font-size: 0.8125rem; font-weight: 600; color: var(--text-color); }
+    small { color: var(--text-color-secondary); }
+}
+
 // ── Identification Bar ─────────────────────────────────────────
 .ds-id-bar {
     display: flex;
