@@ -14,8 +14,12 @@ export const DEMO_STYLES = `
     .tok-str { color: #FCD34D; }
     .tok-pt  { color: #E2E8F0; }
 
-    /* ── demo card ── */
-    .demo-card { border: 1px solid var(--surface-border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; scroll-margin-top: 80px; }
+    /* ── demo card ──
+       Sem overflow:hidden — MegaMenu/Menubar/TieredMenu/SpeedDial renderizam
+       o painel dentro do card e seriam cortados. O arredondamento fica nos filhos. */
+    .demo-card { border: 1px solid var(--surface-border); border-radius: 12px; margin-bottom: 16px; scroll-margin-top: 80px; }
+    .demo-card > *:first-child { border-top-left-radius: 11px; border-top-right-radius: 11px; }
+    .demo-card > *:last-child  { border-bottom-left-radius: 11px; border-bottom-right-radius: 11px; }
     .demo-card-head { padding: 14px 20px 12px; background: var(--surface-card); border-bottom: 1px solid var(--surface-border); }
     .demo-card-title { font-size: 14px; font-weight: 700; color: var(--text-color); margin: 0 0 3px; }
     .demo-card-desc  { font-size: 12px; color: var(--text-color-secondary); margin: 0; line-height: 1.5; }

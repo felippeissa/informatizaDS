@@ -34,20 +34,20 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <div class="demo-card-title">SpeedDial</div>
                             <p class="demo-card-desc">Menu radial de ações rápidas que se expande ao clicar. Configure a direção com <code>direction</code> e adicione uma máscara com <code>[mask]="true"</code>.</p>
                         </div>
-                        <div class="demo-card-body" style="position:relative;min-height:220px;overflow:hidden;justify-content:center;align-items:center;gap:80px">
-                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:flex-end;justify-content:center">
+                        <div class="demo-card-body" style="position:relative;min-height:300px;justify-content:center;gap:80px">
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:flex-end;justify-content:center;align-self:flex-end">
                                 <p-speeddial [model]="items" direction="up" />
                                 <span style="position:absolute;top:-22px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">up</span>
                             </div>
-                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:flex-start">
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:flex-start;align-self:center">
                                 <p-speeddial [model]="items" direction="right" />
                                 <span style="position:absolute;bottom:-18px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">right</span>
                             </div>
-                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:flex-start;justify-content:center">
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:flex-start;justify-content:center;align-self:flex-start">
                                 <p-speeddial [model]="items" direction="down" />
                                 <span style="position:absolute;bottom:-22px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">down</span>
                             </div>
-                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:flex-end">
+                            <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:flex-end;align-self:center">
                                 <p-speeddial [model]="items" direction="left" />
                                 <span style="position:absolute;bottom:-18px;font-size:11px;font-weight:600;color:var(--text-color-secondary);white-space:nowrap">left</span>
                             </div>
