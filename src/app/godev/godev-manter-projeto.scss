@@ -235,9 +235,6 @@
 }
 
 // Senha ocupa 100% (p-password tem wrapper próprio)
-:host ::ng-deep .gmp-senha-input { width: 100%; }
-:host ::ng-deep p-password { display: block; width: 100%; }
-
 // Mensagem azul de obrigatoriedade
 .gmp-info-azul {
     display: flex;
@@ -387,31 +384,61 @@
     &--erro { background: #fee2e2; color: #dc2626; }
 }
 
-.gmp-repo-criar {
+// Modo edição de um repositório (URL + TAG)
+.gmp-repo-edit {
+    flex: 1;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    flex-shrink: 0;
-
-    label { font-size: 0.75rem; font-weight: 600; color: var(--text-color); cursor: pointer; }
+    gap: 0.5rem;
+    min-width: 0;
 }
 
-.gmp-repos-sugestao {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--text-color-secondary);
-    line-height: 1.5;
-    padding: 0.25rem;
+.gmp-repo-edit-url {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.8125rem !important;
+    padding: 0.45rem 0.6rem !important;
+}
 
-    i { color: #2563eb; margin-top: 1px; }
+:host ::ng-deep .gmp-repo-edit-tag {
+    width: 130px;
+    flex-shrink: 0;
+
+    .p-select-label { font-size: 0.8125rem; padding: 0.45rem 0.6rem; }
 }
 
 .gmp-repos-acoes {
     display: flex;
     justify-content: flex-end;
+    gap: 0.5rem;
     padding-top: 0.25rem;
+}
+
+// Select de template no modo edição do repositório
+:host ::ng-deep .gmp-repo-edit-template {
+    width: 190px;
+    flex-shrink: 0;
+
+    .p-select-label { font-size: 0.8125rem; padding: 0.45rem 0.6rem; font-family: monospace; }
+}
+
+// Badge do template no modo leitura
+.gmp-repo-template {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: monospace;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 20px;
+    background: var(--surface-ground);
+    border: 1px solid var(--surface-border);
+    color: var(--text-color-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    i { font-size: 10px; color: var(--primary-color); }
 }
 
 // Campos com fundo próprio (bento): cada input se mostra como um campo

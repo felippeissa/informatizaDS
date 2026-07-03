@@ -26,21 +26,13 @@
                           class="gmp-input" rows="4"></textarea>
             </div>
 
-            <div class="gmp-field">
-                <label class="gmp-label">Tipo de projeto</label>
-                <p-select [options]="tipoOpcoes" [(ngModel)]="form.tipo"
-                          optionLabel="label" optionValue="value"
-                          placeholder="Selecione o tipo"
-                          styleClass="gmp-input" />
-            </div>
-
             <!-- Repositório raiz do projeto: busca os sub-repos e sugere criar os que faltam -->
             <div class="gmp-divisor"><i class="pi pi-server"></i> Repositório do projeto (GitLab)</div>
             <div class="gmp-field">
                 <label class="gmp-label">URL raiz do projeto <span class="gmp-required">*</span></label>
                 <input pInputText [(ngModel)]="form.rootUrl" (ngModelChange)="onRootChange()"
                        placeholder="https://gitlab.goias.gov.br/nome-do-projeto" class="gmp-input" />
-                <small class="gmp-ajuda">O sistema verifica quais repositórios existem nessa raiz (wiki, frontend e back-ends) e sugere criar os que faltam.</small>
+                <small class="gmp-ajuda">O sistema verifica quais repositórios existem nessa raiz. Você pode editar a URL e a tag de cada resultado ou adicionar novos com "Novo".</small>
             </div>
             <div class="gmp-conexao-row">
                 <p-button label="Buscar repositórios" icon="pi pi-search" [outlined]="true" size="small"
@@ -57,45 +49,55 @@
                 <div class="gmp-repos">
                     <div class="gmp-repos-titulo">
                         <i class="pi pi-check-circle"></i>
-                        {{ reposEncontrados.length }} repositório(s) encontrado(s)
-                        @if (reposFaltando.length) { · {{ reposFaltando.length }} faltando }
+                        {{ repos().length }} repositório(s) encontrado(s)
                     </div>
 
-                    @for (r of repos(); track r.path) {
-                        <div class="gmp-repo-item"
-                             [class.gmp-repo-item--falta]="!r.encontrado"
-                             [class.gmp-repo-item--excluir]="r.encontrado && r.excluir">
-                            <i class="pi" [class]="!r.encontrado ? 'pi-exclamation-circle' : (r.excluir ? 'pi-minus-circle' : 'pi-check-circle')"></i>
-                            <div class="gmp-repo-info">
-                                <span class="gmp-repo-nome">{{ r.nome }}</span>
-                                <span class="gmp-repo-path">{{ form.rootUrl }}{{ r.path }}</span>
-                            </div>
+                    @for (r of repos(); track $index) {
+                        <div class="gmp-repo-item" [class.gmp-repo-item--excluir]="r.excluir">
+                            <i class="pi" [class]="r.excluir ? 'pi-minus-circle' : 'pi-check-circle'"></i>
 
-                            <span class="gmp-repo-tipo" [class]="'gmp-repo-tipo--' + r.tipo">{{ tipoLabel[r.tipo] }}</span>
-
-                            @if (!r.encontrado) {
-                                <div class="gmp-repo-criar">
-                                    <p-checkbox [(ngModel)]="r.criar" [binary]="true" inputId="criar-{{ r.path }}" />
-                                    <label [attr.for]="'criar-' + r.path">Criar</label>
+                            @if (r.editando) {
+                                <!-- Modo edição: URL + TAG editáveis -->
+                                <div class="gmp-repo-edit">
+                                    <input pInputText [(ngModel)]="r.url" class="gmp-repo-edit-url"
+                                           placeholder="https://gitlab.goias.gov.br/projeto/repo" />
+                                    <p-select [options]="tipoRepoOpcoes" [(ngModel)]="r.tipo"
+                                              optionLabel="label" optionValue="value" appendTo="body"
+                                              styleClass="gmp-repo-edit-tag" />
+                                    <p-select [options]="templateOpcoes" [(ngModel)]="r.template"
+                                              appendTo="body" placeholder="Template"
+                                              styleClass="gmp-repo-edit-template" />
                                 </div>
-                            } @else if (r.excluir) {
-                                <span class="gmp-repo-badge gmp-repo-badge--erro">Será desvinculado</span>
-                                <p-button icon="pi pi-undo" [text]="true" [rounded]="true" size="small"
-                                          pTooltip="Desfazer" tooltipPosition="left" (onClick)="toggleExcluir(r)" />
+                                <p-button icon="pi pi-check" [text]="true" [rounded]="true" size="small"
+                                          pTooltip="Salvar alterações" tooltipPosition="left"
+                                          [disabled]="!r.url.trim()" (onClick)="salvarRepo(r)" />
+                                <p-button icon="pi pi-trash" [text]="true" [rounded]="true" size="small"
+                                          severity="danger" pTooltip="Remover" tooltipPosition="left"
+                                          (onClick)="removerRepo(r)" />
                             } @else {
-                                <span class="gmp-repo-badge gmp-repo-badge--ok">Encontrado</span>
-                                <p-button icon="pi pi-minus-circle" [text]="true" [rounded]="true" size="small"
-                                          severity="warn" pTooltip="Desvincular repositório" tooltipPosition="left"
-                                          (onClick)="toggleExcluir(r)" />
-                            }
-                        </div>
-                    }
+                                <div class="gmp-repo-info">
+                                    <span class="gmp-repo-nome">{{ r.nome }}</span>
+                                    <span class="gmp-repo-path">{{ r.url }}</span>
+                                </div>
 
-                    @if (reposFaltando.length || reposParaExcluir.length) {
-                        <div class="gmp-repos-sugestao">
-                            <i class="pi pi-info-circle"></i>
-                            @if (reposFaltando.length) { Sugerimos criar os repositórios faltantes. }
-                            Marque o que aprova (criar/desvincular) e confirme para continuar.
+                                <span class="gmp-repo-tipo" [class]="'gmp-repo-tipo--' + r.tipo">{{ tipoLabel[r.tipo] }}</span>
+                                <span class="gmp-repo-template" pTooltip="Template do repositório" tooltipPosition="top">
+                                    <i class="pi pi-clone"></i> {{ r.template }}
+                                </span>
+
+                                @if (r.excluir) {
+                                    <span class="gmp-repo-badge gmp-repo-badge--erro">Será desvinculado</span>
+                                    <p-button icon="pi pi-undo" [text]="true" [rounded]="true" size="small"
+                                              pTooltip="Desfazer" tooltipPosition="left" (onClick)="toggleExcluir(r)" />
+                                } @else {
+                                    <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" size="small"
+                                              pTooltip="Editar URL e tag" tooltipPosition="top"
+                                              (onClick)="editarRepo(r)" />
+                                    <p-button icon="pi pi-minus-circle" [text]="true" [rounded]="true" size="small"
+                                              severity="warn" pTooltip="Desvincular repositório" tooltipPosition="left"
+                                              (onClick)="toggleExcluir(r)" />
+                                }
+                            }
                         </div>
                     }
 
@@ -103,43 +105,15 @@
                         @if (confirmado()) {
                             <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Repositórios confirmados</span>
                         } @else {
+                            <p-button label="Novo" icon="pi pi-plus" size="small" [outlined]="true"
+                                      pTooltip="Adicionar repositório" tooltipPosition="top"
+                                      (onClick)="novoRepo()" />
                             <p-button [label]="labelConfirmar" icon="pi pi-check" size="small"
-                                      (onClick)="confirmarRepos()" />
+                                      [disabled]="temEdicaoAberta" (onClick)="confirmarRepos()" />
                         }
                     </div>
                 </div>
             }
-
-            <!-- Conexão com o banco de dados -->
-            <div class="gmp-divisor"><i class="pi pi-database"></i> Banco de dados</div>
-            <div class="gmp-field">
-                <label class="gmp-label">Banco de dados <span class="gmp-required">*</span></label>
-                <p-select [options]="bancoOpcoes" [(ngModel)]="form.banco" (ngModelChange)="onDbChange()"
-                          optionLabel="label" optionValue="value" appendTo="body"
-                          placeholder="Selecione o banco" styleClass="gmp-input" />
-            </div>
-            <div class="gmp-field">
-                <label class="gmp-label">Usuário do banco <span class="gmp-required">*</span></label>
-                <input pInputText [(ngModel)]="form.dbUsuario" (ngModelChange)="onDbChange()"
-                       placeholder="Ex: svc_godev" class="gmp-input" />
-            </div>
-            <div class="gmp-field">
-                <label class="gmp-label">Senha do banco <span class="gmp-required">*</span></label>
-                <p-password [(ngModel)]="form.dbSenha" (ngModelChange)="onDbChange()"
-                            [feedback]="false" [toggleMask]="true" [fluid]="true"
-                            placeholder="••••••••" styleClass="gmp-input" inputStyleClass="gmp-senha-input" />
-            </div>
-            <div class="gmp-conexao-row">
-                <p-button label="Testar conexão" icon="pi pi-link" [outlined]="true" size="small"
-                          [loading]="dbStatus() === 'testando'"
-                          [disabled]="dbStatus() === 'testando'"
-                          (onClick)="testarBanco()" />
-                @switch (dbStatus()) {
-                    @case ('testando')  { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Conectando...</span> }
-                    @case ('conectado') { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Conectado</span> }
-                    @case ('falhou')    { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Falhou</span> }
-                }
-            </div>
         </div>
 
         <!-- Coluna direita: membros -->
@@ -182,7 +156,7 @@
     @if (!podeSalvar) {
         <div class="gmp-info-azul">
             <i class="pi pi-info-circle"></i>
-            Para continuar é necessário preencher todos os campos obrigatórios (*) e realizar o teste de conexão.
+            Para continuar é necessário preencher todos os campos obrigatórios (*) e confirmar os repositórios.
         </div>
     }
 

@@ -9,18 +9,15 @@ import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
-import { PasswordModule } from 'primeng/password';
-import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MessageService } from 'primeng/api';
-import { Membro, Papel, Projeto, TipoProjeto } from './godev.models';
+import { Membro, Papel, Projeto } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
-import { BG_PAPEL, COR_PAPEL, PAPEL_OPCOES, TIPO_OPCOES, iniciais } from './godev.ui';
+import { BG_PAPEL, COR_PAPEL, PAPEL_OPCOES, iniciais } from './godev.ui';
 
-type ConexaoStatus = 'idle' | 'testando' | 'conectado' | 'falhou';
 type RepoTipo = 'wiki' | 'frontend' | 'backend' | 'api';
 
-interface RepoScan { nome: string; path: string; tipo: RepoTipo; encontrado: boolean; criar: boolean; excluir: boolean; }
+interface RepoScan { nome: string; url: string; tipo: RepoTipo; template: string; excluir: boolean; editando: boolean; }
 
 interface UsuarioBase { nome: string; login: string; email: string; cpf: string; }
 interface SugestaoUsuario extends UsuarioBase { display: string; }
@@ -29,7 +26,7 @@ interface SugestaoUsuario extends UsuarioBase { display: string; }
     selector: 'app-godev-manter-projeto',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule,
-              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, PasswordModule, CheckboxModule, AutoCompleteModule],
+              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, AutoCompleteModule],
     templateUrl: './godev-manter-projeto.html',
     styleUrl:    './godev-manter-projeto.scss',
 })
@@ -41,7 +38,6 @@ export class GodevManterProjeto implements OnInit {
     corPapel = COR_PAPEL;
     bgPapel  = BG_PAPEL;
     papelOpcoes = PAPEL_OPCOES;
-    tipoOpcoes  = TIPO_OPCOES;
     iniciais = iniciais;
 
     isEdicao      = false;
@@ -50,18 +46,9 @@ export class GodevManterProjeto implements OnInit {
 
 
     form = {
-        nome: '', descricao: '', tipo: null as TipoProjeto | null,
+        nome: '', descricao: '',
         rootUrl: '',
-        // Conexões
-        banco: null as string | null, dbUsuario: '', dbSenha: '',
     };
-    bancoOpcoes = [
-        { label: 'PostgreSQL', value: 'postgres' },
-        { label: 'MySQL',      value: 'mysql' },
-        { label: 'SQL Server', value: 'sqlserver' },
-        { label: 'Oracle',     value: 'oracle' },
-        { label: 'MongoDB',    value: 'mongodb' },
-    ];
     membros = signal<Membro[]>([]);
 
     // 10 cenários possíveis ao CRIAR um projeto — sorteados a cada "Buscar repositórios".
@@ -142,23 +129,57 @@ export class GodevManterProjeto implements OnInit {
     repos = signal<RepoScan[]>([]);
     confirmado = signal(false);
 
-    get reposEncontrados()  { return this.repos().filter(r => r.encontrado); }
-    get reposFaltando()     { return this.repos().filter(r => !r.encontrado); }
-    get reposParaCriar()    { return this.reposFaltando.filter(r => r.criar); }
-    get reposParaExcluir()  { return this.repos().filter(r => r.encontrado && r.excluir); }
+    get reposParaExcluir() { return this.repos().filter(r => r.excluir); }
+    get temEdicaoAberta()  { return this.repos().some(r => r.editando); }
 
     toggleExcluir(r: RepoScan) { r.excluir = !r.excluir; this.confirmado.set(false); }
 
     get labelConfirmar() {
-        const partes: string[] = [];
-        if (this.reposParaCriar.length)   partes.push(`criar ${this.reposParaCriar.length}`);
-        if (this.reposParaExcluir.length) partes.push(`desvincular ${this.reposParaExcluir.length}`);
-        return partes.length ? `Confirmar (${partes.join(' · ')})` : 'Confirmar repositórios';
+        const n = this.reposParaExcluir.length;
+        return n ? `Confirmar (desvincular ${n})` : 'Confirmar repositórios';
     }
 
-    // Estado de conexão do banco
-    dbStatus = signal<ConexaoStatus>('idle');
+    // Editar URL/TAG/Template de um resultado
+    tipoRepoOpcoes: { label: string; value: RepoTipo }[] = [
+        { label: 'Wiki',      value: 'wiki' },
+        { label: 'Front-end', value: 'frontend' },
+        { label: 'Back-end',  value: 'backend' },
+        { label: 'API',       value: 'api' },
+    ];
 
+    // Cada repositório se baseia em um template
+    templateOpcoes = ['smart-arquivos', 'smart-clientes-api', 'smart-sakai-primeng'];
+
+    // Sugestão de template conforme o tipo do repositório
+    private templatePadrao(tipo: RepoTipo): string {
+        if (tipo === 'wiki') return 'smart-arquivos';
+        if (tipo === 'frontend') return 'smart-sakai-primeng';
+        return 'smart-clientes-api'; // backend / api
+    }
+
+    editarRepo(r: RepoScan) { r.editando = true; this.confirmado.set(false); }
+
+    salvarRepo(r: RepoScan) {
+        if (!r.url.trim()) return;
+        r.url = r.url.trim();
+        r.nome = this.nomeDaUrl(r.url);
+        r.editando = false;
+    }
+
+    // "Novo": acrescenta uma linha editável para o usuário informar URL e TAG
+    novoRepo() {
+        const base = this.form.rootUrl.trim().replace(/\/+$/, '');
+        this.repos.update(l => [...l, { nome: '', url: `${base}/`, tipo: 'api', template: 'smart-clientes-api', excluir: false, editando: true }]);
+        this.confirmado.set(false);
+    }
+
+    removerRepo(r: RepoScan) { this.repos.update(l => l.filter(x => x !== r)); }
+
+    private nomeDaUrl(url: string): string {
+        const seg = url.replace(/\/+$/, '').split('/').pop() ?? '';
+        const limpo = seg.replace(/[-_]/g, ' ').trim();
+        return limpo ? limpo.charAt(0).toUpperCase() + limpo.slice(1) : 'Repositório';
+    }
 
     private urlValida(url: string) { return /^https?:\/\/[^\s]+\.[^\s]+/.test(url.trim()); }
 
@@ -177,28 +198,27 @@ export class GodevManterProjeto implements OnInit {
         const base = this.isEdicao
             ? this.cenarioEdicao
             : this.cenarios[Math.floor(Math.random() * this.cenarios.length)];
+        const raiz = this.form.rootUrl.trim().replace(/\/+$/, '');
         setTimeout(() => {
-            this.repos.set(base.map(e => ({
-                ...e,
-                tipo: this.tipoDoRepo(e.path),
-                criar: !e.encontrado, // sugere criar os que faltam
-                excluir: false,
-            })));
+            // Só os repositórios existentes na raiz — os demais podem ser adicionados com "Novo"
+            this.repos.set(base.filter(e => e.encontrado).map(e => {
+                const tipo = this.tipoDoRepo(e.path);
+                return {
+                    nome: e.nome,
+                    url: raiz + e.path,
+                    tipo,
+                    template: this.templatePadrao(tipo),
+                    excluir: false,
+                    editando: false,
+                };
+            }));
             this.buscaStatus.set('concluido');
         }, 1500);
     }
 
-    confirmarRepos() { this.confirmado.set(true); }
-
-    onDbChange() { this.dbStatus.set('idle'); }
-
-    testarBanco() {
-        this.dbStatus.set('testando');
-        // Mock: conecta se banco, usuário e senha estiverem preenchidos
-        setTimeout(() => {
-            const ok = !!this.form.banco && !!this.form.dbUsuario.trim() && !!this.form.dbSenha.trim();
-            this.dbStatus.set(ok ? 'conectado' : 'falhou');
-        }, 1500);
+    confirmarRepos() {
+        if (this.temEdicaoAberta) return;
+        this.confirmado.set(true);
     }
 
     // ===================== Membros (busca na base do estado) =====================
@@ -262,18 +282,23 @@ export class GodevManterProjeto implements OnInit {
         const p = PROJETOS_MOCK.find(x => x.id === +id!);
         if (p) {
             this.projetoEditando = p;
+            const rootUrl = `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}`;
             this.form = {
                 ...this.form,
-                nome: p.nome, descricao: p.descricao, tipo: p.tipo,
-                // Conexões já configuradas (mock) do projeto existente
-                rootUrl: `https://gitlab.goias.gov.br/${p.nome.toLowerCase().replace(/\s+/g, '-')}`,
-                banco: 'postgres', dbUsuario: 'svc_godev', dbSenha: 'senha-mock-123',
+                nome: p.nome, descricao: p.descricao,
+                rootUrl,
             };
-            // Repositórios já verificados (todos existentes) e banco conectado
-            this.repos.set(this.cenarioEdicao.map(e => ({ ...e, tipo: this.tipoDoRepo(e.path), criar: false, excluir: false })));
+            // Repositórios já verificados do projeto existente
+            this.repos.set(this.cenarioEdicao.map(e => {
+                const tipo = this.tipoDoRepo(e.path);
+                return {
+                    nome: e.nome, url: rootUrl + e.path, tipo,
+                    template: this.templatePadrao(tipo),
+                    excluir: false, editando: false,
+                };
+            }));
             this.buscaStatus.set('concluido');
             this.confirmado.set(true);
-            this.dbStatus.set('conectado');
             this.membros.set([...p.membros]);
         }
     }
@@ -313,12 +338,9 @@ export class GodevManterProjeto implements OnInit {
 
     get podeSalvar() {
         const f = this.form;
-        // Banco é sempre obrigatório e precisa estar conectado
-        const dbOk = !!f.banco && !!f.dbUsuario.trim() && !!f.dbSenha.trim()
-            && this.dbStatus() === 'conectado';
-        // Raiz do projeto: precisa buscar os repositórios e confirmar
-        const reposOk = !!f.rootUrl.trim() && this.confirmado();
-        return !!f.nome.trim() && dbOk && reposOk;
+        // Raiz do projeto: precisa buscar os repositórios e confirmar (sem edições abertas)
+        const reposOk = !!f.rootUrl.trim() && this.confirmado() && !this.temEdicaoAberta;
+        return !!f.nome.trim() && reposOk;
     }
 
     private persistir(): Projeto {
@@ -328,7 +350,6 @@ export class GodevManterProjeto implements OnInit {
             const p = this.projetoEditando;
             p.nome = f.nome.trim();
             p.descricao = f.descricao.trim();
-            p.tipo = f.tipo ?? p.tipo;
             p.membros = this.membros();
             p.ultimaPublicacao = 'agora mesmo';
             return p;
@@ -339,7 +360,7 @@ export class GodevManterProjeto implements OnInit {
             id: novoId,
             nome: f.nome.trim(),
             descricao: f.descricao.trim(),
-            tipo: f.tipo ?? 'Web',
+            tipo: 'Web',
             status: 'ativo',
             sincronizacao: 'sincronizado',
             membros: this.membros(),
