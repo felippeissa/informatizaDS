@@ -1,0 +1,111 @@
+<div class="pt-page">
+
+    <!-- Breadcrumb -->
+    <nav class="pt-breadcrumb">
+        <i class="pi pi-home"></i>
+        <i class="pi pi-angle-right pt-bc-sep"></i>
+        <span class="pt-bc-link">Nome da página anterior</span>
+        <i class="pi pi-angle-right pt-bc-sep"></i>
+        <span class="pt-bc-atual">Cadastrar &lt;nome&gt;</span>
+    </nav>
+
+    <h2 class="pt-titulo">Cadastrar &lt;nome&gt;</h2>
+
+    <!-- Card branco com o formulário -->
+    <div class="ds-card pt-card">
+
+        <!-- Linha 1: 6 campos -->
+        <div class="pt-grid pt-grid--6">
+            <div class="pt-campo">
+                <label for="pt-c1">Texto <span class="pt-req">*</span></label>
+                <input id="pt-c1" pInputText [(ngModel)]="form.texto1" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-c2">Texto <span class="pt-req">*</span></label>
+                <input id="pt-c2" pInputText [(ngModel)]="form.texto2" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-c3">Texto <span class="pt-req">*</span></label>
+                <input id="pt-c3" pInputText [(ngModel)]="form.texto3" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-cpf">Texto</label>
+                <p-inputmask id="pt-cpf" mask="999.999.999-99" [(ngModel)]="form.cpf"
+                             placeholder="000.000.000-00" [fluid]="true" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-cep1">Texto</label>
+                <p-inputmask id="pt-cep1" mask="99999-999" [(ngModel)]="form.cep1"
+                             placeholder="00000-000" [fluid]="true" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-v1">Valor</label>
+                <p-inputnumber id="pt-v1" [(ngModel)]="form.valor1" mode="currency" currency="BRL"
+                               locale="pt-BR" [fluid]="true" inputStyleClass="pt-valor" placeholder="R$ 0,00" />
+            </div>
+        </div>
+
+        <!-- Linha 2: 3 campos -->
+        <div class="pt-grid pt-grid--3">
+            <div class="pt-campo">
+                <label for="pt-c4">Texto</label>
+                <input id="pt-c4" pInputText [(ngModel)]="form.texto4" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-cep2">Texto <span class="pt-req">*</span></label>
+                <p-inputmask id="pt-cep2" mask="99999-999" [(ngModel)]="form.cep2"
+                             placeholder="00000-000" [fluid]="true" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-v2">Valor</label>
+                <p-inputnumber id="pt-v2" [(ngModel)]="form.valor2" mode="currency" currency="BRL"
+                               locale="pt-BR" [fluid]="true" inputStyleClass="pt-valor" placeholder="R$ 0,00" />
+            </div>
+        </div>
+
+        <!-- Linha 3: 3 campos -->
+        <div class="pt-grid pt-grid--3">
+            <div class="pt-campo">
+                <label for="pt-c5">Texto</label>
+                <input id="pt-c5" pInputText [(ngModel)]="form.texto5" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-cep3">Texto</label>
+                <p-inputmask id="pt-cep3" mask="99999-999" [(ngModel)]="form.cep3"
+                             placeholder="00000-000" [fluid]="true" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-v3">Valor</label>
+                <p-inputnumber id="pt-v3" [(ngModel)]="form.valor3" mode="currency" currency="BRL"
+                               locale="pt-BR" [fluid]="true" inputStyleClass="pt-valor" placeholder="R$ 0,00" />
+            </div>
+        </div>
+
+        <!-- Linha 4: 2 campos -->
+        <div class="pt-grid pt-grid--2">
+            <div class="pt-campo">
+                <label for="pt-c6">Texto <span class="pt-req">*</span></label>
+                <input id="pt-c6" pInputText [(ngModel)]="form.texto6" placeholder="Digite" />
+            </div>
+            <div class="pt-campo">
+                <label for="pt-v4">Valor</label>
+                <p-inputnumber id="pt-v4" [(ngModel)]="form.valor4" mode="currency" currency="BRL"
+                               locale="pt-BR" [fluid]="true" inputStyleClass="pt-valor" placeholder="R$ 0,00" />
+            </div>
+        </div>
+
+        <!-- Linha 5: campo largura total -->
+        <div class="pt-grid pt-grid--1">
+            <div class="pt-campo">
+                <label for="pt-c7">Texto</label>
+                <input id="pt-c7" pInputText [(ngModel)]="form.texto7" placeholder="Digite" />
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="pt-acoes">
+            <p-button label="Cancelar" [outlined]="true" (onClick)="cancelar()" />
+            <p-button label="Salvar" (onClick)="salvar()" />
+        </div>
+    </div>
+</div>

@@ -41,10 +41,34 @@ export class AppMenu implements OnInit, OnDestroy {
             this.model = this.draconMenu;
         } else if (url.startsWith('/godev')) {
             this.model = this.godevMenu;
+        } else if (url.startsWith('/protege')) {
+            this.model = this.protegeMenu;
         } else {
             this.model = this.dsMenu;
         }
     }
+
+    /* ══════════════════════════════════════════════════════
+       Menu: PROTEGE
+    ══════════════════════════════════════════════════════ */
+    private protegeMenu: MenuItem[] = [
+        {
+            items: [
+                { label: '<Nome da página>', icon: 'pi pi-fw pi-external-link', routerLink: ['/protege/cadastrar'] },
+                { label: 'menu-02', icon: 'pi pi-fw pi-external-link' },
+                { label: 'menu-03', icon: 'pi pi-fw pi-external-link' },
+                { label: 'menu-04', icon: 'pi pi-fw pi-external-link' },
+                { label: 'menu-05', icon: 'pi pi-fw pi-external-link' },
+                {
+                    label: 'menu-06', icon: 'pi pi-fw pi-external-link',
+                    items: [
+                        { label: 'submenu-01' },
+                        { label: 'submenu-02' },
+                    ]
+                },
+            ]
+        }
+    ];
 
     /* ══════════════════════════════════════════════════════
        Menu: ASSINAGO

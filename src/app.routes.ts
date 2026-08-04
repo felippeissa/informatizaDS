@@ -30,6 +30,11 @@ export const appRoutes: Routes = [
         loadChildren: () => import('./app/godev/godev.routes').then(m => m.godevRoutes)
     },
     {
+        path: 'protege',
+        component: AppLayout,
+        loadChildren: () => import('./app/protege/protege.routes').then(m => m.protegeRoutes)
+    },
+    {
         path: 'manual',
         loadChildren: () => import('./app/manual/manual.routes').then(m => m.manualRoutes)
     },

@@ -103,6 +103,11 @@ import { filter } from 'rxjs/operators';
                     <a class="layout-topbar-logo" routerLink="/godev">
                         <img src="assets/logo-godev.svg" alt="GO.DEV" style="height:32px;width:auto" />
                     </a>
+                } @else if (activeSystem().id === 'protege') {
+                    <a class="layout-topbar-logo" routerLink="/protege" style="gap:9px">
+                        <i class="pi pi-shield" style="font-size:22px;color:#059669"></i>
+                        <span style="font-size:18px;font-weight:900;letter-spacing:-.01em;color:var(--text-color)">PROTEGE</span>
+                    </a>
                 } @else if (activeSystem().id === 'manual') {
                     <a class="layout-topbar-logo" routerLink="/manual" style="gap:9px">
                         <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" style="height:30px;width:auto" />
@@ -254,6 +259,16 @@ export class AppTopbar implements OnInit {
             color: '#16A34A',
             bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
             route: '/godev',
+            comingSoon: false
+        },
+        {
+            id: 'protege',
+            name: 'PROTEGE',
+            desc: 'Proteção e assistência social',
+            icon: 'pi pi-shield',
+            color: '#059669',
+            bgColor: 'color-mix(in srgb, #059669 12%, transparent)',
+            route: '/protege',
             comingSoon: false
         },
         {
