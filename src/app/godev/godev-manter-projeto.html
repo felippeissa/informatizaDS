@@ -107,7 +107,7 @@
                         } @else {
                             <p-button label="Novo" icon="pi pi-plus" size="small" [outlined]="true"
                                       pTooltip="Adicionar repositório" tooltipPosition="top"
-                                      (onClick)="novoRepo()" />
+                                      (onClick)="abrirNovoRepo()" />
                             <p-button [label]="labelConfirmar" icon="pi pi-check" size="small"
                                       [disabled]="temEdicaoAberta" (onClick)="confirmarRepos()" />
                         }
@@ -172,6 +172,97 @@
     </div>
 
 </div>
+
+<!-- Modal: novo repositório (criar ou vincular por URL) -->
+<p-dialog header="Novo repositório" [(visible)]="novoRepoModal"
+          [modal]="true" [draggable]="false" [style]="{width:'560px'}">
+
+    <p-tabs [(value)]="abaRepo">
+        <p-tablist>
+            <p-tab value="criar">Criar repositório</p-tab>
+            <p-tab value="url">Vincular por URL</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <!-- Aba: criar -->
+            <p-tabpanel value="criar">
+                <div class="gmp-dialog-body">
+                    <div class="gmp-field">
+                        <label class="gmp-label">Área de negócio (grupo GitLab) <span class="gmp-required">*</span></label>
+                        <input pInputText [(ngModel)]="formRepo.area" (ngModelChange)="onRepoFormChange()"
+                               placeholder="Ex: siofi" class="gmp-input" />
+                    </div>
+
+                    <div class="gmp-repo-row2">
+                        <div class="gmp-field">
+                            <label class="gmp-label">Prefixo do sistema</label>
+                            <input pInputText [(ngModel)]="formRepo.prefixo" (ngModelChange)="onRepoFormChange()"
+                                   placeholder="Ex: projeto" class="gmp-input" />
+                        </div>
+                        <div class="gmp-field">
+                            <label class="gmp-label">Nome do serviço <span class="gmp-required">*</span></label>
+                            <input pInputText [(ngModel)]="formRepo.servico" (ngModelChange)="onRepoFormChange()"
+                                   placeholder="Ex: empenhos" class="gmp-input" />
+                        </div>
+                    </div>
+
+                    <div class="gmp-repo-row2">
+                        <div class="gmp-field">
+                            <label class="gmp-label">Tipo</label>
+                            <p-select [options]="tipoRepoModalOpcoes" [(ngModel)]="formRepo.tipo"
+                                      (ngModelChange)="onRepoFormChange()"
+                                      optionLabel="label" optionValue="value" appendTo="body"
+                                      styleClass="gmp-input" />
+                        </div>
+                        <div class="gmp-field">
+                            <label class="gmp-label">Template</label>
+                            <p-select [options]="templateModalOpcoes" [(ngModel)]="formRepo.template"
+                                      optionLabel="label" optionValue="value" appendTo="body"
+                                      placeholder="Vazio (sem template)" styleClass="gmp-input" />
+                        </div>
+                    </div>
+
+                    <!-- Path final -->
+                    <div class="gmp-path">
+                        <div class="gmp-path-info">
+                            <span class="gmp-path-titulo">Path final</span>
+                            <span class="gmp-path-valor">{{ pathFinal || '—' }}</span>
+                            @switch (pathStatus()) {
+                                @case ('verificando') { <span class="gmp-conexao gmp-conexao--load"><i class="pi pi-spin pi-spinner"></i> Verificando...</span> }
+                                @case ('livre')       { <span class="gmp-conexao gmp-conexao--ok"><i class="pi pi-check-circle"></i> Disponível</span> }
+                                @case ('existe')      { <span class="gmp-conexao gmp-conexao--erro"><i class="pi pi-times-circle"></i> Já existe um repositório neste path</span> }
+                            }
+                        </div>
+                        <p-button label="Verificar" size="small" [outlined]="true"
+                                  [disabled]="!pathFinal || pathStatus() === 'verificando'"
+                                  [loading]="pathStatus() === 'verificando'"
+                                  (onClick)="verificarPath()" />
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <!-- Aba: vincular por URL -->
+            <p-tabpanel value="url">
+                <div class="gmp-dialog-body">
+                    <div class="gmp-field">
+                        <label class="gmp-label">URL do repositório <span class="gmp-required">*</span></label>
+                        <input pInputText [(ngModel)]="formUrlRepo.url"
+                               placeholder="https://codigo.dev.tools.go.gov.br/grupo/repo" class="gmp-input" />
+                    </div>
+                </div>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+
+    <ng-template pTemplate="footer">
+        <p-button label="Cancelar" [outlined]="true" (onClick)="novoRepoModal = false" />
+        @if (abaRepo === 'criar') {
+            <p-button label="Adicionar" (onClick)="adicionarRepoCriado()" [disabled]="!podeAdicionarRepo" />
+        } @else {
+            <p-button label="Vincular" (onClick)="vincularRepoUrl()" [disabled]="!podeVincularRepo" />
+        }
+    </ng-template>
+</p-dialog>
 
 <!-- Modal: adicionar membro -->
 <p-dialog header="Adicionar membro" [(visible)]="addMembroModal"

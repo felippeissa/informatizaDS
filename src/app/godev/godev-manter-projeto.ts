@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { Membro, Papel, Projeto } from './godev.models';
 import { PROJETOS_MOCK } from './godev.mock';
@@ -26,7 +27,7 @@ interface SugestaoUsuario extends UsuarioBase { display: string; }
     selector: 'app-godev-manter-projeto',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule,
-              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, AutoCompleteModule],
+              SelectModule, DialogModule, ProgressSpinnerModule, TooltipModule, AutoCompleteModule, TabsModule],
     templateUrl: './godev-manter-projeto.html',
     styleUrl:    './godev-manter-projeto.scss',
 })
@@ -166,11 +167,113 @@ export class GodevManterProjeto implements OnInit {
         r.editando = false;
     }
 
-    // "Novo": acrescenta uma linha editável para o usuário informar URL e TAG
-    novoRepo() {
-        const base = this.form.rootUrl.trim().replace(/\/+$/, '');
-        this.repos.update(l => [...l, { nome: '', url: `${base}/`, tipo: 'api', template: 'smart-clientes-api', excluir: false, editando: true }]);
+    // ===================== Modal "Novo repositório" =====================
+    novoRepoModal = false;
+    abaRepo: 'criar' | 'url' = 'criar';
+    pathStatus = signal<'idle' | 'verificando' | 'livre' | 'existe'>('idle');
+
+    formRepo = {
+        area: '', prefixo: '', servico: '',
+        tipo: 'api' as RepoTipo,
+        template: '',
+    };
+    formUrlRepo = { url: '' };
+
+    // Sufixo aplicado ao nome do repositório conforme o tipo
+    private sufixoTipo: Record<RepoTipo, string> = {
+        wiki: '-wiki', frontend: '-web', backend: '-back', api: '-api',
+    };
+
+    tipoRepoModalOpcoes = this.tipoRepoOpcoes.map(t => ({
+        label: `${t.label} (${this.sufixoTipo[t.value]})`, value: t.value,
+    }));
+
+    templateModalOpcoes = [
+        { label: 'Vazio (sem template)', value: '' },
+        ...this.templateOpcoes.map(t => ({ label: t, value: t })),
+    ];
+
+    // Transforma um texto em slug (usado no prefixo e no nome do serviço)
+    private slug(txt: string) {
+        return txt.trim().toLowerCase()
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    }
+
+    // Path montado a partir dos campos: {dominio}/{area}/{prefixo}-{servico}{sufixo}
+    // Usa só o domínio da URL raiz — a "área de negócio" já é o grupo do GitLab.
+    get pathFinal(): string {
+        const f = this.formRepo;
+        const area = this.slug(f.area);
+        const servico = this.slug(f.servico);
+        if (!area || !servico) return '';
+        const raiz = this.form.rootUrl.trim();
+        let dominio = 'https://gitlab.goias.gov.br';
+        try { dominio = new URL(raiz).origin; } catch { /* raiz inválida: usa o padrão */ }
+        const prefixo = this.slug(f.prefixo);
+        const nome = (prefixo ? `${prefixo}-` : '') + servico + this.sufixoTipo[f.tipo];
+        return `${dominio}/${area}/${nome}`;
+    }
+
+    abrirNovoRepo() {
+        this.abaRepo = 'criar';
+        this.pathStatus.set('idle');
+        this.formRepo = {
+            area: '', prefixo: this.slug(this.form.nome), servico: '',
+            tipo: 'api', template: '',
+        };
+        this.formUrlRepo = { url: '' };
+        this.novoRepoModal = true;
+    }
+
+    onRepoFormChange() { this.pathStatus.set('idle'); }
+
+    verificarPath() {
+        if (!this.pathFinal) return;
+        this.pathStatus.set('verificando');
+        // Mock: considera existente quando o serviço já está na lista
+        setTimeout(() => {
+            const jaExiste = this.repos().some(r => r.url === this.pathFinal);
+            this.pathStatus.set(jaExiste ? 'existe' : 'livre');
+        }, 1200);
+    }
+
+    get podeAdicionarRepo() {
+        return !!this.formRepo.area.trim() && !!this.formRepo.servico.trim() && this.pathStatus() !== 'existe';
+    }
+
+    adicionarRepoCriado() {
+        if (!this.podeAdicionarRepo) return;
+        const url = this.pathFinal;
+        this.repos.update(l => [...l, {
+            nome: this.nomeDaUrl(url),
+            url,
+            tipo: this.formRepo.tipo,
+            template: this.formRepo.template || '—',
+            excluir: false,
+            editando: false,
+        }]);
         this.confirmado.set(false);
+        this.novoRepoModal = false;
+    }
+
+    get podeVincularRepo() { return this.urlValida(this.formUrlRepo.url); }
+
+    vincularRepoUrl() {
+        if (!this.podeVincularRepo) return;
+        const url = this.formUrlRepo.url.trim().replace(/\/+$/, '');
+        const tipo = this.tipoDoRepo(url);
+        this.repos.update(l => [...l, {
+            nome: this.nomeDaUrl(url),
+            url,
+            tipo,
+            template: this.templatePadrao(tipo),
+            excluir: false,
+            editando: false,
+        }]);
+        this.confirmado.set(false);
+        this.novoRepoModal = false;
     }
 
     removerRepo(r: RepoScan) { this.repos.update(l => l.filter(x => x !== r)); }
