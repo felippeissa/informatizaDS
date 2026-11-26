@@ -4,13 +4,13 @@
     {
       "name": "sakai-ng",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
+      "runtimeArgs": ["--prefix", "ds-3.0", "start"],
       "port": 4200
     },
     {
       "name": "preview-4300",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["ng", "serve", "--port", "4300"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "ds-3.0", "run", "ng", "--", "serve", "--port", "4300"],
       "port": 4300
     }
   ]

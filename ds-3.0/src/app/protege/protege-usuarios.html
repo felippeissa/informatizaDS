@@ -1,0 +1,158 @@
+<div class="ds-page">
+
+    <!-- Breadcrumb -->
+    <nav class="us-breadcrumb">
+        <i class="pi pi-home"></i>
+        <i class="pi pi-angle-right us-bc-sep"></i>
+        <span class="us-bc-link">Administração</span>
+        <i class="pi pi-angle-right us-bc-sep"></i>
+        <span class="us-bc-atual">Usuários</span>
+    </nav>
+
+    <div class="ds-page-header">
+        <div>
+            <h2 class="ds-page-title">Cadastro de usuários</h2>
+            <p class="us-subtitulo">{{ filtrados().length }} de {{ usuarios().length }} usuários · {{ totalAtivos() }} ativos</p>
+        </div>
+        <p-button label="Adicionar usuário" icon="pi pi-user-plus" (onClick)="novoUsuario()" />
+    </div>
+
+    <!-- Barra de identificação -->
+    <div class="ds-id-bar">
+        <span class="ds-id-label"><i class="pi pi-id-card"></i> Identificação</span>
+        <span class="ds-id-item"><strong>Usuário</strong> João da Silva</span>
+        <span class="ds-id-item"><strong>Unidade</strong> 21189 - Gerência de Tecnologia do Estado</span>
+    </div>
+
+    <!-- Filtros -->
+    <div class="ds-filter-card">
+        <div class="ds-filter-row ds-filter-row--4">
+            <div class="ds-filter-field">
+                <label for="us-busca">Nome, e-mail ou CPF</label>
+                <p-iconfield>
+                    <p-inputicon class="pi pi-search" />
+                    <input id="us-busca" pInputText [ngModel]="filtro().busca"
+                           (ngModelChange)="atualizarFiltro('busca', $event)"
+                           placeholder="Digite para buscar" class="w-full" />
+                </p-iconfield>
+            </div>
+            <div class="ds-filter-field">
+                <label for="us-perfil">Perfil</label>
+                <p-select inputId="us-perfil" [ngModel]="filtro().perfil"
+                          (ngModelChange)="atualizarFiltro('perfil', $event)"
+                          [options]="perfis" placeholder="Todos" [showClear]="true" [fluid]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label for="us-unidade">Unidade</label>
+                <p-select inputId="us-unidade" [ngModel]="filtro().unidade"
+                          (ngModelChange)="atualizarFiltro('unidade', $event)"
+                          [options]="unidades" placeholder="Todas" [showClear]="true" [fluid]="true" />
+            </div>
+            <div class="ds-filter-field">
+                <label for="us-situacao">Situação</label>
+                <p-select inputId="us-situacao" [ngModel]="filtro().situacao"
+                          (ngModelChange)="atualizarFiltro('situacao', $event)"
+                          [options]="situacoes" placeholder="Todas" [showClear]="true" [fluid]="true" />
+            </div>
+        </div>
+        <div class="ds-filter-actions">
+            <p-button label="Limpar filtro" severity="secondary" [outlined]="true" (onClick)="limparFiltro()" />
+            <p-button label="Filtrar" icon="pi pi-filter" />
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="ds-table-wrapper">
+        <p-table [value]="filtrados()" styleClass="p-datatable-sm ds-table"
+                 [rows]="8" [paginator]="true" [rowsPerPageOptions]="[8, 16, 24]"
+                 [showCurrentPageReport]="true"
+                 currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} resultados"
+                 dataKey="id">
+            <ng-template #header>
+                <tr>
+                    <th pSortableColumn="nome">Usuário <p-sortIcon field="nome" /></th>
+                    <th pSortableColumn="perfil" style="width:11rem">Perfil <p-sortIcon field="perfil" /></th>
+                    <th pSortableColumn="unidade">Unidade <p-sortIcon field="unidade" /></th>
+                    <th pSortableColumn="ultimoAcesso" style="width:11rem">Último acesso <p-sortIcon field="ultimoAcesso" /></th>
+                    <th pSortableColumn="situacao" style="width:8rem">Situação <p-sortIcon field="situacao" /></th>
+                    <th style="width:9rem">Ações</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-u>
+                <tr>
+                    <td>
+                        <div class="us-pessoa">
+                            <p-avatar [label]="iniciais(u.nome)" shape="circle" styleClass="us-avatar" />
+                            <div class="us-pessoa-dados">
+                                <span class="us-nome">{{ u.nome }}</span>
+                                <span class="us-email">{{ u.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><p-tag [value]="u.perfil" severity="info" [rounded]="true" /></td>
+                    <td class="us-unidade">{{ u.unidade }}</td>
+                    <td class="us-acesso">{{ u.ultimoAcesso }}</td>
+                    <td><p-tag [value]="u.situacao" [severity]="severidade(u.situacao)" /></td>
+                    <td>
+                        <div class="ds-acoes-row">
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                                      pTooltip="Editar" tooltipPosition="top" [ariaLabel]="'Editar ' + u.nome" (onClick)="editarUsuario(u)" />
+                            <p-button [icon]="u.situacao === 'Ativo' ? 'pi pi-ban' : 'pi pi-check-circle'"
+                                      [rounded]="true" [text]="true" severity="secondary"
+                                      [pTooltip]="u.situacao === 'Ativo' ? 'Inativar' : 'Ativar'" tooltipPosition="top"
+                                      [ariaLabel]="(u.situacao === 'Ativo' ? 'Inativar ' : 'Ativar ') + u.nome"
+                                      (onClick)="inativar(u)" />
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                      pTooltip="Excluir" tooltipPosition="top" [ariaLabel]="'Excluir ' + u.nome" (onClick)="abrirExclusao(u)" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="6">
+                        <div class="us-vazio">
+                            <i class="pi pi-users"></i>
+                            <span>Nenhum usuário encontrado com os filtros aplicados.</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- ── Modal de exclusão ──────────────────────────────────── -->
+<p-dialog [(visible)]="excluirVisivel" [modal]="true" [draggable]="false" [style]="{ width: '30rem' }"
+          header="Excluir usuário" [dismissableMask]="true">
+    @if (usuarioExcluir(); as u) {
+        <div class="us-excluir">
+            <p-message severity="warn" [closable]="false">
+                Esta ação é permanente e removerá todos os acessos do usuário ao sistema.
+            </p-message>
+
+            <div class="us-excluir-card">
+                <p-avatar [label]="iniciais(u.nome)" shape="circle" styleClass="us-avatar us-avatar--lg" />
+                <div class="us-pessoa-dados">
+                    <span class="us-nome">{{ u.nome }}</span>
+                    <span class="us-email">{{ u.email }}</span>
+                    <span class="us-email">{{ u.perfil }} · {{ u.unidade }}</span>
+                </div>
+            </div>
+
+            <div class="ds-campo">
+                <label for="us-confirma">Digite <strong>EXCLUIR</strong> para confirmar</label>
+                <input id="us-confirma" pInputText [ngModel]="confirmacao()"
+                       (ngModelChange)="confirmacao.set($event)" placeholder="EXCLUIR" class="w-full" />
+            </div>
+        </div>
+    }
+
+    <ng-template #footer>
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="excluirVisivel.set(false)" />
+        <p-button label="Excluir usuário" icon="pi pi-trash" severity="danger"
+                  [disabled]="!podeExcluir()" (onClick)="confirmarExclusao()" />
+    </ng-template>
+</p-dialog>

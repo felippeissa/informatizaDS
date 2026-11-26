@@ -1,0 +1,168 @@
+<div class="ds-page">
+
+    <!-- Breadcrumb -->
+    <nav class="mu-breadcrumb">
+        <i class="pi pi-home"></i>
+        <i class="pi pi-angle-right mu-bc-sep"></i>
+        <span class="mu-bc-link" (click)="cancelar()">Usuários</span>
+        <i class="pi pi-angle-right mu-bc-sep"></i>
+        <span class="mu-bc-atual">{{ edicao() ? 'Editar usuário' : 'Adicionar usuário' }}</span>
+    </nav>
+
+    <div class="ds-page-header">
+        <h2 class="ds-page-title">{{ edicao() ? 'Editar usuário' : 'Adicionar usuário' }}</h2>
+        @if (edicao()) {
+            <p-button label="Excluir usuário" icon="pi pi-trash" severity="danger" [outlined]="true"
+                      (onClick)="excluirVisivel.set(true)" />
+        }
+    </div>
+
+    <!-- ── Dados pessoais ── -->
+    <div class="ds-card mu-card">
+        <h3 class="ds-card-titulo"><i class="pi pi-user"></i> Dados pessoais</h3>
+
+        <div class="mu-identidade">
+            <p-avatar [label]="form().nome ? iniciais(form().nome) : '?'" shape="circle" styleClass="mu-avatar" />
+            <div class="mu-identidade-texto">
+                <strong>{{ form().nome || 'Novo usuário' }}</strong>
+                <span>{{ form().email || 'O e-mail institucional será usado como login de acesso.' }}</span>
+            </div>
+        </div>
+
+        <div class="mu-grid mu-grid--3">
+            <div class="ds-campo mu-campo--wide">
+                <label for="mu-nome">Nome completo <span class="mu-req">*</span></label>
+                <input id="mu-nome" pInputText [ngModel]="form().nome" (ngModelChange)="campo('nome', $event)"
+                       placeholder="Digite o nome completo" [class.ng-invalid-visual]="invalido('nome')" />
+                @if (invalido('nome')) { <small class="mu-erro">Informe o nome completo.</small> }
+            </div>
+
+            <div class="ds-campo">
+                <label for="mu-cpf">CPF <span class="mu-req">*</span></label>
+                <p-inputmask id="mu-cpf" mask="999.999.999-99" [ngModel]="form().cpf"
+                             (ngModelChange)="campo('cpf', $event)" placeholder="000.000.000-00" [fluid]="true"
+                             [styleClass]="invalido('cpf') ? 'ng-invalid-visual' : ''" />
+                @if (invalido('cpf')) { <small class="mu-erro">Informe o CPF.</small> }
+            </div>
+        </div>
+
+        <div class="mu-grid mu-grid--3">
+            <div class="ds-campo">
+                <label for="mu-email">E-mail institucional <span class="mu-req">*</span></label>
+                <input id="mu-email" pInputText type="email" [ngModel]="form().email"
+                       (ngModelChange)="campo('email', $event)" placeholder="nome.sobrenome@goias.gov.br"
+                       [class.ng-invalid-visual]="invalido('email')" />
+                @if (invalido('email')) { <small class="mu-erro">Informe um e-mail válido.</small> }
+            </div>
+
+            <div class="ds-campo">
+                <label for="mu-tel">Telefone</label>
+                <p-inputmask id="mu-tel" mask="(99) 99999-9999" [ngModel]="form().telefone"
+                             (ngModelChange)="campo('telefone', $event)" placeholder="(00) 00000-0000" [fluid]="true" />
+            </div>
+
+            <div class="ds-campo">
+                <label for="mu-mat">Matrícula</label>
+                <input id="mu-mat" pInputText [ngModel]="form().matricula"
+                       (ngModelChange)="campo('matricula', $event)" placeholder="Digite a matrícula" />
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Acesso e permissões ── -->
+    <div class="ds-card mu-card">
+        <h3 class="ds-card-titulo"><i class="pi pi-shield"></i> Acesso e permissões</h3>
+        <p class="ds-card-sub">Defina o perfil, a lotação e quais sistemas o usuário poderá acessar.</p>
+
+        <div class="mu-grid mu-grid--3">
+            <div class="ds-campo">
+                <label for="mu-perfil">Perfil <span class="mu-req">*</span></label>
+                <p-select inputId="mu-perfil" [ngModel]="form().perfil" (ngModelChange)="campo('perfil', $event)"
+                          [options]="perfis" placeholder="Selecione o perfil" [fluid]="true" appendTo="body"
+                          [styleClass]="invalido('perfil') ? 'ng-invalid-visual' : ''" />
+                @if (invalido('perfil')) { <small class="mu-erro">Selecione um perfil.</small> }
+            </div>
+
+            <div class="ds-campo mu-campo--wide">
+                <label for="mu-unidade">Unidade de lotação <span class="mu-req">*</span></label>
+                <p-select inputId="mu-unidade" [ngModel]="form().unidade" (ngModelChange)="campo('unidade', $event)"
+                          [options]="unidades" placeholder="Selecione a unidade" [fluid]="true" appendTo="body"
+                          [filter]="true" [styleClass]="invalido('unidade') ? 'ng-invalid-visual' : ''" />
+                @if (invalido('unidade')) { <small class="mu-erro">Selecione uma unidade.</small> }
+            </div>
+        </div>
+
+        <div class="mu-grid mu-grid--2">
+            <div class="ds-campo">
+                <label for="mu-sistemas">Sistemas liberados</label>
+                <p-multiselect inputId="mu-sistemas" [ngModel]="form().sistemas"
+                               (ngModelChange)="campo('sistemas', $event)" [options]="sistemasDisponiveis"
+                               placeholder="Selecione os sistemas" display="chip" [fluid]="true" appendTo="body" />
+            </div>
+
+            <div class="ds-campo">
+                <label for="mu-validade">Validade do acesso</label>
+                <p-datepicker inputId="mu-validade" [ngModel]="form().validade"
+                              (ngModelChange)="campo('validade', $event)" dateFormat="dd/mm/yy"
+                              placeholder="dd/mm/aaaa" [showIcon]="true" [fluid]="true" appendTo="body" />
+                <small>Deixe em branco para acesso por tempo indeterminado.</small>
+            </div>
+        </div>
+
+        <div class="mu-switches">
+            <div class="mu-switch">
+                <p-toggleswitch inputId="mu-ativo" [ngModel]="form().ativo" (ngModelChange)="campo('ativo', $event)" />
+                <label for="mu-ativo">
+                    <strong>Usuário ativo</strong>
+                    <span>Usuários inativos não conseguem entrar no sistema.</span>
+                </label>
+            </div>
+            <div class="mu-switch">
+                <p-toggleswitch inputId="mu-notif" [ngModel]="form().notificar" (ngModelChange)="campo('notificar', $event)" />
+                <label for="mu-notif">
+                    <strong>Enviar e-mail de boas-vindas</strong>
+                    <span>O usuário recebe o link para definir a própria senha.</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Observações ── -->
+    <div class="ds-card mu-card">
+        <h3 class="ds-card-titulo"><i class="pi pi-comment"></i> Observações</h3>
+        <div class="ds-campo">
+            <label for="mu-obs">Anotações internas</label>
+            <textarea id="mu-obs" pTextarea rows="3" [ngModel]="form().observacoes"
+                      (ngModelChange)="campo('observacoes', $event)"
+                      placeholder="Informações adicionais sobre o cadastro (opcional)"></textarea>
+        </div>
+    </div>
+
+    <!-- ── Ações ── -->
+    <div class="mu-acoes">
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelar()" />
+        @if (!edicao()) {
+            <p-button label="Salvar e adicionar outro" severity="secondary" [outlined]="true" (onClick)="salvarENovo()" />
+        }
+        <p-button [label]="edicao() ? 'Salvar alterações' : 'Adicionar usuário'"
+                  [icon]="edicao() ? 'pi pi-check' : 'pi pi-user-plus'" (onClick)="salvar()" />
+    </div>
+</div>
+
+<!-- ── Modal de exclusão ── -->
+<p-dialog [(visible)]="excluirVisivel" [modal]="true" [draggable]="false" [style]="{ width: '30rem' }"
+          header="Excluir usuário" [dismissableMask]="true">
+    <div class="mu-excluir">
+        <p-message severity="warn" [closable]="false">
+            Esta ação é permanente e removerá todos os acessos de <strong>{{ form().nome }}</strong>.
+        </p-message>
+        <p class="mu-excluir-texto">
+            O histórico de ações realizadas pelo usuário será mantido para fins de auditoria.
+        </p>
+    </div>
+
+    <ng-template #footer>
+        <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="excluirVisivel.set(false)" />
+        <p-button label="Excluir usuário" icon="pi pi-trash" severity="danger" (onClick)="confirmarExclusao()" />
+    </ng-template>
+</p-dialog>
