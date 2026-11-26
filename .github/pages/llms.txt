@@ -1,0 +1,28 @@
+# Informatiza Design System
+
+> Design System do Governo de Goiás para criar interfaces de sistemas públicos. Tem duas versões independentes: DS 3.0 (Angular 21 + PrimeNG 21) e DS 3.1 (HTML + CSS estático com Bootstrap 5, base Inspinia). Escolha a versão pela stack do projeto e siga só o guia dela; não misture as duas. Interfaces em português do Brasil.
+
+Para ler tudo de uma vez: [llms-full.txt](https://felippeissa.github.io/informatizaDS/llms-full.txt)
+
+## Visão geral
+
+- [Guia geral para agentes](https://felippeissa.github.io/informatizaDS/AGENTS.md): qual versão usar e regras comuns às duas
+
+## DS 3.0 — Angular + PrimeNG
+
+- [Guia do DS 3.0](https://felippeissa.github.io/informatizaDS/3.0/AGENTS.md): stack, regras obrigatórias, classes .ds-*, templates de tela e exemplo de código
+- [Tokens do DS 3.0](https://felippeissa.github.io/informatizaDS/3.0/tokens.json): cores, tipografia, espaçamentos e raios (formato W3C Design Tokens)
+- [Vitrine ao vivo](https://felippeissa.github.io/informatizaDS/3.0/ds): componentes e templates (lista, formulário, dashboard, detalhe)
+
+## DS 3.1 — HTML + CSS (Bootstrap 5 / Inspinia)
+
+- [Guia do DS 3.1](https://felippeissa.github.io/informatizaDS/3.1/AGENTS.md): stack, regras, cores, estrutura de página e HTML modelo
+- [Tokens do DS 3.1](https://felippeissa.github.io/informatizaDS/3.1/tokens.json): cores, tipografia, raios, layout (formato W3C Design Tokens)
+- [Página em branco com layout](https://felippeissa.github.io/informatizaDS/3.1/pages-empty.html): ponto de partida de novas telas
+
+## Opcional
+
+- [Exemplos de formulário 3.1](https://felippeissa.github.io/informatizaDS/3.1/form-elements.html)
+- [Exemplos de tabela 3.1](https://felippeissa.github.io/informatizaDS/3.1/tables-static.html)
+- [Exemplos de botões 3.1](https://felippeissa.github.io/informatizaDS/3.1/ui-buttons.html)
+- [Repositório](https://github.com/felippeissa/informatizaDS)

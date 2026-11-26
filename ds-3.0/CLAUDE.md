@@ -25,6 +25,8 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 
 Rotas raiz em `src/app.routes.ts` (`/ds` embrulhada por `AppLayout`; `/auth` e `/notfound` sem layout). Os sistemas GO.DEV, Manual Inteligente, Drácon, ASSINAGO e PROTEGE foram removidos.
 
+Guia para outras IAs: [`AGENTS.md`](AGENTS.md) + [`tokens.json`](tokens.json) — mantenha em sincronia com este arquivo. Estilos `.ds-*` ficam em `src/assets/ds/_ds.scss`.
+
 ## Regras de design (OBRIGATÓRIAS)
 1. **Nunca `padding: 0` / `0px`.** Todo elemento tem respiro.
 2. **Bento:** toda div/seção/campo tem background próprio (`var(--surface-card)` ou `var(--surface-ground)`), `border-radius` e padding.

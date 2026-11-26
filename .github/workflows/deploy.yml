@@ -44,6 +44,15 @@ jobs:
           cp -r ds-3.0/dist/sakai-ng/browser/. _site/3.0/
           cp -r ds-3.1/. _site/3.1/
           cp .github/pages/index.html _site/index.html
+          # Arquivos para agentes de IA
+          cp .github/pages/llms.txt _site/llms.txt
+          cp AGENTS.md _site/AGENTS.md
+          cp ds-3.0/AGENTS.md ds-3.0/tokens.json _site/3.0/
+          {
+            cat AGENTS.md; printf '\n\n---\n\n'
+            cat ds-3.0/AGENTS.md; printf '\n\n## Tokens DS 3.0 (tokens.json)\n\n```json\n'; cat ds-3.0/tokens.json; printf '```\n\n---\n\n'
+            cat ds-3.1/AGENTS.md; printf '\n\n## Tokens DS 3.1 (tokens.json)\n\n```json\n'; cat ds-3.1/tokens.json; printf '```\n'
+          } > _site/llms-full.txt
           # SPA fallback do 3.0: o 404 raiz carrega o app Angular.
           # Links antigos (/informatizaDS/<rota>) sao redirecionados para /informatizaDS/3.0/<rota>.
           sed 's#<head>#<head><script>(function(){var b="/informatizaDS/",p=location.pathname;if(p.indexOf(b)===0\&\&p.indexOf(b+"3.0/")!==0\&\&p.indexOf(b+"3.1/")!==0){location.replace(b+"3.0/"+p.slice(b.length)+location.search+location.hash);}})();</script>#' \
