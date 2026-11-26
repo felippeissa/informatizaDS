@@ -15,6 +15,19 @@ Vitrine ao vivo: https://felippeissa.github.io/informatizaDS/3.0/ds · Tokens: [
 providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })
 ```
 
+## Foundations (fundamentos visuais)
+Documentadas ao vivo em `/ds/foundations/*` (código em `src/app/ds/foundations/`). Valores em [`tokens.json`](tokens.json).
+**A raiz da página é 14px** (`html { font-size: 14px }`), então `1rem = 14px`.
+
+| Foundation | Resumo |
+|---|---|
+| **Cores** (`/cores`) | Use as semânticas: `--primary-color`, `--surface-ground` (fundo da página), `--surface-card`, `--surface-border`, `--surface-hover`, `--text-color`, `--text-color-secondary`. Escalas `--p-primary-50…950` (emerald) e `--p-surface-0…950` (slate/zinc). Status via `severity`: success, info, warn, danger, secondary. |
+| **Tipografia** (`/tipografia`) | Inter. Título da página 1.5rem/700 · título de seção 1rem/700 · corpo 1rem/400 · rótulo 0.8125rem/600 · descrição 0.8125rem secundária · legenda 0.75rem/500 secundária. Sentence case. |
+| **Espaçamento** (`/espacamento`) | Escala: 0.25 · 0.5 · 0.75 · 1 · 1.25 · 1.5 · 2 · 3 rem. Página e card: padding 1.5rem; entre cards e campos: 1rem; rótulo→campo: 0.4rem; entre botões: 0.5rem. Nunca `padding: 0`. |
+| **Bordas e elevação** (`/bordas`) | Raios: xs 2px, sm 4px, md 6px (controles), lg 8px (menus), xl 12px (cards/modais), full. Borda `1px solid var(--surface-border)`. Sombras: card `0 1px 4px rgba(0,0,0,.04)`, overlay, modal. |
+| **Ícones** (`/icones`) | PrimeIcons. Ações padrão: novo `pi-plus`, editar `pi-pencil`, excluir `pi-trash`, salvar `pi-check`, cancelar `pi-times`, buscar `pi-search`, filtrar `pi-filter`, ver `pi-eye`, baixar `pi-download`, enviar `pi-upload`, imprimir `pi-print`, voltar `pi-arrow-left`, mais `pi-ellipsis-v`. |
+| **Grid e layout** (`/grid`) | `AppLayout` = topbar + menu lateral (20rem, vira sobreposição abaixo de 992px) + conteúdo. Grades `.ds-grid--form` (240px) e `.ds-grid--kpi` (180px); grid de 12 colunas do Tailwind. Breakpoints: sm 576, md 768, lg 992, xl 1200, 2xl 1920. |
+
 ## Regras obrigatórias
 1. **Sempre componentes PrimeNG 21.** Não recrie botão, select, tabela etc. com HTML puro.
 2. Nomes novos do PrimeNG 21: `p-select` (não dropdown), `p-datepicker` (não calendar), `p-drawer` (não sidebar),

@@ -25,7 +25,7 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 
 Rotas raiz em `src/app.routes.ts` (`/ds` embrulhada por `AppLayout`; `/auth` e `/notfound` sem layout). Os sistemas GO.DEV, Manual Inteligente, Drácon, ASSINAGO e PROTEGE foram removidos.
 
-Guia para outras IAs: [`AGENTS.md`](AGENTS.md) + [`tokens.json`](tokens.json) — mantenha em sincronia com este arquivo. Estilos `.ds-*` ficam em `src/assets/ds/_ds.scss`.
+Guia para outras IAs: [`AGENTS.md`](AGENTS.md) + [`tokens.json`](tokens.json) — mantenha em sincronia com este arquivo. Estilos `.ds-*` ficam em `src/assets/ds/_ds.scss`. Foundations (cores, tipografia, espaçamento, bordas, ícones, grid) em `src/app/ds/foundations/` (rota `/ds/foundations`), estilos `.fnd-*` em `src/assets/ds/_foundations.scss`. A raiz é 14px (1rem = 14px).
 
 ## Regras de design (OBRIGATÓRIAS)
 1. **Nunca `padding: 0` / `0px`.** Todo elemento tem respiro.

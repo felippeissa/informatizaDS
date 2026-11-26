@@ -49,6 +49,19 @@ export class AppMenu implements OnInit, OnDestroy {
                 ]
             },
 
+            /* ══════════════ FOUNDATIONS ══════════════ */
+            {
+                label: 'Foundations',
+                items: [
+                    { label: 'Cores',             icon: 'pi pi-fw pi-palette',    routerLink: ['/ds/foundations/cores'] },
+                    { label: 'Tipografia',        icon: 'pi pi-fw pi-pencil',     routerLink: ['/ds/foundations/tipografia'] },
+                    { label: 'Espaçamento',       icon: 'pi pi-fw pi-arrows-h',   routerLink: ['/ds/foundations/espacamento'] },
+                    { label: 'Bordas e elevação', icon: 'pi pi-fw pi-clone',      routerLink: ['/ds/foundations/bordas'] },
+                    { label: 'Ícones',            icon: 'pi pi-fw pi-star',       routerLink: ['/ds/foundations/icones'] },
+                    { label: 'Grid e layout',     icon: 'pi pi-fw pi-th-large',   routerLink: ['/ds/foundations/grid'] }
+                ]
+            },
+
             /* ══════════════ TEMPLATES DE TELA ══════════════ */
             {
                 label: 'Templates',

@@ -1,0 +1,199 @@
+// =============================================================
+// INFORMATIZA DS 3.0 — Estilos das páginas de Foundations (/ds/foundations)
+// Prefixo .fnd-* (uso só na documentação; telas de sistema usam .ds-*)
+// =============================================================
+
+.fnd-intro { margin: 0.35rem 0 0; color: var(--text-color-secondary); font-size: 0.9375rem; }
+.fnd-texto-sec { color: var(--text-color-secondary); margin: 0.25rem 0 0.75rem; }
+.fnd-regra { font-size: 0.875rem; }
+.fnd-sub { font-size: 0.8125rem; font-weight: 600; color: var(--text-color-secondary); margin: 1.25rem 0 0.75rem; }
+.fnd-sub:first-of-type { margin-top: 0.25rem; }
+
+.fnd-lista {
+    margin: 1rem 0 0; padding: 0.75rem 1rem 0.75rem 2rem;
+    background: var(--surface-ground); border-radius: 8px;
+    display: flex; flex-direction: column; gap: 0.4rem; color: var(--text-color);
+}
+
+// Botões-cartão clicáveis (copiar)
+%fnd-clicavel {
+    font: inherit; color: inherit; text-align: left; cursor: pointer;
+    background: var(--surface-card); border: 1px solid var(--surface-border);
+    border-radius: 10px; padding: 0.75rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    &:hover { border-color: var(--primary-color); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+    &:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+}
+
+[class*='fnd-'] code, .ds-card-sub code {
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    font-size: 0.85em;
+}
+.fnd-intro code, .ds-card-sub code, .fnd-lista code, .fnd-regra code, .fnd-tabela code {
+    background: var(--surface-ground); border-radius: 4px; padding: 0.1rem 0.35rem;
+}
+
+// ── Cores ─────────────────────────────────────────────────────
+.fnd-sem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.75rem; }
+.fnd-sem {
+    @extend %fnd-clicavel;
+    display: flex; gap: 0.75rem; align-items: stretch;
+    &--estatico { cursor: default; &:hover { border-color: var(--surface-border); box-shadow: none; } }
+}
+.fnd-sem-amostra { width: 3rem; min-height: 3rem; border-radius: 8px; border: 1px solid var(--surface-border); flex-shrink: 0; }
+.fnd-sem-info {
+    display: flex; flex-direction: column; gap: 0.2rem; min-width: 0;
+    strong { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    code { color: var(--primary-color); }
+    small { color: var(--text-color-secondary); }
+}
+.fnd-hex { font-family: ui-monospace, Consolas, monospace; text-transform: lowercase; }
+
+.fnd-escala { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 0.5rem; }
+.fnd-swatch {
+    @extend %fnd-clicavel;
+    padding: 0.4rem; display: flex; flex-direction: column; gap: 0.3rem;
+    &--base { border-color: var(--primary-color); border-width: 2px; }
+}
+.fnd-swatch-cor { height: 3.5rem; border-radius: 6px; border: 1px solid var(--surface-border); }
+.fnd-swatch-nome { font-weight: 700; font-size: 0.8125rem; padding: 0 0.2rem; }
+.fnd-swatch-hex { font-family: ui-monospace, Consolas, monospace; font-size: 0.7rem; color: var(--text-color-secondary); padding: 0 0.2rem 0.2rem; }
+
+// ── Tipografia ────────────────────────────────────────────────
+.fnd-familia {
+    display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;
+    padding: 1rem; background: var(--surface-ground); border-radius: 10px;
+    strong { font-size: 1.25rem; }
+    code { font-size: 0.8rem; }
+}
+.fnd-familia-aa { font-size: 4.5rem; font-weight: 800; line-height: 1; color: var(--primary-color); padding: 0.5rem 1rem; }
+.fnd-alfabeto { margin: 0.75rem 0 0; font-size: 1.05rem; letter-spacing: 0.02em; line-height: 1.6; }
+
+.fnd-tipo-lista { display: flex; flex-direction: column; gap: 0.5rem; }
+.fnd-tipo-item {
+    @extend %fnd-clicavel;
+    display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 1rem; align-items: center; padding: 1rem;
+    @media (max-width: 767px) { grid-template-columns: 1fr; }
+}
+.fnd-tipo-meta {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    small { color: var(--text-color-secondary); }
+    code { color: var(--primary-color); font-size: 0.75rem; }
+}
+.fnd-tipo-exemplo { line-height: 1.3; overflow-wrap: anywhere; }
+
+.fnd-peso {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    padding: 1rem; background: var(--surface-ground); border-radius: 10px; text-align: center;
+    span { font-size: 1.35rem; }
+    small { color: var(--text-color-secondary); }
+    .pi { color: var(--primary-color); }
+}
+
+// ── Espaçamento ───────────────────────────────────────────────
+.fnd-espaco-lista { display: flex; flex-direction: column; gap: 0.4rem; }
+.fnd-espaco {
+    @extend %fnd-clicavel;
+    display: grid; grid-template-columns: 6rem 4rem 9rem 1fr; gap: 1rem; align-items: center; padding: 0.6rem 0.9rem;
+    small { color: var(--text-color-secondary); }
+    @media (max-width: 767px) { grid-template-columns: 5rem 3.5rem 1fr; small { grid-column: 1 / -1; } }
+}
+.fnd-espaco-token { color: var(--primary-color); font-weight: 600; }
+.fnd-espaco-barra { height: 1rem; background: var(--primary-color); opacity: 0.75; border-radius: 3px; }
+.fnd-espaco-valor { font-family: ui-monospace, Consolas, monospace; font-size: 0.8rem; }
+
+.fnd-anatomia { padding: 1rem; background: var(--surface-ground); border-radius: 10px; margin-bottom: 1rem; }
+.fnd-anat-page {
+    position: relative; display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem;
+    border: 2px dashed color-mix(in srgb, var(--primary-color) 55%, transparent); border-radius: 10px;
+}
+.fnd-anat-tag {
+    align-self: flex-start; font-family: ui-monospace, Consolas, monospace; font-size: 0.7rem; font-weight: 600;
+    color: var(--primary-color); background: color-mix(in srgb, var(--primary-color) 10%, var(--surface-card));
+    border-radius: 4px; padding: 0.15rem 0.45rem;
+}
+.fnd-anat-header { display: flex; justify-content: space-between; align-items: center; }
+.fnd-anat-titulo { font-weight: 700; font-size: 1.1rem; }
+.fnd-anat-botao { background: var(--primary-color); color: var(--p-primary-contrast-color, #fff); border-radius: 6px; padding: 0.35rem 0.9rem; font-size: 0.8rem; font-weight: 600; }
+.fnd-anat-card {
+    display: flex; flex-direction: column; gap: 1rem; padding: 1.5rem;
+    background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 12px;
+    &--baixo { min-height: 3.5rem; }
+}
+.fnd-anat-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.fnd-anat-campo {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    span { font-size: 0.75rem; font-weight: 600; }
+    i { height: 2.2rem; border: 1px solid var(--surface-border); border-radius: 6px; background: var(--surface-ground); }
+}
+
+.fnd-tabela {
+    width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-top: 0.5rem;
+    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--surface-border); }
+    th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-color-secondary); background: var(--surface-ground); }
+}
+.fnd-ativo td { background: color-mix(in srgb, var(--primary-color) 8%, transparent); }
+.fnd-agora { color: var(--primary-color); font-weight: 700; }
+
+// ── Bordas / elevação ─────────────────────────────────────────
+.fnd-raios { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
+.fnd-raio {
+    @extend %fnd-clicavel;
+    display: flex; flex-direction: column; gap: 0.3rem; padding: 1rem;
+    code { color: var(--primary-color); font-size: 0.75rem; }
+    small { color: var(--text-color-secondary); }
+}
+.fnd-raio-box {
+    height: 4.5rem; margin-bottom: 0.5rem;
+    background: color-mix(in srgb, var(--primary-color) 18%, var(--surface-card));
+    border: 2px solid var(--primary-color);
+    &--borda { background: var(--surface-card); border-radius: 12px; }
+    &--sombra { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 12px; margin: 0.5rem 0.5rem 1rem; }
+}
+
+// ── Ícones ────────────────────────────────────────────────────
+.fnd-acoes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.5rem; }
+.fnd-acao {
+    @extend %fnd-clicavel;
+    display: grid; grid-template-columns: 2rem 1fr; grid-template-rows: auto auto; column-gap: 0.5rem; align-items: center;
+    .pi { grid-row: 1 / 3; font-size: 1.25rem; color: var(--primary-color); }
+    strong { font-size: 0.8125rem; }
+    code { font-size: 0.7rem; color: var(--text-color-secondary); }
+}
+.fnd-cat-header {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
+    .ds-card-titulo { margin: 0; }
+    input { min-width: 260px; }
+}
+.fnd-icones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.5rem; max-height: 560px; overflow-y: auto; padding: 0.25rem; }
+.fnd-icone {
+    @extend %fnd-clicavel;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0.9rem 0.4rem;
+    .pi { font-size: 1.35rem; }
+    span { font-size: 0.7rem; color: var(--text-color-secondary); text-align: center; overflow-wrap: anywhere; }
+}
+
+// ── Grid / layout ─────────────────────────────────────────────
+.fnd-cel {
+    padding: 0.9rem; text-align: center; font-size: 0.75rem; font-weight: 600;
+    font-family: ui-monospace, Consolas, monospace; color: var(--primary-color);
+    background: color-mix(in srgb, var(--primary-color) 10%, var(--surface-card));
+    border: 1px dashed color-mix(in srgb, var(--primary-color) 45%, transparent); border-radius: 8px;
+}
+.fnd-app {
+    border: 1px solid var(--surface-border); border-radius: 10px; overflow: hidden;
+    font-size: 0.75rem; font-weight: 600; color: var(--text-color-secondary);
+}
+.fnd-app-topbar { padding: 0.75rem 1rem; background: var(--surface-card); border-bottom: 1px solid var(--surface-border); }
+.fnd-app-corpo { display: flex; min-height: 15rem; }
+.fnd-app-menu {
+    width: 28%; max-width: 12rem; padding: 1rem; background: var(--surface-card); border-right: 1px solid var(--surface-border);
+    small { font-weight: 400; }
+}
+.fnd-app-conteudo { flex: 1; display: flex; flex-direction: column; background: var(--surface-ground); padding: 0.75rem; gap: 0.5rem; }
+.fnd-app-page {
+    flex: 1; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.75rem;
+    border: 2px dashed color-mix(in srgb, var(--primary-color) 55%, transparent); border-radius: 8px; color: var(--primary-color);
+}
+.fnd-app-card { padding: 0.9rem; background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 8px; color: var(--text-color-secondary); }
+.fnd-app-footer { padding: 0.25rem 0.5rem; text-align: center; }

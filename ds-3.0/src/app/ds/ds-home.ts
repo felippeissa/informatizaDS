@@ -179,6 +179,24 @@ interface ComponentGroup {
             </div>
         </div>
 
+        <!-- Foundations -->
+        <h2 class="section-title">Foundations</h2>
+        <p class="section-sub">
+            Fundamentos visuais que todas as telas seguem: cores, tipografia, espaçamento, bordas, ícones e grid.
+        </p>
+
+        <div class="components-grid">
+            @for (f of foundations; track f.route) {
+                <a class="comp-group-card" [routerLink]="f.route" style="text-decoration:none;color:inherit">
+                    <div class="comp-group-header">
+                        <div class="comp-group-icon"><i [class]="f.icon"></i></div>
+                        <span class="comp-group-title">{{ f.label }}</span>
+                    </div>
+                    <p class="section-sub" style="margin:0">{{ f.desc }}</p>
+                </a>
+            }
+        </div>
+
         <!-- Componentes -->
         <h2 class="section-title">Componentes</h2>
         <p class="section-sub">
@@ -244,7 +262,7 @@ interface ComponentGroup {
                     <p class="gs-step-desc">Clone o repositório oficial do Informatiza DS e entre na pasta do projeto.</p>
                     <div class="code-block">
                         <span class="code-cmd">git clone https://github.com/felippeissa/informatizaDS.git</span><br/>
-                        <span class="code-cmd">cd informatizaDS</span>
+                        <span class="code-cmd">cd informatizaDS/ds-3.0</span>
                     </div>
                 </div>
             </div>
@@ -356,6 +374,15 @@ interface ComponentGroup {
     `
 })
 export class DsHome {
+    foundations = [
+        { label: 'Cores', icon: 'pi pi-palette', route: '/ds/foundations/cores', desc: 'Primária emerald, neutros, cores semânticas e de status.' },
+        { label: 'Tipografia', icon: 'pi pi-pencil', route: '/ds/foundations/tipografia', desc: 'Fonte Inter, escala de tamanhos e pesos.' },
+        { label: 'Espaçamento', icon: 'pi pi-arrows-h', route: '/ds/foundations/espacamento', desc: 'Escala em rem e espaçamentos padrão das telas.' },
+        { label: 'Bordas e elevação', icon: 'pi pi-clone', route: '/ds/foundations/bordas', desc: 'Raios, bordas e níveis de sombra.' },
+        { label: 'Ícones', icon: 'pi pi-star', route: '/ds/foundations/icones', desc: 'PrimeIcons, ícones padrão por ação e catálogo.' },
+        { label: 'Grid e layout', icon: 'pi pi-th-large', route: '/ds/foundations/grid', desc: 'Estrutura da aplicação, grades e breakpoints.' },
+    ];
+
     groups: ComponentGroup[] = [
         {
             label: 'Formulário',
