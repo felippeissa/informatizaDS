@@ -91,51 +91,15 @@ import { filter } from 'rxjs/operators';
                     <i class="pi pi-bars"></i>
                 </button>
 
-                @if (activeSystem().id === 'assinago') {
-                    <a class="layout-topbar-logo" routerLink="/assinago">
-                        <img src="assets/logoassinago.svg" alt="AssinaGO" style="height:36px;width:auto" />
-                    </a>
-                } @else if (activeSystem().id === 'dracon') {
-                    <a class="layout-topbar-logo" routerLink="/dracon">
-                        <span style="font-size:18px;font-weight:900;letter-spacing:-.02em;color:var(--text-color)">DRACON</span>
-                    </a>
-                } @else if (activeSystem().id === 'godev') {
-                    <a class="layout-topbar-logo" routerLink="/godev">
-                        <img src="assets/logo-godev.svg" alt="GO.DEV" style="height:32px;width:auto" />
-                    </a>
-                } @else if (activeSystem().id === 'protege') {
-                    <a class="layout-topbar-logo" routerLink="/protege" style="gap:9px">
-                        <i class="pi pi-shield" style="font-size:22px;color:#059669"></i>
-                        <span style="font-size:18px;font-weight:900;letter-spacing:-.01em;color:var(--text-color)">PROTEGE</span>
-                    </a>
-                } @else if (activeSystem().id === 'manual') {
-                    <a class="layout-topbar-logo" routerLink="/manual" style="gap:9px">
-                        <img src="assets/logo-manual-icon.svg" alt="Manual Inteligente" style="height:30px;width:auto" />
-                        <span style="font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--text-color);white-space:nowrap">Manual Inteligente</span>
-                    </a>
-                } @else {
-                    <a class="layout-topbar-logo" routerLink="/ds">
-                        <div class="ds-logo-text">
-                            <span class="ds-logo-sup">Aplicações</span>
-                            <span class="ds-logo-main">expr<span>e</span>sso</span>
-                        </div>
-                    </a>
-                }
+                <a class="layout-topbar-logo" routerLink="/ds">
+                    <div class="ds-logo-text">
+                        <span class="ds-logo-sup">Aplicações</span>
+                        <span class="ds-logo-main">expr<span>e</span>sso</span>
+                    </div>
+                </a>
             </div>
 
             <div class="layout-topbar-actions">
-                @if (activeSystem().id === 'godev') {
-                    <button class="sys-btn" style="background:var(--primary-color);color:#fff;border-radius:6px;padding:0 14px;gap:6px;font-weight:600;font-size:13px" routerLink="/godev/projetos/novo">
-                        <i class="pi pi-plus" style="font-size:11px"></i>
-                        Novo projeto
-                    </button>
-                }
-                @if (layoutService.layoutConfig().chatMode === 'upper') {
-                    <button class="layout-topbar-action" (click)="layoutService.toggleChat()"
-                            pTooltip="Manual Inteligente" tooltipPosition="bottom">
-                        <i class="pi pi-comments"></i>
-                    </button>
-                }
                 <div class="layout-config-menu">
 
                     <!-- ── System Switcher ── -->
@@ -229,56 +193,6 @@ export class AppTopbar implements OnInit {
             color: '#059669',
             bgColor: 'color-mix(in srgb, #059669 12%, transparent)',
             route: '/ds',
-            comingSoon: false
-        },
-        {
-            id: 'assinago',
-            name: 'ASSINAGO',
-            desc: 'Assinatura digital de documentos',
-            icon: 'pi pi-pen-to-square',
-            color: '#7C3AED',
-            bgColor: 'color-mix(in srgb, #7C3AED 12%, transparent)',
-            route: '/assinago',
-            comingSoon: false
-        },
-        {
-            id: 'dracon',
-            name: 'DRACON',
-            desc: 'Gestão de processos e atos normativos',
-            icon: 'pi pi-briefcase',
-            color: '#1755A3',
-            bgColor: 'color-mix(in srgb, #1755A3 12%, transparent)',
-            route: '/dracon',
-            comingSoon: false
-        },
-        {
-            id: 'godev',
-            name: 'GO.DEV',
-            desc: 'Plataforma de desenvolvimento com IA',
-            icon: 'pi pi-code',
-            color: '#16A34A',
-            bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
-            route: '/godev',
-            comingSoon: false
-        },
-        {
-            id: 'protege',
-            name: 'PROTEGE',
-            desc: 'Proteção e assistência social',
-            icon: 'pi pi-shield',
-            color: '#059669',
-            bgColor: 'color-mix(in srgb, #059669 12%, transparent)',
-            route: '/protege',
-            comingSoon: false
-        },
-        {
-            id: 'manual',
-            name: 'Manual Inteligente',
-            desc: 'Assistente com IA sobre os sistemas',
-            icon: 'pi pi-comments',
-            color: '#16A34A',
-            bgColor: 'color-mix(in srgb, #16A34A 12%, transparent)',
-            route: '/manual',
             comingSoon: false
         },
     ];

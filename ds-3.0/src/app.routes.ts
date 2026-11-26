@@ -14,30 +14,6 @@ export const appRoutes: Routes = [
             { path: 'templates', loadChildren: () => import('./app/ds/templates/templates.routes').then(m => m.templatesRoutes) }
         ]
     },
-    {
-        path: 'assinago',
-        component: AppLayout,
-        loadChildren: () => import('./app/assinago/assinago.routes').then(m => m.assinagoRoutes)
-    },
-    {
-        path: 'dracon',
-        component: AppLayout,
-        loadChildren: () => import('./app/dracon/dracon.routes').then(m => m.draconRoutes)
-    },
-    {
-        path: 'godev',
-        component: AppLayout,
-        loadChildren: () => import('./app/godev/godev.routes').then(m => m.godevRoutes)
-    },
-    {
-        path: 'protege',
-        component: AppLayout,
-        loadChildren: () => import('./app/protege/protege.routes').then(m => m.protegeRoutes)
-    },
-    {
-        path: 'manual',
-        loadChildren: () => import('./app/manual/manual.routes').then(m => m.manualRoutes)
-    },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/auth/login' }

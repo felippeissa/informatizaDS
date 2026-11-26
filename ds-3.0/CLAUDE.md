@@ -1,6 +1,6 @@
 # informatizaDS — Guia do projeto
 
-Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.1/`) que hospeda vários sistemas do Governo de Goiás sobre o
+Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.1/`) com a vitrine do
 **Informatiza Design System 3.0**. Base: template **sakai-ng**.
 
 > Leia este arquivo antes de explorar o código. Ele existe para você resolver
@@ -18,27 +18,12 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 - Deploy: **push na branch `main`** dispara a GitHub Action que publica no **GitHub Pages** (publicado em https://felippeissa.github.io/informatizaDS/3.0/ (workflow builda com `--base-href /informatizaDS/3.0/`)). **Commit/push só quando o usuário pedir.**
 - `gh` fica em `C:\Program Files\GitHub CLI\gh.exe`; autentique com o token do git credential manager (`git credential fill`).
 
-## Sistemas (switcher na topbar → `app.topbar.ts`; menu → `app.menu.ts`)
+## Rotas (switcher na topbar → `app.topbar.ts`; menu → `app.menu.ts`)
 | Rota | Sistema | Onde |
 |---|---|---|
 | `/ds` | Design System (vitrine PrimeNG) | `src/app/ds/` + demos em `src/app/pages/uikit/` |
-| `/godev` | **GO.DEV** — plataforma colaborativa com IA | `src/app/godev/` |
-| `/manual` | Manual Inteligente (chat standalone) | `src/app/manual/` (reusa `GodevManual`) |
-| `/dracon` | Drácon — processos/atos | `src/app/dracon/` |
-| `/assinago` | ASSINAGO — assinatura digital | `src/app/assinago/` |
 
-Rotas raiz em `src/app.routes.ts` (todas embrulhadas por `AppLayout`, exceto `/manual` que usa `ManualLayout` sem menu lateral).
-
-## GO.DEV (`src/app/godev/`)
-- `godev.models.ts` — tipos. **Projeto** = `{ membros[], specs[], status, sincronizacao, secretaria?, uso? }`. **Spec** = `{ nome, requisito(md), tela: Tela|null }` (**1 tela por spec**). **Tela** = lista de `ComponenteTela` (titulo/texto/campo/botao/checkbox/tabela). Tipos de dashboard: `AgenteTipo`, `SerieUso`, `UsoProjeto`.
-- `godev.mock.ts` — `PROJETOS_MOCK` (fonte única de dados). **Cuidado:** tem HTML inline grande nas telas; edite cirurgicamente.
-- `godev.ui.ts` — **paleta central** (cores/labels de papel, status, tipo) + `iniciais()`. Reutilize daqui, não redefina cores.
-- `godev-projetos` — lista (card branco: header + filtros + `p-table`).
-- `godev-manter-projeto` — cadastro/edição: repositório raiz (busca sub-repos, tag de tipo, desvincular), banco de dados (teste de conexão), **busca de membro na base** (`p-autoComplete`, `optionLabel`), campo "Perfil". Criar → workspace + toast.
-- `godev-workspace` — abas **Specs / Telas / Código** (sem Membros); seletor de Spec + "Nova spec"; **chat único**; status do agente = notificação (detalhe no hover). Canvas monta a tela a partir de `ComponenteTela`.
-- `godev-home` — dashboard "Central de Agentes" (KPIs, `p-chart`, `p-meterGroup`, feed).
-- `godev-manual` — Manual Inteligente (chat com seletor de sistema/modelo).
-- Chat flutuante acoplável: `src/app/chat/` (`chat-flutuante`, `chat-bridge.service`); modo **None/Bottom/Upper** no configurador (`app.configurator.ts` → `LayoutService.chatMode`).
+Rotas raiz em `src/app.routes.ts` (`/ds` embrulhada por `AppLayout`; `/auth` e `/notfound` sem layout). Os sistemas GO.DEV, Manual Inteligente, Drácon, ASSINAGO e PROTEGE foram removidos.
 
 ## Regras de design (OBRIGATÓRIAS)
 1. **Nunca `padding: 0` / `0px`.** Todo elemento tem respiro.
@@ -57,9 +42,9 @@ Rotas raiz em `src/app.routes.ts` (todas embrulhadas por `AppLayout`, exceto `/m
 
 ## Trabalho eficiente (menos tokens)
 - **Edite cirúrgico**, não reescreva arquivos inteiros.
-- **grep/glob para localizar; `Read` só o trecho** necessário (evite reler arquivos grandes como `godev.mock.ts`).
+- **grep/glob para localizar; `Read` só o trecho** necessário (evite reler arquivos grandes).
 - Build com saída filtrada (só `ERROR`).
-- **Uma sessão por frente de trabalho** (GO.DEV / DS / refactor) — o histórico é reenviado a cada turno.
+- **Uma sessão por frente de trabalho** (DS / refactor) — o histórico é reenviado a cada turno.
 
 ## Memória do agente
 Regras de design também estão em `~/.claude/projects/.../memory/` (`godev-design-rules`, `godev-card-branco-pattern`).
