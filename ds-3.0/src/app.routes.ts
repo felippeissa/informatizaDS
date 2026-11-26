@@ -16,6 +16,8 @@ export const appRoutes: Routes = [
             { path: 'templates', loadChildren: () => import('./app/ds/templates/templates.routes').then(m => m.templatesRoutes) }
         ]
     },
+    // Exemplo de sistema com MegaMenu (padrão GESIS para 3+ níveis) — tem header e navegação próprios
+    { path: 'sistema-megamenu', loadComponent: () => import('./app/ds/megamenu/sistema-megamenu').then(m => m.SistemaMegamenu) },
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/auth/login' }

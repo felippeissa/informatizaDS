@@ -10,7 +10,7 @@ import { FoundationsService, remParaPx } from './fnd-util';
         <div class="ds-page-header">
             <div>
                 <h1 class="ds-page-title">Espaçamento</h1>
-                <p class="fnd-intro">Escala em <code>rem</code> (raiz de 14px). Use sempre valores da escala para padding, margin e gap.</p>
+                <p class="fnd-intro">Escala em <code>rem</code> (raiz de 14px). Onde o guia da GESIS define a medida — <strong>16px</strong> entre botões, campos, colunas e blocos — use 16px.</p>
             </div>
         </div>
 
@@ -41,7 +41,7 @@ import { FoundationsService, remParaPx } from './fnd-util';
             <p class="ds-card-sub">Já aplicados pelas classes <code>.ds-*</code> — você não precisa repetir.</p>
             <div class="fnd-anatomia">
                 <div class="fnd-anat-page">
-                    <span class="fnd-anat-tag">.ds-page · padding 1.5rem · gap 1rem</span>
+                    <span class="fnd-anat-tag">.ds-page · padding 1.5rem · gap 16px</span>
                     <div class="fnd-anat-header">
                         <span class="fnd-anat-titulo">Título da página</span>
                         <span class="fnd-anat-botao">Ação</span>
@@ -53,7 +53,7 @@ import { FoundationsService, remParaPx } from './fnd-util';
                             <div class="fnd-anat-campo"><span>Rótulo</span><i></i></div>
                             <div class="fnd-anat-campo"><span>Rótulo</span><i></i></div>
                         </div>
-                        <span class="fnd-anat-tag">.ds-grid · gap 1rem · .ds-campo · gap 0.4rem</span>
+                        <span class="fnd-anat-tag">.ds-grid · gap 16px · .ds-campo · gap 0.4rem</span>
                     </div>
                     <div class="fnd-anat-card fnd-anat-card--baixo">
                         <span class="fnd-anat-tag">.ds-card</span>
@@ -80,7 +80,7 @@ export class FndEspacamento {
         { token: 'space-1', rem: 0.25, uso: 'Ícone e texto colados, chips' },
         { token: 'space-2', rem: 0.5, uso: 'Entre botões, ícone + rótulo' },
         { token: 'space-3', rem: 0.75, uso: 'Itens de lista, barra de ações' },
-        { token: 'space-4', rem: 1, uso: 'Entre cards e entre campos (padrão)' },
+        { token: 'space-4', rem: 1, uso: 'Espaçamentos internos menores' },
         { token: 'space-5', rem: 1.25, uso: 'Separação de grupos internos' },
         { token: 'space-6', rem: 1.5, uso: 'Padding de card e de página' },
         { token: 'space-8', rem: 2, uso: 'Estados vazios, seções grandes' },
@@ -89,11 +89,12 @@ export class FndEspacamento {
 
     aplicacoes = [
         { onde: 'Padding da página', valor: '1.5rem', classe: '.ds-page' },
-        { onde: 'Espaço entre cards', valor: '1rem', classe: '.ds-page (gap)' },
+        { onde: 'Espaço entre cards', valor: '16px', classe: '.ds-page (gap)' },
         { onde: 'Padding do card', valor: '1.5rem', classe: '.ds-card' },
         { onde: 'Título do card → conteúdo', valor: '1rem', classe: '.ds-card-titulo' },
-        { onde: 'Entre campos', valor: '1rem', classe: '.ds-grid' },
+        { onde: 'Entre campos e colunas (guia GESIS)', valor: '16px', classe: '.ds-grid' },
         { onde: 'Rótulo → campo', valor: '0.4rem', classe: '.ds-campo' },
-        { onde: 'Entre botões', valor: '0.5rem', classe: '.ds-acoes-row' },
+        { onde: 'Entre botões (guia GESIS)', valor: '16px', classe: '.ds-botoes' },
+        { onde: 'Entre ícones de ação da tabela', valor: '0.25rem', classe: '.ds-acoes-row' },
     ];
 }

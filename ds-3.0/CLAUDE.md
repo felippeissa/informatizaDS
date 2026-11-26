@@ -8,7 +8,8 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 > código, o código vence — e atualize este arquivo.
 
 ## Stack
-- **Angular 21** + **PrimeNG 21** (preset **Aura**, cor primária **emerald**), standalone components, lazy loading, signals.
+- **Angular 21** + **PrimeNG 21** (decidido em 26/11/2026; o guia GESIS ainda cita Angular 19) — preset **Aura**, cor primária **emerald**, standalone components, lazy loading, signals.
+- **Breakpoints e espaçamentos seguem o guia GESIS**: 390 / 640 / 768 / 1024 / 1280 / 1920; 16px entre botões, campos, colunas e blocos.
 - Fonte **Inter var** (carregada de `rsms.me` no `src/index.html`).
 - Tudo é **mockado** — sem backend, banco de dados ou IA reais.
 

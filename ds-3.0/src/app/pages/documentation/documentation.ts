@@ -52,7 +52,7 @@ ng serve</code></pre>
         </div>
     `,
     styles: `
-        @media screen and (max-width: 991px) {
+        @media screen and (max-width: 1023px) {
             .video-container {
                 position: relative;
                 width: 100%;

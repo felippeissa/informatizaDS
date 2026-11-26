@@ -57,19 +57,25 @@ Fonte: **GESIS · Definições de padrões de design (UX)** — MGS 2.0.1, vers�
   → no topo do menu, fixo ao rolar; Esc limpa
 - [x] Regras da busca: caminho completo, palavras em qualquer ordem, ignora maiúsculas/acentos/plural, ordenação por relevância
   → `app/layout/component/menu-busca.ts`; resultado mostra o caminho (ex.: "Padrões de UX")
-- [ ] Textos do menu: sentence case, substantivos ("Consulta de usuários"), filho herda o nome do pai, até 40 caracteres
-  → vale para os sistemas; no menu da vitrine os itens são nomes de componentes
+- [x] Textos do menu: sentence case, substantivos ("Consulta de usuários"), filho herda o nome do pai, até 40 caracteres
+  → regra para os **sistemas**; documentada em Padrões de UX › Layout e no AGENTS.md. Não se aplica à vitrine: lá os itens são nomes de componentes (vocabulário do PrimeNG/Figma)
 
 ## 3. Layout — MegaMenu e menu mobile
 
-- [ ] **MegaMenu** completo (só para 3+ níveis)
-  → existe apenas uma demo de protótipo em `/ds/uikit/megamenu`
-- [ ] MegaMenu sem versão fechada (recolhe totalmente à esquerda)
-- [ ] MegaMenu Overlay com larguras 1636 / 826 / 556 / 286px conforme a tela
-- [ ] TieredMenu híbrido para o 4º nível
-- [ ] **Busca no header** (lupa → dialog de 700px, área "Recentes", estrela de favoritar, caminho da funcionalidade)
-- [ ] **Favoritos** (item fixo no topo, por usuário, mais recente primeiro, sem limite)
-- [ ] **Menu mobile** sequencial em tela cheia (abaixo de 768px, só com MegaMenu)
+- [x] **MegaMenu** completo (só para 3+ níveis)
+  → exemplo de sistema "SIGO" em `/sistema-megamenu` (menu Templates › Sistema com MegaMenu); código em `src/app/ds/megamenu/`
+- [x] MegaMenu sem versão fechada (recolhe totalmente à esquerda)
+  → ☰ esconde o menu por inteiro e o conteúdo ocupa a largura toda
+- [x] MegaMenu Overlay com larguras 1636 / 826 / 556 / 286px conforme a tela
+  → colunas de 246px (3 cabem em 826px, 6 em 1636px); poucos itens = largura do conteúdo; títulos longos alinham a altura
+- [x] TieredMenu híbrido para o 4º nível
+  → subitem com angle-right abre camada sobreposta (ex.: Anulação de empenho › Anular empenho em lote)
+- [x] **Busca no header** (lupa → dialog de 700px, área "Recentes", estrela de favoritar, caminho da funcionalidade)
+  → mesmas regras da busca do menu; "anular lote empenho" encontra "Anular empenho em lote"; Enter abre o 1º resultado
+- [x] **Favoritos** (item fixo no topo, por usuário, mais recente primeiro, sem limite)
+  → salvos no navegador do usuário (localStorage) no exemplo; num sistema real, gravar por usuário no back-end
+- [x] **Menu mobile** sequencial em tela cheia (abaixo de 768px, só com MegaMenu)
+  → toda a área do item é tocável; item selecionado no topo (‹) volta um nível
 
 ---
 
@@ -162,10 +168,15 @@ Fonte: **GESIS · Definições de padrões de design (UX)** — MGS 2.0.1, vers�
 
 ## 10. Decisões pendentes (não marcar sem decidir)
 
-- [ ] **Versão do Angular:** guia diz Angular 19 / PrimeOne 20; DS está em Angular 21 / PrimeNG 21 — confirmar com a arquitetura
-- [ ] **Breakpoints:** guia usa 390 / 640 / 768 / 1024 / 1280 / 1920; DS usa 576 / 768 / 992 / 1200 / 1920
+- [x] **Versão do Angular:** guia diz Angular 19 / PrimeOne 20; DS está em Angular 21 / PrimeNG 21 — confirmar com a arquitetura
+  → decidido (26/11/2026): **Angular 21 + PrimeNG 21**; o Figma está sendo atualizado
+- [x] **Breakpoints:** guia usa 390 / 640 / 768 / 1024 / 1280 / 1920; DS usa 576 / 768 / 992 / 1200 / 1920
+  → decidido: **os do guia**. Tailwind, layout (menu fixo a partir de 1024px), Foundations e tokens atualizados
 - [x] **Fonte base:** decidido manter **14px** (botões com 32,8px de altura) — 26/11/2026
-- [ ] **Espaçamentos em px do guia (16px)** com base 14px: usar 16px fixo (≈ 1.143rem) ou aceitar 1rem = 14px
+- [x] **Espaçamentos em px do guia (16px)** com base 14px: usar 16px fixo (≈ 1.143rem) ou aceitar 1rem = 14px
+  → decidido: **16px fixo** onde o guia pede (botões, campos, colunas, blocos — `.ds-botoes`, `.ds-grid`, `.ds-page`)
 - [x] **Brasão oficial:** não será usado — header usa o símbolo + "Informatiza" (26/11/2026)
 - [ ] **Biblioteca de ícones:** ícones novos nascem na "Biblioteca de Ícones 3.0" do Figma; decidir se o DS adota Tabler como complemento
-- [ ] **Princípios** da home (Clareza, Consistência, Acessibilidade, Eficiência): validar com o time de UX
+  → em análise por você (Biblioteca de Ícones 3.0)
+- [x] **Princípios** da home (Clareza, Consistência, Acessibilidade, Eficiência): validar com o time de UX
+  → seguindo o guia: Consistência, Previsibilidade, Qualidade (introdução) e Linguagem clara (diretrizes de escrita)

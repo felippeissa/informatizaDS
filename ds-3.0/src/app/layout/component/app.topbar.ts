@@ -29,13 +29,13 @@ interface Notificacao { id: number; titulo: string; quando: string; icone: strin
         .ds-logo { flex-shrink: 0; display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
         .ds-logo img { height: 2.25rem; width: auto; display: block; }
         .ds-marca-nome { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-color); line-height: 1; }
-        @media (max-width: 575px) { .ds-logo img { height: 1.9rem; } .ds-marca-nome { font-size: 1.2rem; } }
+        @media (max-width: 639px) { .ds-logo img { height: 1.9rem; } .ds-marca-nome { font-size: 1.2rem; } }
         @media (max-width: 767px) { .sys-wrap { display: none !important; } }
-        @media (max-width: 991px) {
+        @media (max-width: 1023px) {
             /* o Sakai fixa 20rem no container da logo; no celular isso empurra o usuário e o "Sair" para fora da tela */
             .layout-topbar .layout-topbar-logo-container { width: auto; gap: 0.5rem; }
         }
-        @media (max-width: 575px) {
+        @media (max-width: 639px) {
             /* No celular: só o essencial do padrão (notificação, usuário, sair) + tema claro/escuro */
             :host ::ng-deep .layout-topbar-actions { gap: 0.25rem !important; }
             .hdr-config-paleta { display: none !important; }
@@ -80,7 +80,7 @@ interface Notificacao { id: number; titulo: string; quando: string; icone: strin
         .hdr-sair { width: auto !important; padding: 0 0.75rem !important; gap: 0.4rem; border-radius: 999px !important; }
         .hdr-sair-texto { font-size: 0.875rem; font-weight: 500; }
 
-        @media (max-width: 991px) {
+        @media (max-width: 1023px) {
             .hdr-usuario-texto, .hdr-usuario-seta, .hdr-sair-texto { display: none; }
             .hdr-usuario { padding: 0 0.25rem; }
             .hdr-sair { padding: 0 !important; width: 2.5rem !important; }

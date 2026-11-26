@@ -9,7 +9,7 @@
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 16px; // padrão GESIS: 16px entre blocos
 }
 
 .ds-page-header {
@@ -55,7 +55,7 @@
 // Grade responsiva para KPIs / campos lado a lado
 .ds-grid {
     display: grid;
-    gap: 1rem;
+    gap: 16px; // padrão GESIS: 16px entre campos/colunas
 
     &--kpi { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
     // Padrão GESIS: 6 colunas com 16px em 1920px; em telas menores os campos

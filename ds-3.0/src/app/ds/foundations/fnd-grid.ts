@@ -21,7 +21,7 @@ import { FoundationsService } from './fnd-util';
             <div class="fnd-app">
                 <div class="fnd-app-topbar">Topbar · logo, seletor de sistema, tema, sair</div>
                 <div class="fnd-app-corpo">
-                    <div class="fnd-app-menu">Menu lateral<br /><small>20rem · some abaixo de 992px</small></div>
+                    <div class="fnd-app-menu">Menu lateral<br /><small>20rem · recolhe para ícones · vira sobreposição abaixo de 1024px</small></div>
                     <div class="fnd-app-conteudo">
                         <div class="fnd-app-page">.ds-page
                             <div class="fnd-app-card">.ds-card</div>
@@ -62,7 +62,7 @@ import { FoundationsService } from './fnd-util';
         <!-- Breakpoints -->
         <div class="ds-card">
             <h2 class="ds-card-titulo"><i class="pi pi-mobile"></i> Breakpoints</h2>
-            <p class="ds-card-sub">Mesmos valores nas utilities do Tailwind (<code>sm:</code>, <code>md:</code>…) e no layout.</p>
+            <p class="ds-card-sub">Valores do <strong>guia da GESIS</strong>, usados nas utilities do Tailwind (<code>sm:</code>, <code>md:</code>…) e no layout.</p>
             <table class="fnd-tabela">
                 <thead><tr><th>Prefixo</th><th>A partir de</th><th>Dispositivo</th><th></th></tr></thead>
                 <tbody>
@@ -77,7 +77,7 @@ import { FoundationsService } from './fnd-util';
                 </tbody>
             </table>
             <ul class="fnd-lista">
-                <li>Abaixo de <strong>992px</strong> o menu lateral vira sobreposição (botão ☰ na topbar).</li>
+                <li>A partir de <strong>1024px</strong> o menu lateral é fixo (o ☰ alterna entre aberto e só ícones); abaixo disso vira sobreposição.</li>
                 <li>Projete primeiro para <strong>1366px</strong> (notebook comum no governo) e confira em 768px.</li>
                 <li>Tabelas largas: envolva em rolagem horizontal em vez de esconder colunas importantes.</li>
             </ul>
@@ -88,12 +88,13 @@ import { FoundationsService } from './fnd-util';
 export class FndGrid {
     fnd = inject(FoundationsService);
 
+    /** Breakpoints do guia de padrões da GESIS. */
     breakpoints = [
-        { prefixo: 'base', min: 0, dispositivo: 'Celular' },
-        { prefixo: 'sm', min: 576, dispositivo: 'Celular grande' },
+        { prefixo: 'base', min: 390, dispositivo: 'Celular (menor tela suportada)' },
+        { prefixo: 'sm', min: 640, dispositivo: 'Celular grande' },
         { prefixo: 'md', min: 768, dispositivo: 'Tablet' },
-        { prefixo: 'lg', min: 992, dispositivo: 'Notebook (menu lateral fixo)' },
-        { prefixo: 'xl', min: 1200, dispositivo: 'Desktop' },
+        { prefixo: 'lg', min: 1024, dispositivo: 'Notebook (menu lateral fixo)' },
+        { prefixo: 'xl', min: 1280, dispositivo: 'Desktop (xg no guia)' },
         { prefixo: '2xl', min: 1920, dispositivo: 'Monitor Full HD' },
     ];
 
@@ -101,7 +102,7 @@ export class FndGrid {
 
     faixaAtual() {
         const w = this.largura();
-        return [...this.breakpoints].reverse().find((b) => w >= b.min)!.prefixo;
+        return ([...this.breakpoints].reverse().find((b) => w >= b.min) ?? this.breakpoints[0]).prefixo;
     }
 
     @HostListener('window:resize')

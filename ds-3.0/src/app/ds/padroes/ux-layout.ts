@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
+import { RouterModule } from '@angular/router';
 import { UxFigma, UxFonte } from './ux-fonte';
 
 /** PADRÃO DE UX — Layout (header, sidebar, MegaMenu, menu mobile). */
 @Component({
     selector: 'app-ux-layout',
     standalone: true,
-    imports: [AvatarModule, ButtonModule, UxFigma, UxFonte],
+    imports: [AvatarModule, ButtonModule, RouterModule, UxFigma, UxFonte],
     template: `
     <div class="ds-page">
         <div class="ds-page-header">
@@ -132,6 +133,9 @@ import { UxFigma, UxFonte } from './ux-fonte';
                 <li><strong>Favoritos</strong> obrigatório: item fixo no topo do MegaMenu, começa vazio, lista por ordem de inclusão (mais recente primeiro), sem limite, individual por usuário.</li>
                 <li>Abaixo de 768px, use o <strong>Menu Mobile</strong>.</li>
             </ul>
+            <div class="ds-botoes" style="margin-top: 1rem;">
+                <p-button label="Ver exemplo de sistema com MegaMenu" icon="pi pi-external-link" [text]="true" routerLink="/sistema-megamenu" />
+            </div>
         </div>
 
         <!-- MOBILE -->

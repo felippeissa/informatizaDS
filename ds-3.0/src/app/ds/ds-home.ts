@@ -113,7 +113,7 @@ interface Secao { titulo: string; desc: string; icon: string; rota: string; tota
         <section class="home-secao">
             <div class="home-secao-cab">
                 <h2>Princípios</h2>
-                <p>O que orienta cada decisão de design dos sistemas do Informatiza.</p>
+                <p>Do guia de padrões da GESIS: o que orienta cada decisão nos sistemas do Informatiza.</p>
             </div>
             <div class="home-grade home-grade--4">
                 @for (p of principios; track p.titulo) {
@@ -191,7 +191,7 @@ export class DsHome {
         { valor: '89', label: 'componentes', rota: '/ds/uikit/button' },
         { valor: '7', label: 'padrões de UX', rota: '/ds/padroes' },
         { valor: '6', label: 'foundations', rota: '/ds/foundations' },
-        { valor: '4', label: 'templates de tela', rota: '/ds/templates' },
+        { valor: '5', label: 'templates de tela', rota: '/ds/templates' },
     ];
 
     atalhos: Atalho[] = [
@@ -232,20 +232,22 @@ export class DsHome {
             ]
         },
         {
-            titulo: 'Templates de tela', icon: 'pi pi-objects-column', rota: '/ds/templates', total: '4 modelos',
+            titulo: 'Templates de tela', icon: 'pi pi-objects-column', rota: '/ds/templates', total: '5 modelos',
             desc: 'Pontos de partida prontos para as telas mais comuns dos sistemas. Copie e adapte.',
             links: [
                 { label: 'Lista com filtros', rota: '/ds/templates/lista' }, { label: 'Cadastro', rota: '/ds/templates/formulario' },
                 { label: 'Visualização', rota: '/ds/templates/detalhe' }, { label: 'Painel de indicadores', rota: '/ds/templates/dashboard' },
+                { label: 'Sistema com MegaMenu', rota: '/sistema-megamenu' },
             ]
         },
     ];
 
+    /** Princípios tirados do guia de padrões da GESIS (introdução e diretrizes gerais de escrita). */
     principios = [
-        { titulo: 'Clareza', icon: 'pi pi-eye', texto: 'Linguagem simples, em voz ativa, sem termos técnicos. O usuário sempre sabe onde está e o que fazer.' },
-        { titulo: 'Consistência', icon: 'pi pi-sync', texto: 'O mesmo problema tem a mesma solução em todos os sistemas: mesmos componentes, nomes e posições.' },
-        { titulo: 'Acessibilidade', icon: 'pi pi-users', texto: 'Contraste, rótulos e textos que não dependem só de cor. Todo cidadão e servidor consegue usar.' },
-        { titulo: 'Eficiência', icon: 'pi pi-bolt', texto: 'Menos cliques e menos espera: filtros diretos, ações à mão e feedback imediato.' },
+        { titulo: 'Consistência', icon: 'pi pi-sync', texto: 'O mesmo visual e o mesmo comportamento em todos os sistemas do Informatiza, do Figma ao código.' },
+        { titulo: 'Previsibilidade', icon: 'pi pi-compass', texto: 'Botões, filtros e mensagens sempre no mesmo lugar e com os mesmos nomes: o usuário sabe o que vai acontecer.' },
+        { titulo: 'Qualidade', icon: 'pi pi-verified', texto: 'Padrões construídos a partir das dúvidas reais dos projetos, revisados pelo time de UX da GESIS.' },
+        { titulo: 'Linguagem clara', icon: 'pi pi-comment', texto: 'Simples, objetiva e em voz ativa, sem termos técnicos. Mensagens de erro dizem como corrigir.' },
     ];
 
     novidades = [

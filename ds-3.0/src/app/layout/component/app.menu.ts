@@ -82,7 +82,7 @@ export class AppMenu implements OnInit, OnDestroy {
     private sub!: Subscription;
 
     private campoBusca = viewChild<ElementRef<HTMLInputElement>>('campoBusca');
-    private desktop = signal(typeof window === 'undefined' || window.innerWidth > 991);
+    private desktop = signal(typeof window === 'undefined' || window.innerWidth > 1023);
     private url = signal('');
 
     termo = signal('');
@@ -93,7 +93,7 @@ export class AppMenu implements OnInit, OnDestroy {
         this.layoutService.menuRecolhido() && this.desktop() && this.layoutService.layoutConfig().menuMode === 'static');
 
     @HostListener('window:resize')
-    onResize() { this.desktop.set(window.innerWidth > 991); }
+    onResize() { this.desktop.set(window.innerWidth > 1023); }
 
     ngOnInit() {
         this.buildMenu(this.router.url);
@@ -181,7 +181,8 @@ export class AppMenu implements OnInit, OnDestroy {
                     { label: 'Lista com filtros',   icon: 'pi pi-fw pi-list',          routerLink: ['/ds/templates/lista'] },
                     { label: 'Cadastro',  icon: 'pi pi-fw pi-pencil',        routerLink: ['/ds/templates/formulario'] },
                     { label: 'Dashboard',           icon: 'pi pi-fw pi-chart-line',    routerLink: ['/ds/templates/dashboard'] },
-                    { label: 'Visualização', icon: 'pi pi-fw pi-eye', routerLink: ['/ds/templates/detalhe'] }
+                    { label: 'Visualização', icon: 'pi pi-fw pi-eye', routerLink: ['/ds/templates/detalhe'] },
+                    { label: 'Sistema com MegaMenu', icon: 'pi pi-fw pi-th-large', routerLink: ['/sistema-megamenu'] }
                 ]
             },
 

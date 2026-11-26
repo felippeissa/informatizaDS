@@ -12,7 +12,7 @@
 }
 
 // ── Fechado (só ícones) — apenas desktop com menu estático ───────
-@media (min-width: 992px) {
+@media (min-width: 1024px) {
     .layout-wrapper.layout-static.layout-menu-recolhido {
         .layout-sidebar { width: 4.5rem; padding: 0.5rem; overflow-x: hidden; }
         .layout-main-container { margin-left: 6.5rem; }
