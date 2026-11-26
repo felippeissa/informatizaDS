@@ -52,6 +52,14 @@ export class LayoutService {
 
     transitionComplete = signal<boolean>(false);
 
+    /**
+     * Padrão GESIS: no desktop (menu estático) o hambúrguer alterna o sidebar entre
+     * ABERTO (padrão) e FECHADO só com ícones — não esconde o menu por inteiro.
+     */
+    menuRecolhido = signal<boolean>(false);
+
+    expandirMenu() { this.menuRecolhido.set(false); }
+
     private initialized = false;
 
     constructor() {
@@ -98,7 +106,8 @@ export class LayoutService {
         }
 
         if (this.isDesktop()) {
-            this.layoutState.update((prev) => ({ ...prev, staticMenuDesktopInactive: !this.layoutState().staticMenuDesktopInactive }));
+            if (this.isOverlay()) return;
+            this.menuRecolhido.update((v) => !v);
         } else {
             this.layoutState.update((prev) => ({ ...prev, mobileMenuActive: !this.layoutState().mobileMenuActive }));
         }

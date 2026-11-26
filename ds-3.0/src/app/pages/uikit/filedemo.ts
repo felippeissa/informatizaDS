@@ -37,7 +37,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                     <!-- Basic -->
                     <div id="basic" class="demo-card">
                         <div class="demo-card-head">
-                            <div class="demo-card-title">Basic</div>
+                            <div class="demo-card-title">Básico</div>
                             <p class="demo-card-desc">Modo simples com um único botão. Use <code>mode="basic"</code> para uma interface compacta.</p>
                         </div>
                         <div class="demo-card-body" style="gap:16px;align-items:center">
@@ -87,7 +87,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                     <!-- Auto Upload -->
                     <div id="auto" class="demo-card">
                         <div class="demo-card-head">
-                            <div class="demo-card-title">Auto Upload</div>
+                            <div class="demo-card-title">Envio automático</div>
                             <p class="demo-card-desc">Com <code>[auto]="true"</code> o envio ocorre automaticamente após a seleção do arquivo.</p>
                         </div>
                         <div class="demo-card-body" style="gap:12px;align-items:center">

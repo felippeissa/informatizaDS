@@ -43,12 +43,12 @@ declare type SurfacesType = {
     template: `
         <div class="flex flex-col gap-4">
             <div>
-                <span class="text-sm text-muted-color font-semibold">Primary</span>
+                <span class="text-sm text-muted-color font-semibold">Cor primária</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-start">
                     @for (primaryColor of primaryColors(); track primaryColor.name) {
                         <button
                             type="button"
-                            [title]="primaryColor.name"
+                            [title]="nomeCor(primaryColor.name)"
                             (click)="updateColors($event, 'primary', primaryColor)"
                             [ngClass]="{
                                     'outline outline-primary': primaryColor.name === selectedPrimaryColor()
@@ -63,12 +63,12 @@ declare type SurfacesType = {
                 </div>
             </div>
             <div>
-                <span class="text-sm text-muted-color font-semibold">Surface</span>
+                <span class="text-sm text-muted-color font-semibold">Superfície</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-start">
                     @for (surface of surfaces; track surface.name) {
                         <button
                             type="button"
-                            [title]="surface.name"
+                            [title]="nomeCor(surface.name)"
                             (click)="updateColors($event, 'surface', surface)"
                             class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center p-0 outline-offset-1"
                             [ngClass]="{
@@ -82,11 +82,11 @@ declare type SurfacesType = {
                 </div>
             </div>
             <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Presets</span>
+                <span class="text-sm text-muted-color font-semibold">Tema base</span>
                 <p-selectbutton [options]="presets" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false" size="small" />
             </div>
             <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
+                <span class="text-sm text-muted-color font-semibold">Modo do menu</span>
                 <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
             </div>
         </div>
@@ -108,11 +108,21 @@ export class AppConfigurator {
 
     presets = Object.keys(presets);
 
+    /** Nomes das cores em português (aparecem ao passar o mouse). */
+    private nomesCores: Record<string, string> = {
+        noir: 'Preto', emerald: 'Esmeralda', green: 'Verde', lime: 'Lima', orange: 'Laranja', amber: 'Âmbar', yellow: 'Amarelo',
+        teal: 'Verde-azulado', cyan: 'Ciano', sky: 'Céu', blue: 'Azul', indigo: 'Índigo', violet: 'Violeta', purple: 'Roxo',
+        fuchsia: 'Fúcsia', pink: 'Rosa', rose: 'Rosado', slate: 'Ardósia', gray: 'Cinza', zinc: 'Zinco', neutral: 'Neutro',
+        stone: 'Pedra', soho: 'Soho', viva: 'Viva', ocean: 'Oceano'
+    };
+
+    nomeCor(nome: string | undefined) { return nome ? (this.nomesCores[nome] ?? nome) : ''; }
+
     showMenuModeButton = signal(!this.router.url.includes('auth'));
 
     menuModeOptions = [
-        { label: 'Static', value: 'static' },
-        { label: 'Overlay', value: 'overlay' }
+        { label: 'Fixo', value: 'static' },
+        { label: 'Sobreposto', value: 'overlay' }
     ];
 
     ngOnInit() {

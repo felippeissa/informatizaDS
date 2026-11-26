@@ -7,7 +7,7 @@ import { Routes } from '@angular/router';
 export const templatesRoutes: Routes = [
     { path: '', redirectTo: 'lista', pathMatch: 'full' },
     { path: 'lista', loadComponent: () => import('./tpl-lista').then(m => m.TplLista), data: { breadcrumb: 'Lista com filtros' } },
-    { path: 'formulario', loadComponent: () => import('./tpl-formulario').then(m => m.TplFormulario), data: { breadcrumb: 'Formulário em card' } },
+    { path: 'formulario', loadComponent: () => import('./tpl-formulario').then(m => m.TplFormulario), data: { breadcrumb: 'Cadastro' } },
     { path: 'dashboard', loadComponent: () => import('./tpl-dashboard').then(m => m.TplDashboard), data: { breadcrumb: 'Dashboard' } },
-    { path: 'detalhe', loadComponent: () => import('./tpl-detalhe').then(m => m.TplDetalhe), data: { breadcrumb: 'Detalhe / Workspace' } },
+    { path: 'detalhe', loadComponent: () => import('./tpl-detalhe').then(m => m.TplDetalhe), data: { breadcrumb: 'Visualização' } },
 ];

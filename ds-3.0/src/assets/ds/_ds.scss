@@ -58,7 +58,45 @@
     gap: 1rem;
 
     &--kpi { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    &--form { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    // Padrão GESIS: 6 colunas com 16px em 1920px; em telas menores os campos
+    // não encolhem — vão para a linha seguinte.
+    &--form {
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        @media (min-width: 1800px) { grid-template-columns: repeat(6, 1fr); }
+    }
+    .ds-col-2 { grid-column: span 2; }
+    .ds-col-full { grid-column: 1 / -1; }
+}
+
+// Barra de botões (padrão GESIS): à direita, terciário → secundário → primário, 16px
+.ds-botoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+// Rótulo + texto (telas de visualização — nunca campo desabilitado)
+.ds-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+
+    &-rotulo { font-size: 0.8125rem; font-weight: 600; color: var(--text-color-secondary); }
+    &-valor { font-size: 1rem; color: var(--text-color); overflow-wrap: anywhere; }
+}
+
+// Valores numéricos sempre à direita (tabela e campo)
+.ds-num { text-align: right !important; font-variant-numeric: tabular-nums; }
+.ds-num input { text-align: right; }
+
+// Texto longo em célula: reticências
+.ds-celula-longa {
+    display: flex; align-items: center; gap: 0.25rem; max-width: 18rem;
+    > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 
 .ds-campo {
@@ -153,8 +191,10 @@
 }
 
 // ── Table ──────────────────────────────────────────────────────
+// Ícones de ação da tabela: alinhados à direita (Editar → Visualizar → Excluir → mais)
 .ds-acoes-row {
     display: flex;
+    justify-content: flex-end;
     gap: 0.25rem;
 }
 
@@ -287,6 +327,8 @@
 }
 
 .ds-required { color: var(--p-red-500, #ef4444); }
+// Mensagem de erro do campo — indica a ação corretiva ("Informe o nome…")
+.ds-erro, .ds-campo small.ds-erro { color: var(--p-red-600, #dc2626); font-size: 0.8125rem; }
 
 .ds-footer-actions {
     display: flex;
@@ -506,3 +548,18 @@
     font-family: monospace;
     color: var(--text-color-secondary);
 }
+
+// ── Dialogs (padrão GESIS) ─────────────────────────────────────
+// Use em p-dialog e p-confirmdialog via styleClass:
+//   basic (e ConfirmDialog) = 350px · long content = 700px · altura até 90% da tela, com rolagem.
+.p-dialog.ds-dialog-basico { width: 350px; }
+.p-dialog.ds-dialog-longo  { width: 700px; }
+.p-dialog.ds-dialog-basico,
+.p-dialog.ds-dialog-longo {
+    max-width: calc(100vw - 2rem);
+    max-height: 90vh;
+    .p-dialog-content { overflow-y: auto; }
+}
+// Botões do rodapé do dialog seguem a regra de 16px entre eles
+.p-dialog.ds-dialog-basico .p-dialog-footer,
+.p-dialog.ds-dialog-longo .p-dialog-footer { gap: 16px; }

@@ -98,7 +98,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
     `
 })
 export class PopoverDemo {
-    code = `<p-button label="Info"
+    code = `<p-button label="Ver detalhes"
     (click)="op.toggle($event)" />
 
 <p-popover #op>

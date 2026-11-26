@@ -17,7 +17,7 @@ import { TagModule } from 'primeng/tag';
     template: `
     <div class="ds-page">
         <div class="ds-page-header">
-            <h1 class="ds-page-title">Dashboard</h1>
+            <h1 class="ds-page-title">Painel de indicadores</h1>
             <p-selectbutton [options]="periodos" [(ngModel)]="periodo" optionLabel="label" optionValue="value" [allowEmpty]="false" />
         </div>
 
@@ -29,7 +29,7 @@ import { TagModule } from 'primeng/tag';
                         <span style="color: var(--text-color-secondary); font-size: 0.8125rem; font-weight: 600;">{{ k.titulo }}</span>
                         <i class="pi {{ k.icone }}" style="color: var(--primary-color);"></i>
                     </div>
-                    <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem;">{{ k.valor }}</div>
+                    <div style="font-size: 1.75rem; font-weight: 700; margin-top: 0.5rem; font-variant-numeric: tabular-nums;">{{ k.valor }}</div>
                     <p-tag [value]="k.variacao" [severity]="k.variacao.startsWith('+') ? 'success' : 'danger'" styleClass="mt-1" />
                 </div>
             }

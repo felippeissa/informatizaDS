@@ -84,7 +84,7 @@ export class OrgChartDemo {
                     children: [
                         { label: 'Desenvolvimento', data: { role: 'Gerência' }, children: [
                             { label: 'Front-end', data: { role: 'Equipe' } },
-                            { label: 'Back-end', data: { role: 'Equipe' } }
+                            { label: 'Sistemas', data: { role: 'Equipe' } }
                         ]},
                         { label: 'Infraestrutura', data: { role: 'Gerência' } }
                     ]

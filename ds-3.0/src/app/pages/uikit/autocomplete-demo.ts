@@ -40,7 +40,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body col" style="gap:16px;padding:20px">
                             <div class="form-col">
                                 <label>Básico (digite uma cidade)</label>
-                                <p-autocomplete [(ngModel)]="autoVal" [suggestions]="autoSuggestions" (completeMethod)="onComplete($event)" field="name" [fluid]="true" placeholder="Ex: Goiânia" />
+                                <p-autocomplete [(ngModel)]="autoVal" [suggestions]="autoSuggestions" (completeMethod)="onComplete($event)" optionLabel="name" [dropdown]="true" [fluid]="true" placeholder="Digite e selecione" />
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -104,9 +104,10 @@ export class AutoCompleteDemo {
     code = `<p-autocomplete [(ngModel)]="value"
     [suggestions]="filteredItems"
     (completeMethod)="search($event)"
-    field="name"
+    optionLabel="name"
+    [dropdown]="true"
     [fluid]="true"
-    placeholder="Digite para buscar..." />
+    placeholder="Digite e selecione" />
 
 // No componente:
 search(event: AutoCompleteCompleteEvent) {
@@ -118,7 +119,7 @@ search(event: AutoCompleteCompleteEvent) {
 
     props = [
         { name: 'suggestions',    type: 'any[]',   default: 'null',  description: 'Lista de sugestões filtradas.' },
-        { name: 'field',          type: 'string',  default: 'null',  description: 'Propriedade do objeto usada como label.' },
+        { name: 'optionLabel',    type: 'string',  default: 'null',  description: 'Campo do objeto exibido como texto (substitui o antigo field).' },
         { name: 'completeMethod', type: 'Event',   default: 'null',  description: 'Evento disparado ao digitar para filtrar sugestões.' },
         { name: 'multiple',       type: 'boolean', default: 'false', description: 'Permite seleção múltipla (chips).' },
         { name: 'dropdown',       type: 'boolean', default: 'false', description: 'Exibe botão de dropdown.' },

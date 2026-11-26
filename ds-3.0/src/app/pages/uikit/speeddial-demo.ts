@@ -99,7 +99,7 @@ export class SpeedDialDemo implements OnInit {
             { label: 'Adicionar', icon: 'pi pi-pencil', command: () => {} },
             { label: 'Atualizar', icon: 'pi pi-refresh', command: () => {} },
             { label: 'Excluir',   icon: 'pi pi-trash',   command: () => {} },
-            { label: 'Upload',    icon: 'pi pi-upload',  command: () => {} },
+            { label: 'Enviar',    icon: 'pi pi-upload',  command: () => {} },
         ];
     }
 

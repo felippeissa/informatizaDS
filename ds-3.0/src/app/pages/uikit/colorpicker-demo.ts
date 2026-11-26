@@ -76,7 +76,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 
                     <div class="demo-card">
                         <div class="demo-card-head">
-                            <div class="demo-card-title">Disabled</div>
+                            <div class="demo-card-title">Desabilitado</div>
                         </div>
                         <div class="demo-card-body">
                             <p-colorpicker [ngModel]="'1976D2'" [disabled]="true" />

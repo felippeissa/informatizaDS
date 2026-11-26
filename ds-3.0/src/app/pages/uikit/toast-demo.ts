@@ -40,7 +40,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
                             <p-button label="Sucesso"   severity="success" icon="pi pi-check"               (click)="show('success','Salvo!','Registro salvo com sucesso.')" />
-                            <p-button label="Info"      severity="info"    icon="pi pi-info-circle"          (click)="show('info','Informação','Operação em andamento.')" />
+                            <p-button label="Informação" severity="info"    icon="pi pi-info-circle"          (click)="show('info','Informação','Operação em andamento.')" />
                             <p-button label="Aviso"     severity="warn"    icon="pi pi-exclamation-triangle" (click)="show('warn','Atenção','Verifique os dados.')" />
                             <p-button label="Erro"      severity="danger"  icon="pi pi-times"               (click)="show('error','Erro','Falha ao processar.')" />
                         </div>

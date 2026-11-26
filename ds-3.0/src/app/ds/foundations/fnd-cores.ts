@@ -113,11 +113,11 @@ export class FndCores {
     ];
 
     feedbacks: Feedback[] = [
-        { severidade: 'success', variavel: '--p-green-500', nome: 'Sucesso', uso: 'Ativo, concluído, aprovado' },
-        { severidade: 'info', variavel: '--p-sky-500', nome: 'Informação', uso: 'Avisos neutros, novidades' },
-        { severidade: 'warn', variavel: '--p-orange-500', nome: 'Atenção', uso: 'Pendente, em análise, prazo próximo' },
-        { severidade: 'danger', variavel: '--p-red-500', nome: 'Erro', uso: 'Inativo, recusado, exclusão, erro' },
-        { severidade: 'secondary', variavel: '--p-surface-500', nome: 'Neutro', uso: 'Rascunho, sem status definido' },
+        { severidade: 'success', variavel: '--p-green-500', nome: 'Sucesso', uso: 'Confirmação de ação bem-sucedida (toast, message)' },
+        { severidade: 'info', variavel: '--p-sky-500', nome: 'Informação', uso: 'Avisos neutros; severidade padrão das messages' },
+        { severidade: 'warn', variavel: '--p-orange-500', nome: 'Atenção', uso: 'Atenção antes de uma ação, possível problema' },
+        { severidade: 'danger', variavel: '--p-red-500', nome: 'Erro', uso: 'Erros, falhas, ações bloqueadas; tag de alerta' },
+        { severidade: 'secondary', variavel: '--p-surface-500', nome: 'Neutro', uso: 'Tag de inativo (ativo = tag sem severity, cor primária)' },
     ];
 
     valores = computed(() => {

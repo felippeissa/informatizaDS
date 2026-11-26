@@ -49,7 +49,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 
                     <div class="demo-card">
                         <div class="demo-card-head">
-                            <div class="demo-card-title">Disabled</div>
+                            <div class="demo-card-title">Desabilitado</div>
                             <p class="demo-card-desc">Estado desabilitado do componente.</p>
                         </div>
                         <div class="demo-card-body">
@@ -91,10 +91,10 @@ export class CascadeSelectDemo {
             ]
         },
         {
-            name: 'Estados Unidos', code: 'US',
+            name: 'Portugal', code: 'PT',
             states: [
-                { name: 'California', cities: [{ cname: 'Los Angeles' }, { cname: 'San Francisco' }] },
-                { name: 'New York', cities: [{ cname: 'New York City' }, { cname: 'Buffalo' }] }
+                { name: 'Lisboa', cities: [{ cname: 'Lisboa' }, { cname: 'Sintra' }] },
+                { name: 'Porto', cities: [{ cname: 'Porto' }, { cname: 'Vila Nova de Gaia' }] }
             ]
         }
     ];

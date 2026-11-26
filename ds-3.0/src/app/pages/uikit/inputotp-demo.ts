@@ -77,7 +77,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <p-inputotp [(ngModel)]="otp5" variant="filled" />
                             </div>
                             <div class="otp-row">
-                                <label>Disabled</label>
+                                <label>Desabilitado</label>
                                 <p-inputotp [(ngModel)]="otp6" [disabled]="true" />
                             </div>
                         </div>

@@ -39,7 +39,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p-button label="Salvar" />
                             <p-button label="Salvar" icon="pi pi-check" />
                             <p-button icon="pi pi-check" />
-                            <p-button label="Salvar" icon="pi pi-check" iconPos="right" />
+                            <p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeBasic }}</pre></div>
                     </div>
@@ -51,14 +51,14 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Variantes de cor para comunicar diferentes níveis de ação.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Primary" />
-                            <p-button label="Secondary" severity="secondary" />
-                            <p-button label="Success"   severity="success" />
-                            <p-button label="Info"      severity="info" />
-                            <p-button label="Warning"   severity="warn" />
-                            <p-button label="Help"      severity="help" />
-                            <p-button label="Danger"    severity="danger" />
-                            <p-button label="Contrast"  severity="contrast" />
+                            <p-button label="Primário" />
+                            <p-button label="Secundário" severity="secondary" />
+                            <p-button label="Sucesso"   severity="success" />
+                            <p-button label="Informação"      severity="info" />
+                            <p-button label="Atenção"   severity="warn" />
+                            <p-button label="Ajuda"      severity="help" />
+                            <p-button label="Perigo"    severity="danger" />
+                            <p-button label="Contraste"  severity="contrast" />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeSeverities }}</pre></div>
                     </div>
@@ -70,10 +70,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Variante com borda e sem preenchimento.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Primary"   outlined />
-                            <p-button label="Secondary" severity="secondary" outlined />
-                            <p-button label="Success"   severity="success"   outlined />
-                            <p-button label="Danger"    severity="danger"    outlined />
+                            <p-button label="Primário"   outlined />
+                            <p-button label="Secundário" severity="secondary" outlined />
+                            <p-button label="Sucesso"   severity="success"   outlined />
+                            <p-button label="Perigo"    severity="danger"    outlined />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeOutlined }}</pre></div>
                     </div>
@@ -85,10 +85,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Variante sem borda nem fundo — aparência de link.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Primary"   text />
-                            <p-button label="Secondary" severity="secondary" text />
-                            <p-button label="Success"   severity="success"   text />
-                            <p-button label="Danger"    severity="danger"    text />
+                            <p-button label="Primário"   text />
+                            <p-button label="Secundário" severity="secondary" text />
+                            <p-button label="Sucesso"   severity="success"   text />
+                            <p-button label="Perigo"    severity="danger"    text />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeText }}</pre></div>
                     </div>
@@ -100,10 +100,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Botão com sombra elevada.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Primary"   raised />
-                            <p-button label="Secondary" severity="secondary" raised />
-                            <p-button label="Success"   severity="success"   raised />
-                            <p-button label="Danger"    severity="danger"    raised />
+                            <p-button label="Primário"   raised />
+                            <p-button label="Secundário" severity="secondary" raised />
+                            <p-button label="Sucesso"   severity="success"   raised />
+                            <p-button label="Perigo"    severity="danger"    raised />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeRaised }}</pre></div>
                     </div>
@@ -115,10 +115,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Botão com bordas totalmente arredondadas.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Primary"   rounded />
-                            <p-button label="Secondary" severity="secondary" rounded />
-                            <p-button label="Success"   severity="success"   rounded />
-                            <p-button label="Danger"    severity="danger"    rounded />
+                            <p-button label="Primário"   rounded />
+                            <p-button label="Secundário" severity="secondary" rounded />
+                            <p-button label="Sucesso"   severity="success"   rounded />
+                            <p-button label="Perigo"    severity="danger"    rounded />
                             <p-button icon="pi pi-check"  rounded />
                             <p-button icon="pi pi-times"  severity="danger" rounded outlined />
                         </div>
@@ -133,7 +133,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap;align-items:center">
                             <p-button label="Small"   size="small" />
-                            <p-button label="Default" />
+                            <p-button label="Padrão" />
                             <p-button label="Large"   size="large" />
                         </div>
                         <div class="demo-card-code"><pre>{{ codeSizes }}</pre></div>
@@ -142,7 +142,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                     <!-- Loading -->
                     <div class="demo-card">
                         <div class="demo-card-head">
-                            <div class="demo-card-title">Loading</div>
+                            <div class="demo-card-title">Carregando</div>
                             <p class="demo-card-desc">Estado de carregamento com spinner automático.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
@@ -243,39 +243,39 @@ export class ButtonDemo {
     codeBasic = `<p-button label="Salvar" />
 <p-button label="Salvar" icon="pi pi-check" />
 <p-button icon="pi pi-check" />
-<p-button label="Salvar" icon="pi pi-check" iconPos="right" />`;
+<p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" />`;
 
-    codeSeverities = `<p-button label="Primary" />
-<p-button label="Secondary" severity="secondary" />
-<p-button label="Success"   severity="success" />
-<p-button label="Info"      severity="info" />
-<p-button label="Warning"   severity="warn" />
-<p-button label="Help"      severity="help" />
-<p-button label="Danger"    severity="danger" />
-<p-button label="Contrast"  severity="contrast" />`;
+    codeSeverities = `<p-button label="Primário" />
+<p-button label="Secundário" severity="secondary" />
+<p-button label="Sucesso"   severity="success" />
+<p-button label="Informação"      severity="info" />
+<p-button label="Atenção"   severity="warn" />
+<p-button label="Ajuda"      severity="help" />
+<p-button label="Perigo"    severity="danger" />
+<p-button label="Contraste"  severity="contrast" />`;
 
-    codeOutlined = `<p-button label="Primary"   outlined />
-<p-button label="Secondary" severity="secondary" outlined />
-<p-button label="Success"   severity="success"   outlined />
-<p-button label="Danger"    severity="danger"    outlined />`;
+    codeOutlined = `<p-button label="Primário"   outlined />
+<p-button label="Secundário" severity="secondary" outlined />
+<p-button label="Sucesso"   severity="success"   outlined />
+<p-button label="Perigo"    severity="danger"    outlined />`;
 
-    codeText = `<p-button label="Primary"   text />
-<p-button label="Secondary" severity="secondary" text />
-<p-button label="Success"   severity="success"   text />
-<p-button label="Danger"    severity="danger"    text />`;
+    codeText = `<p-button label="Primário"   text />
+<p-button label="Secundário" severity="secondary" text />
+<p-button label="Sucesso"   severity="success"   text />
+<p-button label="Perigo"    severity="danger"    text />`;
 
-    codeRaised = `<p-button label="Primary"   raised />
-<p-button label="Secondary" severity="secondary" raised />
-<p-button label="Success"   severity="success"   raised />
-<p-button label="Danger"    severity="danger"    raised />`;
+    codeRaised = `<p-button label="Primário"   raised />
+<p-button label="Secundário" severity="secondary" raised />
+<p-button label="Sucesso"   severity="success"   raised />
+<p-button label="Perigo"    severity="danger"    raised />`;
 
-    codeRounded = `<p-button label="Primary"  rounded />
-<p-button label="Danger"   severity="danger" rounded />
+    codeRounded = `<p-button label="Primário"  rounded />
+<p-button label="Perigo"   severity="danger" rounded />
 <p-button icon="pi pi-check" rounded />
 <p-button icon="pi pi-times" severity="danger" rounded outlined />`;
 
     codeSizes = `<p-button label="Small"   size="small" />
-<p-button label="Default" />
+<p-button label="Padrão" />
 <p-button label="Large"   size="large" />`;
 
     codeLoading = `<p-button label="Salvando..." [loading]="true" />

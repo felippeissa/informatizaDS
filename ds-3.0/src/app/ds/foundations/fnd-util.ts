@@ -36,6 +36,6 @@ export class FoundationsService {
 
     copiar(texto: string) {
         navigator.clipboard?.writeText(texto);
-        this.msg.add({ severity: 'success', summary: 'Copiado', detail: texto, life: 1800 });
+        this.msg.add({ severity: 'success', summary: 'Sucesso', detail: 'Copiado: ' + texto, life: 3000 });
     }
 }

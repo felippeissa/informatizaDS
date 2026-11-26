@@ -106,7 +106,7 @@ export class TreeSelectDemo {
                 { key: 'ti-dev', label: 'Desenvolvimento', icon: 'pi pi-code',
                   children: [
                     { key: 'ti-dev-fe', label: 'Front-end', icon: 'pi pi-globe' },
-                    { key: 'ti-dev-be', label: 'Back-end', icon: 'pi pi-server' }
+                    { key: 'ti-dev-be', label: 'Sistemas', icon: 'pi pi-server' }
                   ]
                 },
                 { key: 'ti-infra', label: 'Infraestrutura', icon: 'pi pi-server' }

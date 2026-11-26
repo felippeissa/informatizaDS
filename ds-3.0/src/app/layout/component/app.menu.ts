@@ -1,42 +1,136 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, OnInit, OnDestroy, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
 import { AppMenuitem } from './app.menuitem';
+import { LayoutService } from '@/app/layout/service/layout.service';
+import { buscarNoMenu, indexarMenu, ResultadoBusca } from './menu-busca';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+/**
+ * Menu lateral (padrão GESIS):
+ * - ABERTO (padrão): campo de busca + itens agrupados.
+ * - FECHADO (hambúrguer no desktop): só ícones — um por seção, mais a lupa.
+ *   Como o menu tem busca, clicar em qualquer ícone EXPANDE o menu (já na seção clicada).
+ * - Busca: caminho completo, palavras em qualquer ordem, ignora maiúsculas/acentos/plural,
+ *   resultados por relevância (ver menu-busca.ts).
+ */
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule],
-    template: `<ul class="layout-menu">
-        @for (item of model; track item.label) {
-            @if (!item.separator) {
-                <li app-menuitem [item]="item" [root]="true"></li>
-            } @else {
-                <li class="menu-separator"></li>
+    imports: [CommonModule, AppMenuitem, RouterModule, TooltipModule],
+    template: `
+    @if (recolhido()) {
+        <nav class="menu-trilho" aria-label="Menu recolhido">
+            <button type="button" class="menu-trilho-item" (click)="abrirBusca()" pTooltip="Buscar no menu" tooltipPosition="right" aria-label="Buscar no menu">
+                <i class="pi pi-search"></i>
+            </button>
+            <span class="menu-trilho-divisor" aria-hidden="true"></span>
+            @for (g of model; track g.label) {
+                <button type="button" class="menu-trilho-item" [class.menu-trilho-item--ativo]="grupoAtivo(g)"
+                        (click)="abrirGrupo(g)" [pTooltip]="g.label" tooltipPosition="right" [attr.aria-label]="g.label">
+                    <i [class]="g.icon"></i>
+                </button>
             }
+        </nav>
+    } @else {
+        <div class="menu-busca" role="search">
+            <i class="pi pi-search menu-busca-icone" aria-hidden="true"></i>
+            <input #campoBusca type="search" class="menu-busca-campo" placeholder="Buscar no menu" aria-label="Buscar no menu"
+                   [value]="termo()" (input)="termo.set($any($event.target).value)" (keydown.escape)="limparBusca()" />
+            @if (termo()) {
+                <button type="button" class="menu-busca-limpar" (click)="limparBusca()" aria-label="Limpar busca"><i class="pi pi-times"></i></button>
+            }
+        </div>
+
+        @if (termo().trim()) {
+            <ul class="menu-resultados" aria-live="polite">
+                @for (r of resultados(); track r.item.label + r.caminho) {
+                    <li>
+                        <a [routerLink]="r.item.routerLink" (click)="limparBusca()" class="menu-resultado">
+                            <i [class]="r.item.icon" class="menu-resultado-icone"></i>
+                            <span class="menu-resultado-texto">
+                                <span class="menu-resultado-titulo">{{ r.item.label }}</span>
+                                <span class="menu-resultado-caminho">{{ r.caminho }}</span>
+                            </span>
+                        </a>
+                    </li>
+                } @empty {
+                    <li class="menu-resultados-vazio">Nenhum item encontrado.</li>
+                }
+            </ul>
+        } @else {
+            <ul class="layout-menu">
+                @for (item of model; track item.label) {
+                    @if (!item.separator) {
+                        <li app-menuitem [item]="item" [root]="true" [attr.data-grupo]="item.label"></li>
+                    } @else {
+                        <li class="menu-separator"></li>
+                    }
+                }
+            </ul>
         }
-    </ul>`
+    }`
 })
 export class AppMenu implements OnInit, OnDestroy {
     model: MenuItem[] = [];
     private router = inject(Router);
+    private el = inject(ElementRef<HTMLElement>);
+    layoutService = inject(LayoutService);
     private sub!: Subscription;
+
+    private campoBusca = viewChild<ElementRef<HTMLInputElement>>('campoBusca');
+    private desktop = signal(typeof window === 'undefined' || window.innerWidth > 991);
+    private url = signal('');
+
+    termo = signal('');
+    private indice = computed(() => indexarMenu(this.model));
+    resultados = computed<ResultadoBusca[]>(() => buscarNoMenu(this.indice(), this.termo()));
+
+    recolhido = computed(() =>
+        this.layoutService.menuRecolhido() && this.desktop() && this.layoutService.layoutConfig().menuMode === 'static');
+
+    @HostListener('window:resize')
+    onResize() { this.desktop.set(window.innerWidth > 991); }
 
     ngOnInit() {
         this.buildMenu(this.router.url);
+        this.url.set(this.router.url);
         this.sub = this.router.events
             .pipe(filter(e => e instanceof NavigationEnd))
-            .subscribe((e: any) => this.buildMenu(e.urlAfterRedirects));
+            .subscribe((e: any) => { this.buildMenu(e.urlAfterRedirects); this.url.set(e.urlAfterRedirects); });
     }
 
     ngOnDestroy() { this.sub?.unsubscribe(); }
 
     private buildMenu(_url: string) {
-        this.model = this.dsMenu;
+        if (!this.model.length) this.model = this.dsMenu;
     }
+
+    /** Seção que contém a página atual (destaca o ícone no menu recolhido). */
+    grupoAtivo(g: MenuItem) {
+        const url = this.url().split('?')[0];
+        return (g.items ?? []).some((i) => i.routerLink && url === i.routerLink[0]);
+    }
+
+    /** Fechado → clicar no ícone da seção expande o menu já posicionado nela. */
+    abrirGrupo(g: MenuItem) {
+        this.layoutService.expandirMenu();
+        setTimeout(() => {
+            const alvo = this.el.nativeElement.querySelector(`[data-grupo="${g.label}"]`) as HTMLElement | null;
+            alvo?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        }, 80);
+    }
+
+    /** Fechado → lupa expande o menu e foca a busca. */
+    abrirBusca() {
+        this.layoutService.expandirMenu();
+        setTimeout(() => this.campoBusca()?.nativeElement.focus(), 80);
+    }
+
+    limparBusca() { this.termo.set(''); }
 
     /* ══════════════════════════════════════════════════════
        Menu: Informatiza Design System
@@ -44,14 +138,31 @@ export class AppMenu implements OnInit, OnDestroy {
     private get dsMenu(): MenuItem[] { return [
             {
                 label: 'Início',
+                icon: 'pi pi-home',
                 items: [
                     { label: 'Visão Geral', icon: 'pi pi-fw pi-home', routerLink: ['/ds'] }
+                ]
+            },
+
+            /* ══════════════ PADRÕES DE UX (GESIS) ══════════════ */
+            {
+                label: 'Padrões de UX',
+                icon: 'pi pi-book',
+                items: [
+                    { label: 'Layout e navegação',  icon: 'pi pi-fw pi-objects-column', routerLink: ['/ds/padroes/layout'] },
+                    { label: 'Feedback ao usuário', icon: 'pi pi-fw pi-bell',           routerLink: ['/ds/padroes/feedback'] },
+                    { label: 'Inputs',              icon: 'pi pi-fw pi-pen-to-square',  routerLink: ['/ds/padroes/inputs'] },
+                    { label: 'Botões',              icon: 'pi pi-fw pi-stop',           routerLink: ['/ds/padroes/botoes'] },
+                    { label: 'Filtros',             icon: 'pi pi-fw pi-filter',         routerLink: ['/ds/padroes/filtros'] },
+                    { label: 'Tabelas',             icon: 'pi pi-fw pi-table',          routerLink: ['/ds/padroes/tabelas'] },
+                    { label: 'Formulários',         icon: 'pi pi-fw pi-file-edit',      routerLink: ['/ds/padroes/formularios'] }
                 ]
             },
 
             /* ══════════════ FOUNDATIONS ══════════════ */
             {
                 label: 'Foundations',
+                icon: 'pi pi-palette',
                 items: [
                     { label: 'Cores',             icon: 'pi pi-fw pi-palette',    routerLink: ['/ds/foundations/cores'] },
                     { label: 'Tipografia',        icon: 'pi pi-fw pi-pencil',     routerLink: ['/ds/foundations/tipografia'] },
@@ -65,17 +176,19 @@ export class AppMenu implements OnInit, OnDestroy {
             /* ══════════════ TEMPLATES DE TELA ══════════════ */
             {
                 label: 'Templates',
+                icon: 'pi pi-objects-column',
                 items: [
                     { label: 'Lista com filtros',   icon: 'pi pi-fw pi-list',          routerLink: ['/ds/templates/lista'] },
-                    { label: 'Formulário em card',  icon: 'pi pi-fw pi-pencil',        routerLink: ['/ds/templates/formulario'] },
+                    { label: 'Cadastro',  icon: 'pi pi-fw pi-pencil',        routerLink: ['/ds/templates/formulario'] },
                     { label: 'Dashboard',           icon: 'pi pi-fw pi-chart-line',    routerLink: ['/ds/templates/dashboard'] },
-                    { label: 'Detalhe / Workspace', icon: 'pi pi-fw pi-window-maximize', routerLink: ['/ds/templates/detalhe'] }
+                    { label: 'Visualização', icon: 'pi pi-fw pi-eye', routerLink: ['/ds/templates/detalhe'] }
                 ]
             },
 
             /* ══════════════ ÁTOMOS ══════════════ */
             {
                 label: 'Átomos',
+                icon: 'pi pi-circle',
                 items: [
                     { label: 'Button',         icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/button'] },
                     { label: 'SplitButton',    icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/splitbutton'] },
@@ -127,6 +240,7 @@ export class AppMenu implements OnInit, OnDestroy {
             /* ══════════════ MOLÉCULAS ══════════════ */
             {
                 label: 'Moléculas',
+                icon: 'pi pi-clone',
                 items: [
                     { label: 'Card',          icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/card'] },
                     { label: 'Accordion',     icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/accordion'] },
@@ -153,6 +267,7 @@ export class AppMenu implements OnInit, OnDestroy {
             /* ══════════════ ORGANISMOS ══════════════ */
             {
                 label: 'Organismos',
+                icon: 'pi pi-sitemap',
                 items: [
                     { label: 'DataTable',       icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/datatable'] },
                     { label: 'Paginator',       icon: 'pi pi-fw pi-circle', routerLink: ['/ds/uikit/paginator'] },

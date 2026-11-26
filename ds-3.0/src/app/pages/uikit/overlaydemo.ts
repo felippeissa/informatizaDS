@@ -252,7 +252,7 @@ export class OverlayDemo {
 
 <input pInputText pTooltip="Campo obrigatório" />`,
 
-        popover: `<p-button label="Info"
+        popover: `<p-button label="Ver detalhes"
     (click)="op.toggle($event)" />
 
 <p-popover #op>
