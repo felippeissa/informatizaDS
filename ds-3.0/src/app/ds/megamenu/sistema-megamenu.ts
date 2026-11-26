@@ -102,12 +102,12 @@ const CHAVE_FAVORITOS = 'informatiza-ds:sigo:favoritos';
         <ng-template #itemTpl let-no let-caminho="caminho" let-nivel="nivel">
             <li class="mm-sub" [class.mm-sub--aberto]="tieredAberto(caminho + ' › ' + no.label)">
                 @if (no.itens?.length) {
-                    <button type="button" class="mm-sub-btn" (click)="alternarTiered(caminho + ' › ' + no.label, nivel)"
+                    <button type="button" class="mm-sub-btn" (click)="alternarTiered(caminho + ' › ' + no.label, nivel, $event)"
                             [attr.aria-expanded]="tieredAberto(caminho + ' › ' + no.label)">
                         <span>{{ no.label }}</span><i class="pi pi-angle-right"></i>
                     </button>
                     @if (tieredAberto(caminho + ' › ' + no.label)) {
-                        <ul class="mm-tiered">
+                        <ul class="mm-tiered" [class.mm-tiered--esquerda]="paraEsquerda().includes(caminho + ' › ' + no.label)">
                             @for (f of no.itens; track f.label) {
                                 <ng-container *ngTemplateOutlet="itemTpl; context: { $implicit: f, caminho: caminho + ' › ' + no.label, nivel: nivel + 1 }" />
                             }
@@ -292,11 +292,22 @@ export class SistemaMegamenu {
     tieredAberto(caminho: string) { return this.tiered().includes(caminho); }
 
     /** Abre/fecha um nível do TieredMenu híbrido; mantém abertos só os níveis acima. */
-    alternarTiered(caminho: string, nivel: number) {
+    alternarTiered(caminho: string, nivel: number, ev: Event) {
+        ev.stopPropagation();
         const idx = nivel - 3;
         const atual = this.tiered();
-        this.tiered.set(atual[idx] === caminho ? atual.slice(0, idx) : [...atual.slice(0, idx), caminho]);
+        const fechando = atual[idx] === caminho;
+        this.tiered.set(fechando ? atual.slice(0, idx) : [...atual.slice(0, idx), caminho]);
+        if (!fechando) {
+            // Abre para a esquerda se não couber à direita (≈ 290px)
+            const r = (ev.currentTarget as HTMLElement).getBoundingClientRect();
+            const semEspaco = window.innerWidth - r.right < 290;
+            this.paraEsquerda.update((l) => [...l.filter((c) => c !== caminho), ...(semEspaco ? [caminho] : [])]);
+        }
     }
+
+    /** Caminhos do TieredMenu que abrem para a esquerda (sem espaço à direita). */
+    paraEsquerda = signal<string[]>([]);
 
     // ── Mobile ──
     nivelMobile = computed<MmNo[]>(() => {

@@ -54,7 +54,8 @@ $mm-menu: 19rem;
 // ── Overlay (larguras do guia) ────────────────────────────────
 .mm-overlay {
     position: fixed; top: calc(#{$mm-header} + 0.75rem); left: calc(#{$mm-menu} + 0.75rem); z-index: 950;
-    width: max-content; max-width: 1636px; max-height: calc(100vh - #{$mm-header} - 1.5rem); overflow: auto;
+    // Sem rolagem interna: o TieredMenu híbrido precisa "flutuar" para fora do painel sem ser cortado
+    width: max-content; max-width: 1636px; overflow: visible;
     padding: 1.25rem; border-radius: 12px; background: var(--surface-card); border: 1px solid var(--surface-border);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     animation: mm-entra 0.18s ease-out;
@@ -85,10 +86,13 @@ $mm-menu: 19rem;
 
 // TieredMenu híbrido: camada sobreposta ao lado do item
 .mm-tiered {
-    position: absolute; top: -0.4rem; left: calc(100% + 0.4rem); z-index: 2; min-width: 220px;
+    position: absolute; top: -0.4rem; left: calc(100% + 0.4rem); z-index: 2; min-width: 220px; width: max-content; max-width: 280px;
     padding: 0.4rem; border-radius: 10px; background: var(--surface-card); border: 1px solid var(--surface-border);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
+
+// Sem espaço à direita: abre para a esquerda
+.mm-tiered--esquerda { left: auto; right: calc(100% + 0.4rem); }
 
 // Favoritos / resultados da busca
 .mm-favoritos { width: 380px; max-width: 100%; display: flex; flex-direction: column; gap: 0.25rem; max-height: 60vh; overflow-y: auto; }
