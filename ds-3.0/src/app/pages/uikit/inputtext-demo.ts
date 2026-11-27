@@ -44,7 +44,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body form-grid">
                             <div class="form-col">
                                 <label>Básico</label>
-                                <input pInputText type="text" placeholder="Digite algo" [(ngModel)]="txt" />
+                                <input pInputText type="text" placeholder="Digite" [(ngModel)]="txt" />
                             </div>
                             <div class="form-col">
                                 <label>Desabilitado</label>
@@ -54,7 +54,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <label>Com ícone</label>
                                 <p-iconfield>
                                     <p-inputicon class="pi pi-search" />
-                                    <input pInputText type="text" placeholder="Buscar..." />
+                                    <input pInputText type="text" placeholder="Digite" />
                                 </p-iconfield>
                             </div>
                             <div class="form-col">
@@ -108,12 +108,12 @@ export class InputTextDemo {
     txt2 = '';
 
     code = `<!-- Básico -->
-<input pInputText type="text" placeholder="Digite algo" [(ngModel)]="txt" />
+<input pInputText type="text" placeholder="Digite" [(ngModel)]="txt" />
 
 <!-- Com ícone -->
 <p-iconfield>
     <p-inputicon class="pi pi-search" />
-    <input pInputText type="text" placeholder="Buscar..." />
+    <input pInputText type="text" placeholder="Digite" />
 </p-iconfield>
 
 <!-- Float Label -->

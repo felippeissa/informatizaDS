@@ -40,17 +40,17 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body demo-grid">
                             <p-iconfield>
                                 <p-inputicon styleClass="pi pi-search" />
-                                <input pInputText [(ngModel)]="search" placeholder="Pesquisar..." />
+                                <input pInputText [(ngModel)]="search" placeholder="Digite" />
                             </p-iconfield>
 
                             <p-iconfield>
                                 <p-inputicon styleClass="pi pi-user" />
-                                <input pInputText [(ngModel)]="username" placeholder="Usuário" />
+                                <input pInputText [(ngModel)]="username" placeholder="Digite" />
                             </p-iconfield>
 
                             <p-iconfield>
                                 <p-inputicon styleClass="pi pi-envelope" />
-                                <input pInputText [(ngModel)]="email" placeholder="E-mail" />
+                                <input pInputText [(ngModel)]="email" placeholder="email@goias.gov.br" />
                             </p-iconfield>
                         </div>
                     </div>
@@ -62,12 +62,12 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body demo-grid">
                             <p-iconfield iconPosition="right">
-                                <input pInputText [(ngModel)]="search2" placeholder="Pesquisar..." />
+                                <input pInputText [(ngModel)]="search2" placeholder="Digite" />
                                 <p-inputicon styleClass="pi pi-search" />
                             </p-iconfield>
 
                             <p-iconfield iconPosition="right">
-                                <input pInputText [(ngModel)]="pass" placeholder="Senha" type="password" />
+                                <input pInputText [(ngModel)]="pass" placeholder="Digite" type="password" />
                                 <p-inputicon styleClass="pi pi-eye" />
                             </p-iconfield>
                         </div>
@@ -80,7 +80,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body demo-grid">
                             <p-iconfield>
                                 <p-inputicon styleClass="pi pi-search" />
-                                <input pInputText [(ngModel)]="search3" placeholder="Pesquisar produtos..." />
+                                <input pInputText [(ngModel)]="search3" placeholder="Digite" />
                                 <p-inputicon styleClass="pi pi-times" style="cursor:pointer" (click)="search3=''" />
                             </p-iconfield>
                         </div>

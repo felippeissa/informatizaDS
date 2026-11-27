@@ -46,7 +46,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <p-inplace>
                                     <ng-template #display>{{ nome || 'Clique para editar...' }}</ng-template>
                                     <ng-template #content>
-                                        <input pInputText [(ngModel)]="nome" autofocus placeholder="Digite o nome" />
+                                        <input pInputText [(ngModel)]="nome" autofocus placeholder="Digite" />
                                     </ng-template>
                                 </p-inplace>
                             </div>
@@ -55,7 +55,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <p-inplace>
                                     <ng-template #display>{{ descricao || 'Clique para adicionar descrição...' }}</ng-template>
                                     <ng-template #content>
-                                        <input pInputText [(ngModel)]="descricao" autofocus placeholder="Digite a descrição" style="width:300px" />
+                                        <input pInputText [(ngModel)]="descricao" autofocus placeholder="Digite" style="width:300px" />
                                     </ng-template>
                                 </p-inplace>
                             </div>
@@ -73,7 +73,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <p-inplace [closable]="true" (onDeactivate)="onSave()">
                                     <ng-template #display>{{ email || 'Clique para editar e-mail...' }}</ng-template>
                                     <ng-template #content>
-                                        <input pInputText [(ngModel)]="email" autofocus placeholder="email@exemplo.com" style="width:260px" />
+                                        <input pInputText [(ngModel)]="email" autofocus placeholder="email@goias.gov.br" style="width:260px" />
                                     </ng-template>
                                 </p-inplace>
                             </div>

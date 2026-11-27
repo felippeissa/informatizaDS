@@ -41,11 +41,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body form-grid">
                             <div class="form-col">
                                 <label>Básico</label>
-                                <p-password [(ngModel)]="pwd" [feedback]="false" [toggleMask]="true" [fluid]="true" placeholder="Senha" />
+                                <p-password [(ngModel)]="pwd" [feedback]="false" [toggleMask]="true" [fluid]="true" placeholder="Digite" />
                             </div>
                             <div class="form-col">
                                 <label>Com medidor de força</label>
-                                <p-password [(ngModel)]="pwd2" [feedback]="true" [toggleMask]="true" [fluid]="true" placeholder="Digite sua senha" />
+                                <p-password [(ngModel)]="pwd2" [feedback]="true" [toggleMask]="true" [fluid]="true" placeholder="Digite" />
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -95,7 +95,7 @@ export class PasswordDemo {
     [feedback]="false"
     [toggleMask]="true"
     [fluid]="true"
-    placeholder="Senha" />
+    placeholder="Digite" />
 
 <!-- Com medidor de força -->
 <p-password [(ngModel)]="pwd"

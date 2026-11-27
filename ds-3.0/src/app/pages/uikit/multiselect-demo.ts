@@ -40,11 +40,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body col" style="gap:16px;padding:20px">
                             <div class="form-col">
                                 <label>Com chips</label>
-                                <p-multiselect [(ngModel)]="multiVal" [options]="cities" optionLabel="name" placeholder="Selecione cidades" [fluid]="true" display="chip" />
+                                <p-multiselect [(ngModel)]="multiVal" [options]="cities" optionLabel="name" placeholder="Selecione" [fluid]="true" display="chip" />
                             </div>
                             <div class="form-col">
                                 <label>Com filtro</label>
-                                <p-multiselect [(ngModel)]="multiVal2" [options]="cities" optionLabel="name" placeholder="Busque e selecione" [fluid]="true" [filter]="true" />
+                                <p-multiselect [(ngModel)]="multiVal2" [options]="cities" optionLabel="name" placeholder="Digite e selecione" [fluid]="true" [filter]="true" />
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -101,7 +101,7 @@ export class MultiSelectDemo {
     code = `<p-multiselect [(ngModel)]="cidades"
     [options]="opcoes"
     optionLabel="name"
-    placeholder="Selecione cidades"
+    placeholder="Selecione"
     display="chip"
     [fluid]="true" />`;
 

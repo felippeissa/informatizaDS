@@ -37,24 +37,24 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body" style="gap:12px">
                             <p-button label="Básico" (click)="dlgBasic=true" />
                             <p-button label="Com rodapé" (click)="dlgFooter=true" severity="secondary" />
-                            <p-button label="Maximizável" (click)="dlgMax=true" severity="secondary" outlined />
+                            <p-button label="Maximizável" (click)="dlgMax=true" [outlined]="true" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>
 
-                    <p-dialog header="Diálogo Básico" [(visible)]="dlgBasic" [style]="{width:'420px'}" [modal]="true">
+                    <p-dialog header="Diálogo Básico" [(visible)]="dlgBasic" styleClass="ds-dialog-basico" [modal]="true">
                         <p style="margin:0;line-height:1.6">Conteúdo do diálogo. Adicione formulários, tabelas ou qualquer componente aqui.</p>
                     </p-dialog>
 
-                    <p-dialog header="Com Rodapé" [(visible)]="dlgFooter" [style]="{width:'420px'}" [modal]="true">
+                    <p-dialog header="Com Rodapé" [(visible)]="dlgFooter" styleClass="ds-dialog-basico" [modal]="true">
                         <p style="margin:0;line-height:1.6">Confirme a ação abaixo.</p>
                         <ng-template pTemplate="footer">
-                            <p-button label="Cancelar" severity="secondary" text (click)="dlgFooter=false" />
-                            <p-button label="Confirmar" icon="pi pi-check" (click)="dlgFooter=false" />
+                            <p-button label="Cancelar" [outlined]="true" (click)="dlgFooter=false" />
+                            <p-button label="Confirmar" (click)="dlgFooter=false" />
                         </ng-template>
                     </p-dialog>
 
-                    <p-dialog header="Maximizável" [(visible)]="dlgMax" [style]="{width:'560px'}" [modal]="true" [maximizable]="true">
+                    <p-dialog header="Maximizável" [(visible)]="dlgMax" styleClass="ds-dialog-longo" [modal]="true" [maximizable]="true">
                         <p style="margin:0;line-height:1.6">Este diálogo pode ser maximizado clicando no ícone no cabeçalho.</p>
                     </p-dialog>
 
@@ -102,7 +102,7 @@ export class DialogDemo {
     code = `<p-button label="Abrir" (click)="visible=true" />
 
 <p-dialog header="Título" [(visible)]="visible"
-    [style]="{width:'450px'}" [modal]="true">
+    styleClass="ds-dialog-basico" [modal]="true">
     <p>Conteúdo do diálogo</p>
     <ng-template pTemplate="footer">
         <p-button label="Fechar" (click)="visible=false" />
@@ -113,7 +113,7 @@ export class DialogDemo {
         { name: 'header',      type: 'string',  default: 'null',   description: 'Texto do cabeçalho.' },
         { name: 'visible',     type: 'boolean', default: 'false',  description: 'Controla visibilidade (two-way).' },
         { name: 'modal',       type: 'boolean', default: 'true',   description: 'Exibe overlay escuro de fundo.' },
-        { name: 'style',       type: 'object',  default: 'null',   description: 'Estilos inline: ex. {width: "450px"}.' },
+        { name: 'style',       type: 'object',  default: 'null',   description: 'Estilos inline. Para largura use styleClass="ds-dialog-basico" (350px) ou "ds-dialog-longo" (700px).' },
         { name: 'draggable',   type: 'boolean', default: 'true',   description: 'Permite arrastar o diálogo.' },
         { name: 'resizable',   type: 'boolean', default: 'true',   description: 'Permite redimensionar.' },
         { name: 'maximizable', type: 'boolean', default: 'false',  description: 'Exibe botão de maximizar.' },

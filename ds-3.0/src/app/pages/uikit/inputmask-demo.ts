@@ -45,15 +45,15 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             </div>
                             <div class="form-col">
                                 <label>Telefone</label>
-                                <p-inputmask [(ngModel)]="maskPhone" mask="(99) 9 9999-9999" placeholder="(62) 9 0000-0000" [fluid]="true" />
+                                <p-inputmask [(ngModel)]="maskPhone" mask="(99) 9 9999-9999" placeholder="(00) 00000-0000" [fluid]="true" />
                             </div>
                             <div class="form-col">
                                 <label>Data</label>
-                                <p-inputmask [(ngModel)]="maskDate" mask="99/99/9999" placeholder="dd/mm/aaaa" [fluid]="true" />
+                                <p-inputmask [(ngModel)]="maskDate" mask="99/99/9999" placeholder="DD/MM/AAAA" [fluid]="true" />
                             </div>
                             <div class="form-col">
                                 <label>CNPJ</label>
-                                <p-inputmask [(ngModel)]="maskCnpj" mask="99.999.999/9999-99" placeholder="00.000.000/0001-00" [fluid]="true" />
+                                <p-inputmask [(ngModel)]="maskCnpj" mask="99.999.999/9999-99" placeholder="00.000.000/0000-00" [fluid]="true" />
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -110,7 +110,7 @@ export class InputMaskDemo {
 <!-- Telefone -->
 <p-inputmask [(ngModel)]="tel"
     mask="(99) 9 9999-9999"
-    placeholder="(62) 9 0000-0000"
+    placeholder="(00) 00000-0000"
     [fluid]="true" />
 
 <!-- Máscara: 9=dígito  a=letra  *=alfanumérico -->`;

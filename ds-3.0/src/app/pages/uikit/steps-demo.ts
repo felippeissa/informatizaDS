@@ -40,7 +40,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p-steps [model]="stepItems" [activeIndex]="activeStepIndex" [readonly]="false"
                                      (activeIndexChange)="activeStepIndex=$event" styleClass="w-full" />
                             <div style="display:flex;gap:8px;justify-content:center">
-                                <p-button label="Anterior" icon="pi pi-arrow-left" severity="secondary" size="small"
+                                <p-button label="Anterior" icon="pi pi-arrow-left" [outlined]="true" size="small"
                                           [disabled]="activeStepIndex === 0"
                                           (click)="activeStepIndex = activeStepIndex - 1" />
                                 <p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" size="small"

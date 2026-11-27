@@ -14,7 +14,7 @@ import { filter } from 'rxjs/operators';
         }
         @if ((!hasRouterLink() || hasChildren()) && isVisible()) {
             <a [attr.href]="item().url" (click)="itemClick($event)" [ngClass]="item().class" [attr.target]="item().target" tabindex="0" pRipple>
-                <i [ngClass]="item().icon" class="layout-menuitem-icon"></i>
+                @if (item().icon) { <i [ngClass]="item().icon" class="layout-menuitem-icon"></i> }
                 <span class="layout-menuitem-text">{{ item().label }}</span>
                 @if (hasChildren()) {
                     <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
@@ -39,7 +39,7 @@ import { filter } from 'rxjs/operators';
                 tabindex="0"
                 pRipple
             >
-                <i [ngClass]="item().icon" class="layout-menuitem-icon"></i>
+                @if (item().icon) { <i [ngClass]="item().icon" class="layout-menuitem-icon"></i> }
                 <span class="layout-menuitem-text">{{ item().label }}</span>
                 @if (hasChildren()) {
                     <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>

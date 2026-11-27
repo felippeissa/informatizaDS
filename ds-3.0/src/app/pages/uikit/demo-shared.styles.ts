@@ -41,7 +41,8 @@ export const DEMO_STYLES = `
     /* ── API ── */
     .api-block-title { font-size: 14px; font-weight: 700; color: var(--text-color); margin: 24px 0 8px; letter-spacing: -.01em; }
     .api-block-title:first-child { margin-top: 0; }
-    .badge-type    { display: inline-block; background: #DBEAFE; color: #1D4ED8; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: monospace; white-space: nowrap; }
+    .badge-type    { display: inline-block; background: color-mix(in srgb, var(--p-blue-500) 15%, transparent); color: var(--p-blue-700); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: monospace; white-space: nowrap; }
+    :host-context(.app-dark) .badge-type { color: var(--p-blue-300); }
     .badge-default { display: inline-block; background: var(--surface-ground); color: var(--text-color-secondary); border: 1px solid var(--surface-border); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; font-family: monospace; white-space: nowrap; }
 
     /* ── Theming ── */
@@ -59,7 +60,7 @@ export const DEMO_STYLES = `
     }
     :host ::ng-deep .p-datatable-sm .p-datatable-tbody > tr > td {
         padding: 9px 14px; border-bottom: 1px solid var(--surface-border); vertical-align: top;
-        background: var(--surface-0, #fff);
+        background: var(--surface-card);
     }
     :host ::ng-deep .p-datatable-sm .p-datatable-tbody > tr:nth-child(even) > td {
         background: var(--surface-ground);

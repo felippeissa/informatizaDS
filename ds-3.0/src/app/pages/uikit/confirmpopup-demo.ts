@@ -39,8 +39,8 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Confirmação inline ancorada ao elemento. Mais sutil que o ConfirmDialog — ideal para ações destrutivas em linha.</p>
                         </div>
                         <div class="demo-card-body" style="gap:12px">
-                            <p-button label="Confirmar inline" icon="pi pi-check"  severity="warn"  (click)="confirmarPopup($event)" />
-                            <p-button label="Excluir item"     icon="pi pi-trash"  severity="danger" outlined (click)="excluirPopup($event)" />
+                            <p-button label="Confirmar inline"  severity="warn"  (click)="confirmarPopup($event)" />
+                            <p-button label="Excluir item"  severity="danger" outlined (click)="excluirPopup($event)" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>
@@ -88,8 +88,9 @@ export class ConfirmPopupDemo {
             target: event.target as EventTarget,
             message: 'Deseja confirmar esta ação?',
             icon: 'pi pi-exclamation-circle',
-            acceptLabel: 'Sim',
-            rejectLabel: 'Não',
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            rejectButtonProps: { outlined: true },
             accept: () => {},
             reject: () => {}
         });
@@ -102,6 +103,7 @@ export class ConfirmPopupDemo {
             icon: 'pi pi-trash',
             acceptLabel: 'Excluir',
             rejectLabel: 'Cancelar',
+            rejectButtonProps: { outlined: true },
             accept: () => {},
             reject: () => {}
         });
@@ -117,8 +119,8 @@ this.cs.confirm({
     target: event.target as EventTarget,
     message: 'Confirmar?',
     icon: 'pi pi-exclamation-circle',
-    acceptLabel: 'Sim',
-    rejectLabel: 'Não',
+    acceptLabel: 'Confirmar',
+    rejectLabel: 'Cancelar',
     accept: () => { /* ação confirmada */ }
 });`;
 

@@ -41,11 +41,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body form-grid">
                             <div class="form-col">
                                 <label>Data simples</label>
-                                <p-datepicker [(ngModel)]="date1" [fluid]="true" dateFormat="dd/mm/yy" placeholder="dd/mm/aaaa" />
+                                <p-datepicker [(ngModel)]="date1" [fluid]="true" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA" />
                             </div>
                             <div class="form-col">
                                 <label>Range de datas</label>
-                                <p-datepicker [(ngModel)]="dateRange" selectionMode="range" [fluid]="true" dateFormat="dd/mm/yy" placeholder="Início – Fim" />
+                                <p-datepicker [(ngModel)]="dateRange" selectionMode="range" [fluid]="true" dateFormat="dd/mm/yy" placeholder="DD/MM/AAAA - DD/MM/AAAA" />
                             </div>
                             <div class="form-col">
                                 <label>Com hora</label>

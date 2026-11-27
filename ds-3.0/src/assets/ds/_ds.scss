@@ -408,6 +408,12 @@
     font-size: 0.8125rem;
     color: var(--p-yellow-900, #78350f);
 
+    .app-dark & {
+        background: color-mix(in srgb, var(--p-yellow-500) 12%, var(--surface-card));
+        border-color: color-mix(in srgb, var(--p-yellow-500) 45%, transparent);
+        color: var(--p-yellow-100);
+    }
+
     .pi { color: var(--p-yellow-600, #d97706); flex-shrink: 0; margin-top: 0.1rem; }
 }
 

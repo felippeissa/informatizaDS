@@ -6,7 +6,7 @@ Vitrine ao vivo: https://felippeissa.github.io/informatizaDS/3.0/ds · Tokens: [
 ## Stack
 - **Angular 21**, standalone components, signals, lazy loading, zoneless.
 - **PrimeNG 21** com preset **Aura** (`@primeuix/themes/aura`), cor primária **emerald**, superfície **slate** (claro) / **zinc** (escuro).
-- Ícones: **PrimeIcons** (`pi pi-*`).
+- Ícones: **somente PrimeIcons** (`pi pi-*`). Não use outras bibliotecas de ícones.
 - Fonte: **Inter** (`https://rsms.me/inter/inter.css`).
 - Modo escuro pela classe `.app-dark` no `<html>`.
 

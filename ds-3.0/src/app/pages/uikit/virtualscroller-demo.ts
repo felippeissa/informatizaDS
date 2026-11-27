@@ -10,7 +10,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
     standalone: true,
     imports: [CommonModule, ScrollerModule, TabsModule, TableModule],
     styles: [DEMO_STYLES + `
-        .list-item { padding: 12px 16px; border-bottom: 1px solid var(--surface-border); display:flex; align-items:center; gap:12px; background: var(--surface-0, #fff); }
+        .list-item { padding: 12px 16px; border-bottom: 1px solid var(--surface-border); display:flex; align-items:center; gap:12px; background: var(--surface-card); }
         .list-item:hover { background: var(--surface-hover); }
         .item-icon { width:36px; height:36px; border-radius:50%; background: color-mix(in srgb, var(--primary-color) 15%, transparent); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .item-content { flex:1; }

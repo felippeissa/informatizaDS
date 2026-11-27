@@ -36,11 +36,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Exiba iniciais com <code>label</code> ou um ícone com <code>icon</code>. Use <code>shape="circle"</code> para formato circular.</p>
                         </div>
                         <div class="demo-card-body" style="gap:16px;align-items:center;flex-wrap:wrap">
-                            <p-avatar label="FI" size="xlarge" [style]="{'background-color':'#059669','color':'#fff'}" />
-                            <p-avatar label="AB" size="large"  [style]="{'background-color':'#3B82F6','color':'#fff'}" />
-                            <p-avatar label="CD" [style]="{'background-color':'#D97706','color':'#fff'}" />
+                            <p-avatar label="FI" size="xlarge" [style]="{'background-color':'#047857','color':'#fff'}" />
+                            <p-avatar label="AB" size="large"  [style]="{'background-color':'#1D4ED8','color':'#fff'}" />
+                            <p-avatar label="CD" [style]="{'background-color':'#B45309','color':'#fff'}" />
                             <p-avatar icon="pi pi-user" size="xlarge" shape="circle" />
-                            <p-avatar icon="pi pi-user" size="large" shape="circle" [style]="{'background-color':'#059669','color':'#fff'}" />
+                            <p-avatar icon="pi pi-user" size="large" shape="circle" [style]="{'background-color':'#047857','color':'#fff'}" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code.basic }}</pre></div>
                     </div>
@@ -53,10 +53,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body" style="gap:16px;align-items:center">
                             <p-avatargroup>
-                                <p-avatar label="A" shape="circle" [style]="{'background-color':'#059669','color':'#fff'}" />
-                                <p-avatar label="B" shape="circle" [style]="{'background-color':'#3B82F6','color':'#fff'}" />
-                                <p-avatar label="C" shape="circle" [style]="{'background-color':'#D97706','color':'#fff'}" />
-                                <p-avatar label="+3" shape="circle" [style]="{'background-color':'#6B7280','color':'#fff'}" />
+                                <p-avatar label="A" shape="circle" [style]="{'background-color':'#047857','color':'#fff'}" />
+                                <p-avatar label="B" shape="circle" [style]="{'background-color':'#1D4ED8','color':'#fff'}" />
+                                <p-avatar label="C" shape="circle" [style]="{'background-color':'#B45309','color':'#fff'}" />
+                                <p-avatar label="+3" shape="circle" [style]="{'background-color':'#4B5563','color':'#fff'}" />
                             </p-avatargroup>
                         </div>
                         <div class="demo-card-code"><pre>{{ code.group }}</pre></div>
@@ -102,7 +102,7 @@ export class AvatarDemo {
     code: any = {
         basic: `<!-- Iniciais -->
 <p-avatar label="FI" size="xlarge"
-    [style]="{'background-color':'#059669','color':'#fff'}" />
+    [style]="{'background-color':'#047857','color':'#fff'}" />
 
 <!-- Ícone com círculo -->
 <p-avatar icon="pi pi-user" shape="circle" />
@@ -111,11 +111,11 @@ export class AvatarDemo {
 
         group: `<p-avatargroup>
     <p-avatar label="A" shape="circle"
-        [style]="{'background-color':'#059669','color':'#fff'}" />
+        [style]="{'background-color':'#047857','color':'#fff'}" />
     <p-avatar label="B" shape="circle"
-        [style]="{'background-color':'#3B82F6','color':'#fff'}" />
+        [style]="{'background-color':'#1D4ED8','color':'#fff'}" />
     <p-avatar label="+3" shape="circle"
-        [style]="{'background-color':'#6B7280','color':'#fff'}" />
+        [style]="{'background-color':'#4B5563','color':'#fff'}" />
 </p-avatargroup>`,
     };
 

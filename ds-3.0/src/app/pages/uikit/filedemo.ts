@@ -161,17 +161,17 @@ export class FileDemo {
     onSelectBasic(event: any) {
         if (event.files?.length) {
             this.uploadedBasic = event.files[0].name;
-            this.messageService.add({ severity: 'info', summary: 'Arquivo selecionado', detail: event.files[0].name, life: 3000 });
+            this.messageService.add({ severity: 'info', summary: 'Informação', detail: 'Arquivo selecionado: ' + event.files[0].name, life: 3000 });
         }
     }
 
     onSelectAdvanced(event: any) {
-        this.messageService.add({ severity: 'success', summary: `${event.files.length} arquivo(s) selecionado(s)`, life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Informação', detail: `${event.files.length} arquivo(s) selecionado(s).`, life: 3000 });
     }
 
     onSelectAuto(event: any) {
         if (event.files?.length) {
-            this.messageService.add({ severity: 'success', summary: 'Enviado automaticamente', detail: event.files[0].name, life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Arquivo enviado com sucesso: ' + event.files[0].name, life: 3000 });
         }
     }
 

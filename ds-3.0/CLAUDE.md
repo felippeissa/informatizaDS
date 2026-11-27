@@ -9,6 +9,8 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 
 ## Stack
 - **Angular 21** + **PrimeNG 21** (decidido em 26/11/2026; o guia GESIS ainda cita Angular 19) — preset **Aura**, cor primária **emerald**, standalone components, lazy loading, signals.
+- **Ícones: somente PrimeIcons** (`pi pi-*`) — decidido em 26/11/2026; não adotar outra biblioteca.
+- **DS 3.1 (`../ds-3.1`) não deve ser alterado** por enquanto.
 - **Breakpoints e espaçamentos seguem o guia GESIS**: 390 / 640 / 768 / 1024 / 1280 / 1920; 16px entre botões, campos, colunas e blocos.
 - Fonte **Inter var** (carregada de `rsms.me` no `src/index.html`).
 - Tudo é **mockado** — sem backend, banco de dados ou IA reais.
@@ -26,8 +28,6 @@ Projeto Angular (pasta `ds-3.0/` do repo; o DS 3.1 em HTML/CSS fica em `../ds-3.
 
 Rotas raiz em `src/app.routes.ts` (`/ds` embrulhada por `AppLayout`; `/auth` e `/notfound` sem layout). Os sistemas GO.DEV, Manual Inteligente, Drácon, ASSINAGO e PROTEGE foram removidos.
 
-Andamento dos padrões da GESIS: [`CHECKLIST_GESIS.md`](CHECKLIST_GESIS.md) — **atualize os checks ao concluir itens**.
-
 Guia para outras IAs: [`AGENTS.md`](AGENTS.md) + [`tokens.json`](tokens.json) — mantenha em sincronia com este arquivo. Estilos `.ds-*` ficam em `src/assets/ds/_ds.scss`. Padrões de UX da GESIS em `src/app/ds/padroes/` (rota `/ds/padroes`, estilos `.ux-*` em `src/assets/ds/_padroes.scss`). Foundations (cores, tipografia, espaçamento, bordas, ícones, grid) em `src/app/ds/foundations/` (rota `/ds/foundations`), estilos `.fnd-*` em `src/assets/ds/_foundations.scss`. A raiz é 14px (1rem = 14px).
 
 ## Regras de design (OBRIGATÓRIAS)
@@ -42,10 +42,11 @@ Guia para outras IAs: [`AGENTS.md`](AGENTS.md) + [`tokens.json`](tokens.json) �
 - **Budget de CSS por componente** no `angular.json`: erro em **32 kB**. O build de produção (CI) falha se um `.scss` estourar, mesmo que o `ng serve` passe.
 - `p-select`/`p-autoComplete` dentro de `p-dialog` precisam de **`appendTo="body"`** (senão o overlay fica atrás do modal).
 - PrimeNG 21: usar nomes novos — `p-select` (não dropdown), `p-datepicker` (não calendar), `p-drawer` (não sidebar), `p-toggleswitch`, `p-popover`, `p-tabs/p-tablist/p-tab/p-tabpanel`. `p-autoComplete` usa `optionLabel` (não `field`).
+- Itens do menu ficam em `app/layout/component/ds-menu.ts` (`DS_MENU`) — fonte única: os números da home são contados dali (`contarItens`). Para adicionar uma página, basta incluí-la no menu.
 - Menu lateral: hambúrguer (desktop) alterna aberto ⇄ só ícones (`LayoutService.menuRecolhido`); busca do menu em `app/layout/component/menu-busca.ts`. Toda seção do menu precisa de `icon`.
 - Topbar: o Sakai esconde `<span>` dentro de `.layout-topbar-action` — use `<b>`/`<strong>` para textos e selos nesses botões.
 - Git no Windows converte LF→CRLF (warning inofensivo).
-- Mensagem de commit termina com: `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+- Mensagem de commit termina com: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
 ## Trabalho eficiente (menos tokens)
 - **Edite cirúrgico**, não reescreva arquivos inteiros.

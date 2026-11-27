@@ -13,7 +13,9 @@ export const appRoutes: Routes = [
             { path: 'padroes', loadChildren: () => import('./app/ds/padroes/padroes.routes').then(m => m.padroesRoutes) },
             { path: 'foundations', loadChildren: () => import('./app/ds/foundations/foundations.routes').then(m => m.foundationsRoutes) },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
-            { path: 'templates', loadChildren: () => import('./app/ds/templates/templates.routes').then(m => m.templatesRoutes) }
+            { path: 'templates', loadChildren: () => import('./app/ds/templates/templates.routes').then(m => m.templatesRoutes) },
+            // TEMPORÁRIO: revisão das páginas sem uso (remover depois da decisão)
+            { path: 'revisao', loadChildren: () => import('./app/pages/revisao.routes').then(m => m.revisaoRoutes) }
         ]
     },
     // Exemplo de sistema com MegaMenu (padrão GESIS para 3+ níveis) — tem header e navegação próprios

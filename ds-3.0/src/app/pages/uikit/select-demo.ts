@@ -41,15 +41,15 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body form-grid">
                             <div class="form-col">
                                 <label>Básico</label>
-                                <p-select [(ngModel)]="selVal" [options]="cities" optionLabel="name" placeholder="Selecione a cidade" [fluid]="true" />
+                                <p-select [(ngModel)]="selVal" [options]="cities" optionLabel="name" placeholder="Selecione" [fluid]="true" />
                             </div>
                             <div class="form-col">
                                 <label>Com filtro</label>
-                                <p-select [(ngModel)]="selVal2" [options]="cities" optionLabel="name" [filter]="true" placeholder="Busque a cidade" [fluid]="true" />
+                                <p-select [(ngModel)]="selVal2" [options]="cities" optionLabel="name" [filter]="true" placeholder="Digite e selecione" [fluid]="true" />
                             </div>
                             <div class="form-col">
                                 <label>Desabilitado</label>
-                                <p-select [options]="cities" optionLabel="name" placeholder="—" [disabled]="true" [fluid]="true" />
+                                <p-select [options]="cities" optionLabel="name" placeholder="Selecione" [disabled]="true" [fluid]="true" />
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -106,7 +106,7 @@ export class SelectDemo {
     code = `<p-select [(ngModel)]="cidade"
     [options]="cidades"
     optionLabel="name"
-    placeholder="Selecione a cidade"
+    placeholder="Selecione"
     [fluid]="true" />
 
 <!-- Com filtro -->

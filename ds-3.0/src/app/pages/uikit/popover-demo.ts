@@ -35,7 +35,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Sobreposição com conteúdo rico ativada por clique. Use <code>#op</code> e <code>op.toggle($event)</code> para controlar a visibilidade.</p>
                         </div>
                         <div class="demo-card-body">
-                            <p-button label="Abrir Popover" icon="pi pi-info-circle" (click)="pop.toggle($event)" severity="secondary" />
+                            <p-button label="Ver detalhes" (click)="pop.toggle($event)" [outlined]="true" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>

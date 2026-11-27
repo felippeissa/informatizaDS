@@ -41,7 +41,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 </p>
                                 <ng-template pTemplate="footer">
                                     <p-button label="Ação" size="small" />
-                                    <p-button label="Cancelar" size="small" severity="secondary" text />
+                                    <p-button label="Cancelar" size="small" [outlined]="true" />
                                 </ng-template>
                             </p-card>
                             <p-card header="Card Simples" [style]="{width:'280px'}">

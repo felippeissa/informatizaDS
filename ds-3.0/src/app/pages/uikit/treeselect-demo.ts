@@ -55,12 +55,12 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <div class="form-col">
                                 <label>Múltiplas categorias</label>
                                 <p-treeselect [(ngModel)]="selected2" [options]="nodes" selectionMode="multiple"
-                                    placeholder="Selecione múltiplos" style="min-width:240px" />
+                                    placeholder="Selecione" style="min-width:240px" />
                             </div>
                             <div class="form-col">
                                 <label>Checkbox</label>
                                 <p-treeselect [(ngModel)]="selected3" [options]="nodes" selectionMode="checkbox"
-                                    placeholder="Checkbox" style="min-width:240px" />
+                                    placeholder="Selecione" style="min-width:240px" />
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <div class="form-col">
                                 <label>Filtro na árvore</label>
                                 <p-treeselect [(ngModel)]="selected4" [options]="nodes" [filter]="true"
-                                    placeholder="Pesquisar..." style="min-width:240px" />
+                                    placeholder="Digite" style="min-width:240px" />
                             </div>
                         </div>
                     </div>

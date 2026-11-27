@@ -75,7 +75,7 @@ export class ProductDialogContent {
                             <p class="demo-card-desc">O <code>DialogService.open()</code> recebe o componente e configurações, retornando uma <code>DynamicDialogRef</code>.</p>
                         </div>
                         <div class="demo-card-body" style="flex-direction:column;align-items:flex-start;padding:20px;gap:16px">
-                            <p-button label="Abrir Dialog com Produtos" icon="pi pi-shopping-cart" (click)="openDialog()" />
+                            <p-button label="Abrir Dialog com Produtos" (click)="openDialog()" />
                             <p-button label="Dialog sem header" severity="secondary" (click)="openMinimal()" />
                             <div class="result-box" *ngIf="result">
                                 Resultado: <strong>{{ result }}</strong>

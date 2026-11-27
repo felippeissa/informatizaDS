@@ -46,7 +46,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <label>Com ícone à esquerda</label>
                                 <p-inputgroup>
                                     <p-inputgroup-addon><i class="pi pi-user"></i></p-inputgroup-addon>
-                                    <input pInputText placeholder="Usuário" [(ngModel)]="igUser" />
+                                    <input pInputText placeholder="Digite" [(ngModel)]="igUser" />
                                 </p-inputgroup>
                             </div>
                             <div class="form-col">
@@ -60,7 +60,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <div class="form-col">
                                 <label>Com botão</label>
                                 <p-inputgroup>
-                                    <input pInputText placeholder="Buscar protocolo..." [(ngModel)]="igSearch" />
+                                    <input pInputText placeholder="Digite" [(ngModel)]="igSearch" />
                                     <p-button icon="pi pi-search" />
                                 </p-inputgroup>
                             </div>
@@ -68,7 +68,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <label>URL</label>
                                 <p-inputgroup>
                                     <p-inputgroup-addon>https://</p-inputgroup-addon>
-                                    <input pInputText placeholder="site.goias.gov.br" [(ngModel)]="igUrl" />
+                                    <input pInputText placeholder="www.site.com.br" [(ngModel)]="igUrl" />
                                 </p-inputgroup>
                             </div>
                         </div>
@@ -120,7 +120,7 @@ export class InputGroupDemo {
     <p-inputgroup-addon>
         <i class="pi pi-user"></i>
     </p-inputgroup-addon>
-    <input pInputText placeholder="Usuário" />
+    <input pInputText placeholder="Digite" />
 </p-inputgroup>
 
 <!-- Prefixo texto -->
@@ -131,7 +131,7 @@ export class InputGroupDemo {
 
 <!-- Com botão -->
 <p-inputgroup>
-    <input pInputText placeholder="Buscar..." />
+    <input pInputText placeholder="Digite" />
     <p-button icon="pi pi-search" />
 </p-inputgroup>`;
 

@@ -37,8 +37,8 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body col" style="padding:16px;gap:0">
                             <p-toolbar styleClass="w-full">
                                 <ng-template pTemplate="start">
-                                    <p-button label="Novo"   icon="pi pi-plus"    size="small" />
-                                    <p-button label="Editar" icon="pi pi-pencil"  severity="secondary" size="small" />
+                                    <p-button label="Novo" icon="pi pi-plus" [text]="true" size="small" />
+                                    <p-button label="Editar" icon="pi pi-pencil" [text]="true" size="small" />
                                     <p-button icon="pi pi-trash" severity="danger" size="small" outlined />
                                 </ng-template>
                                 <ng-template pTemplate="end">
@@ -88,7 +88,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 export class ToolbarDemo {
     code = `<p-toolbar>
     <ng-template pTemplate="start">
-        <p-button label="Novo" icon="pi pi-plus" />
+        <p-button label="Novo" icon="pi pi-plus" [text]="true" />
         <p-button label="Editar" severity="secondary" />
     </ng-template>
     <ng-template pTemplate="end">

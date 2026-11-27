@@ -70,7 +70,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                     <p-progressspinner />
                                 </div>
                             </p-blockui>
-                            <p-button label="Bloquear Página por 2s" icon="pi pi-spinner" (click)="blockDoc()" />
+                            <p-button label="Bloquear Página por 2s" (click)="blockDoc()" />
                         </div>
                     </div>
 

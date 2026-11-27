@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { contarItens } from '@/app/layout/component/ds-menu';
 
 const FIGMA = 'https://www.figma.com/design/oBPMZCbXjlFLs1qZ11ofD8/Informatiza-3.0?node-id=8594-22240';
 const GITHUB = 'https://github.com/felippeissa/informatizaDS';
@@ -187,11 +188,12 @@ export class DsHome {
 
     ciclo = signal(0);
 
+    // Calculados a partir do menu (ds-menu.ts): nunca ficam desatualizados
     numeros = [
-        { valor: '89', label: 'componentes', rota: '/ds/uikit/button' },
-        { valor: '7', label: 'padrões de UX', rota: '/ds/padroes' },
-        { valor: '6', label: 'foundations', rota: '/ds/foundations' },
-        { valor: '5', label: 'templates de tela', rota: '/ds/templates' },
+        { valor: String(contarItens('Átomos', 'Moléculas', 'Organismos')), label: 'componentes', rota: '/ds/uikit/button' },
+        { valor: String(contarItens('Padrões de UX')), label: 'padrões de UX', rota: '/ds/padroes' },
+        { valor: String(contarItens('Foundations')), label: 'foundations', rota: '/ds/foundations' },
+        { valor: String(contarItens('Templates')), label: 'templates de tela', rota: '/ds/templates' },
     ];
 
     atalhos: Atalho[] = [
@@ -203,7 +205,7 @@ export class DsHome {
 
     secoes: Secao[] = [
         {
-            titulo: 'Padrões de UX', icon: 'pi pi-book', rota: '/ds/padroes', total: '7 guias',
+            titulo: 'Padrões de UX', icon: 'pi pi-book', rota: '/ds/padroes', total: `${contarItens('Padrões de UX')} guias`,
             desc: 'Como as telas devem se comportar: navegação, feedback, inputs, botões, filtros, tabelas e formulários (time de UX da GESIS).',
             links: [
                 { label: 'Layout e navegação', rota: '/ds/padroes/layout' }, { label: 'Feedback', rota: '/ds/padroes/feedback' },
@@ -213,7 +215,7 @@ export class DsHome {
             ]
         },
         {
-            titulo: 'Foundations', icon: 'pi pi-palette', rota: '/ds/foundations', total: '6 fundamentos',
+            titulo: 'Foundations', icon: 'pi pi-palette', rota: '/ds/foundations', total: `${contarItens('Foundations')} fundamentos`,
             desc: 'A base visual de tudo: paleta de cores, tipografia, espaçamento, bordas e elevação, ícones e grid.',
             links: [
                 { label: 'Cores', rota: '/ds/foundations/cores' }, { label: 'Tipografia', rota: '/ds/foundations/tipografia' },
@@ -222,7 +224,7 @@ export class DsHome {
             ]
         },
         {
-            titulo: 'Componentes', icon: 'pi pi-th-large', rota: '/ds/uikit/button', total: '89 componentes',
+            titulo: 'Componentes', icon: 'pi pi-th-large', rota: '/ds/uikit/button', total: `${contarItens('Átomos', 'Moléculas', 'Organismos')} componentes`,
             desc: 'Átomos, moléculas e organismos do PrimeNG 21 com o tema do Informatiza, exemplos ao vivo e código.',
             links: [
                 { label: 'Button', rota: '/ds/uikit/button' }, { label: 'InputText', rota: '/ds/uikit/inputtext' },
@@ -232,7 +234,7 @@ export class DsHome {
             ]
         },
         {
-            titulo: 'Templates de tela', icon: 'pi pi-objects-column', rota: '/ds/templates', total: '5 modelos',
+            titulo: 'Templates de tela', icon: 'pi pi-objects-column', rota: '/ds/templates', total: `${contarItens('Templates')} modelos`,
             desc: 'Pontos de partida prontos para as telas mais comuns dos sistemas. Copie e adapte.',
             links: [
                 { label: 'Lista com filtros', rota: '/ds/templates/lista' }, { label: 'Cadastro', rota: '/ds/templates/formulario' },
@@ -251,10 +253,10 @@ export class DsHome {
     ];
 
     novidades = [
-        { data: 'Nov 2026', titulo: 'Padrões de UX', texto: 'Regras do time de UX da GESIS documentadas com exemplos ao vivo.', rota: '/ds/padroes' },
-        { data: 'Nov 2026', titulo: 'Foundations', texto: 'Cores, tipografia, espaçamento, bordas, ícones e grid.', rota: '/ds/foundations' },
-        { data: 'Nov 2026', titulo: 'Interface em português', texto: 'Calendário, mensagens e filtros dos componentes traduzidos.', rota: '/ds/uikit/datepicker' },
-        { data: 'Nov 2026', titulo: 'Guias para IA', texto: 'AGENTS.md, tokens W3C e llms.txt publicados.', rota: '/ds/foundations/cores' },
+        { data: '26/11/2026', titulo: 'Padrões de UX', texto: 'Regras do time de UX da GESIS documentadas com exemplos ao vivo.', rota: '/ds/padroes' },
+        { data: '26/11/2026', titulo: 'Foundations', texto: 'Cores, tipografia, espaçamento, bordas, ícones e grid.', rota: '/ds/foundations' },
+        { data: '26/11/2026', titulo: 'Interface em português', texto: 'Calendário, mensagens e filtros dos componentes traduzidos.', rota: '/ds/uikit/datepicker' },
+        { data: '26/11/2026', titulo: 'Guias para IA', texto: 'AGENTS.md, tokens W3C e llms.txt publicados.', rota: '/ds/foundations/cores' },
     ];
 
     ir(rota: string) { this.router.navigateByUrl(rota); }

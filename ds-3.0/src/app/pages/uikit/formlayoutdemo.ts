@@ -57,23 +57,23 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <div style="display:flex;flex-direction:column;gap:14px">
                                     <div class="form-field">
                                         <label for="v-nome">Nome completo</label>
-                                        <input pInputText id="v-nome" type="text" placeholder="Ex.: João Silva" />
+                                        <input pInputText id="v-nome" type="text" placeholder="Digite" />
                                     </div>
                                     <div class="form-field">
                                         <label for="v-email">E-mail institucional</label>
-                                        <input pInputText id="v-email" type="email" placeholder="usuario@goias.gov.br" />
+                                        <input pInputText id="v-email" type="email" placeholder="email@goias.gov.br" />
                                         <small>Use o e-mail cadastrado no sistema.</small>
                                     </div>
                                     <div class="form-field">
                                         <label for="v-cargo">Cargo</label>
                                         <p-select id="v-cargo" [(ngModel)]="selectedCargo" [options]="cargos"
-                                                  optionLabel="label" placeholder="Selecione o cargo" styleClass="w-full" />
+                                                  optionLabel="label" placeholder="Selecione" styleClass="w-full" />
                                     </div>
                                     <div class="form-field">
                                         <label for="v-obs">Observações</label>
-                                        <textarea pTextarea id="v-obs" rows="3" placeholder="Informações adicionais..."></textarea>
+                                        <textarea pTextarea id="v-obs" rows="3" placeholder="Digite"></textarea>
                                     </div>
-                                    <p-button label="Salvar" icon="pi pi-check" />
+                                    <div style="display:flex;justify-content:flex-end"><p-button label="Salvar" /></div>
                                 </div>
                             </div>
                         </div>
@@ -92,21 +92,21 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <div style="display:flex;flex-direction:column;gap:12px">
                                     <div class="form-row">
                                         <label for="h-nome">Nome</label>
-                                        <input pInputText id="h-nome" type="text" placeholder="Pesquisar..." style="flex:1" />
+                                        <input pInputText id="h-nome" type="text" placeholder="Digite" style="flex:1" />
                                     </div>
                                     <div class="form-row">
                                         <label for="h-sistema">Sistema</label>
                                         <p-select id="h-sistema" [(ngModel)]="selectedSistema" [options]="sistemas"
-                                                  optionLabel="label" placeholder="Todos os sistemas" style="flex:1" />
+                                                  optionLabel="label" placeholder="Selecione" style="flex:1" />
                                     </div>
                                     <div class="form-row">
                                         <label for="h-status">Status</label>
                                         <p-select id="h-status" [(ngModel)]="selectedStatus" [options]="statusOptions"
-                                                  optionLabel="label" placeholder="Todos" style="flex:1" />
+                                                  optionLabel="label" placeholder="Selecione" style="flex:1" />
                                     </div>
-                                    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
-                                        <p-button label="Limpar" severity="secondary" outlined />
-                                        <p-button label="Filtrar" icon="pi pi-search" />
+                                    <div style="display:flex;justify-content:flex-end;gap:16px;margin-top:8px">
+                                        <p-button label="Limpar" [outlined]="true" />
+                                        <p-button label="Filtrar" />
                                     </div>
                                 </div>
                             </div>
@@ -126,11 +126,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 <div class="form-grid cols-2" style="margin-bottom:14px">
                                     <div class="form-field">
                                         <label for="g-nome">Nome</label>
-                                        <input pInputText id="g-nome" type="text" placeholder="Nome" />
+                                        <input pInputText id="g-nome" type="text" placeholder="Digite" />
                                     </div>
                                     <div class="form-field">
                                         <label for="g-sobrenome">Sobrenome</label>
-                                        <input pInputText id="g-sobrenome" type="text" placeholder="Sobrenome" />
+                                        <input pInputText id="g-sobrenome" type="text" placeholder="Digite" />
                                     </div>
                                 </div>
                                 <div class="form-grid cols-3" style="margin-bottom:14px">
@@ -140,7 +140,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                     </div>
                                     <div class="form-field">
                                         <label for="g-tel">Telefone</label>
-                                        <input pInputText id="g-tel" type="text" placeholder="(62) 9 0000-0000" />
+                                        <input pInputText id="g-tel" type="text" placeholder="(00) 00000-0000" />
                                     </div>
                                     <div class="form-field">
                                         <label for="g-setor">Setor</label>
@@ -150,15 +150,15 @@ import { DEMO_STYLES } from './demo-shared.styles';
                                 </div>
                                 <div class="form-field" style="margin-bottom:14px">
                                     <label for="g-email">E-mail</label>
-                                    <input pInputText id="g-email" type="email" placeholder="usuario@goias.gov.br" />
+                                    <input pInputText id="g-email" type="email" placeholder="email@goias.gov.br" />
                                 </div>
                                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
                                     <p-checkbox [(ngModel)]="aceitaTermos" [binary]="true" inputId="g-termos" />
                                     <label for="g-termos" style="font-size:13px;cursor:pointer">Declaro que as informações são verdadeiras</label>
                                 </div>
-                                <div style="display:flex;gap:8px">
-                                    <p-button label="Cancelar" severity="secondary" outlined />
-                                    <p-button label="Cadastrar" icon="pi pi-user-plus" [disabled]="!aceitaTermos" />
+                                <div style="display:flex;justify-content:flex-end;gap:16px">
+                                    <p-button label="Cancelar" [outlined]="true" />
+                                    <p-button label="Cadastrar" [disabled]="!aceitaTermos" />
                                 </div>
                             </div>
                         </div>

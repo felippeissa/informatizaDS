@@ -22,7 +22,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
             </div>
         </div>
 
-        <p-confirmdialog />
+        <p-confirmdialog styleClass="ds-dialog-basico" />
 
         <p-tabs value="features" styleClass="mt-1">
             <p-tablist>
@@ -39,8 +39,8 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Diálogo de confirmação padrão via <code>ConfirmationService</code>. Requer o componente <code>&lt;p-confirmdialog&gt;</code> no template.</p>
                         </div>
                         <div class="demo-card-body" style="gap:12px">
-                            <p-button label="Confirmar ação"  icon="pi pi-exclamation-triangle" severity="warn"   (click)="confirmar()" />
-                            <p-button label="Excluir"         icon="pi pi-trash"                severity="danger"  (click)="confirmarExclusao()" />
+                            <p-button label="Confirmar ação" severity="warn"   (click)="confirmar()" />
+                            <p-button label="Excluir"                severity="danger"  (click)="confirmarExclusao()" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>
@@ -85,9 +85,11 @@ export class ConfirmDialogDemo {
 
     confirmar() {
         this.confirmationService.confirm({
-            message: 'Deseja mesmo executar esta ação?',
-            header: 'Confirmação',
+            message: 'Deseja salvar as alterações neste registro?',
+            header: 'Confirmar edição',
             icon: 'pi pi-info-circle',
+            acceptLabel: 'Salvar', rejectLabel: 'Cancelar',
+            rejectButtonProps: { outlined: true },
             accept: () => {},
             reject: () => {}
         });
@@ -95,26 +97,29 @@ export class ConfirmDialogDemo {
 
     confirmarExclusao() {
         this.confirmationService.confirm({
-            message: 'Este registro será excluído permanentemente. Continuar?',
-            header: 'Excluir Registro',
+            message: 'Este registro será excluído permanentemente. Esta ação não pode ser desfeita.',
+            header: 'Excluir registro',
             icon: 'pi pi-exclamation-triangle',
-            acceptButtonProps: { label: 'Excluir', severity: 'danger' },
+            acceptLabel: 'Excluir', rejectLabel: 'Cancelar',
+            acceptButtonProps: { severity: 'danger' }, rejectButtonProps: { outlined: true },
             accept: () => {},
             reject: () => {}
         });
     }
 
     code = `<!-- No template: -->
-<p-confirmdialog />
+<p-confirmdialog styleClass="ds-dialog-basico" />
 
 <!-- No componente: -->
 constructor(private cs: ConfirmationService) {}
 
 this.cs.confirm({
-    message: 'Deseja continuar?',
-    header: 'Confirmação',
+    header: 'Excluir registro',
+    message: 'Este registro será excluído permanentemente. Esta ação não pode ser desfeita.',
     icon: 'pi pi-exclamation-triangle',
-    accept: () => { /* ação confirmada */ },
+    acceptLabel: 'Excluir', rejectLabel: 'Cancelar',
+    acceptButtonProps: { severity: 'danger' }, rejectButtonProps: { outlined: true },
+    accept: () => { /* excluir e mostrar toast "Registro excluído com sucesso." */ },
     reject: () => { /* ação cancelada */ }
 });`;
 

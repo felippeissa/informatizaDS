@@ -40,7 +40,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p-menu [model]="menuItems" [style]="{'max-width':'220px'}" />
                             <div>
                                 <p style="font-size:13px;margin:0 0 8px;color:var(--text-color-secondary);font-weight:600">Popup (clique):</p>
-                                <p-button label="Abrir Menu" icon="pi pi-bars" (click)="popupMenu.toggle($event)" severity="secondary" />
+                                <p-button label="Abrir menu" icon="pi pi-angle-down" iconPos="right" (click)="popupMenu.toggle($event)" [outlined]="true" />
                                 <p-menu #popupMenu [model]="menuItems" [popup]="true" />
                             </div>
                         </div>

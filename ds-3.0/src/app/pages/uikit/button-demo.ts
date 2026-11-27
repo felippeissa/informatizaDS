@@ -37,7 +37,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
                             <p-button label="Salvar" />
-                            <p-button label="Salvar" icon="pi pi-check" />
+                            <p-button label="Adicionar" icon="pi pi-plus" [text]="true" />
                             <p-button icon="pi pi-check" />
                             <p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" />
                         </div>
@@ -161,9 +161,9 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body col" style="gap:16px">
                             <p-buttongroup>
-                                <p-button label="Salvar"    icon="pi pi-save" />
-                                <p-button label="Editar"    icon="pi pi-pencil" severity="secondary" />
-                                <p-button label="Excluir"   icon="pi pi-trash"  severity="danger" />
+                                <p-button label="Salvar" />
+                                <p-button label="Editar" severity="secondary" />
+                                <p-button label="Excluir" severity="danger" />
                             </p-buttongroup>
                             <p-buttongroup>
                                 <p-button icon="pi pi-align-left"   severity="secondary" outlined />
@@ -241,7 +241,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
 export class ButtonDemo {
 
     codeBasic = `<p-button label="Salvar" />
-<p-button label="Salvar" icon="pi pi-check" />
+<p-button label="Adicionar" icon="pi pi-plus" [text]="true" />
 <p-button icon="pi pi-check" />
 <p-button label="Próximo" icon="pi pi-arrow-right" iconPos="right" />`;
 
@@ -282,9 +282,9 @@ export class ButtonDemo {
 <p-button label="Enviando..."  [loading]="true" severity="success" />`;
 
     codeGroup = `<p-buttongroup>
-    <p-button label="Salvar"  icon="pi pi-save" />
-    <p-button label="Editar"  icon="pi pi-pencil" severity="secondary" />
-    <p-button label="Excluir" icon="pi pi-trash"  severity="danger" />
+    <p-button label="Salvar" />
+    <p-button label="Editar" severity="secondary" />
+    <p-button label="Excluir" severity="danger" />
 </p-buttongroup>`;
 
     codeLink = `<p-button label="Acessar site" link />

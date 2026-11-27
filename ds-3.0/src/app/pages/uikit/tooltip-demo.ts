@@ -38,7 +38,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p-button label="Topo"     pTooltip="Tooltip acima"     tooltipPosition="top" />
                             <p-button label="Direita"  severity="secondary" pTooltip="Tooltip à direita"  tooltipPosition="right" />
                             <p-button label="Inferior" severity="secondary" pTooltip="Tooltip abaixo"     tooltipPosition="bottom" />
-                            <p-button label="Esquerda" severity="secondary" outlined pTooltip="Tooltip à esquerda" tooltipPosition="left" />
+                            <p-button label="Esquerda" [outlined]="true" pTooltip="Tooltip à esquerda" tooltipPosition="left" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>

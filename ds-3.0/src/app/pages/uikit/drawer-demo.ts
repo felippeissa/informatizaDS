@@ -37,8 +37,8 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body" style="gap:12px">
                             <p-button label="Esquerda" (click)="openDrawer('left')" />
                             <p-button label="Direita"  (click)="openDrawer('right')" severity="secondary" />
-                            <p-button label="Topo"     (click)="openDrawer('top')" severity="secondary" outlined />
-                            <p-button label="Inferior" (click)="openDrawer('bottom')" severity="secondary" outlined />
+                            <p-button label="Topo"     (click)="openDrawer('top')" [outlined]="true" />
+                            <p-button label="Inferior" (click)="openDrawer('bottom')" [outlined]="true" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>

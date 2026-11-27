@@ -48,7 +48,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body" style="gap:12px">
                             <p-button label="Básico" (click)="dlgBasic=true" />
                             <p-button label="Com rodapé" (click)="dlgFooter=true" severity="secondary" />
-                            <p-button label="Maximizável" (click)="dlgMax=true" severity="secondary" outlined />
+                            <p-button label="Maximizável" (click)="dlgMax=true" [outlined]="true" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code.dialog }}</pre></div>
                     </div>
@@ -78,8 +78,8 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body" style="gap:12px">
                             <p-button label="Esquerda" (click)="openDrawer('left')" />
                             <p-button label="Direita"  (click)="openDrawer('right')" severity="secondary" />
-                            <p-button label="Topo"     (click)="openDrawer('top')" severity="secondary" outlined />
-                            <p-button label="Inferior" (click)="openDrawer('bottom')" severity="secondary" outlined />
+                            <p-button label="Topo"     (click)="openDrawer('top')" [outlined]="true" />
+                            <p-button label="Inferior" (click)="openDrawer('bottom')" [outlined]="true" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code.drawer }}</pre></div>
                     </div>
@@ -98,7 +98,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p-button label="Topo" pTooltip="Tooltip acima" tooltipPosition="top" />
                             <p-button label="Direita" severity="secondary" pTooltip="Tooltip à direita" tooltipPosition="right" />
                             <p-button label="Inferior" severity="secondary" pTooltip="Tooltip abaixo" tooltipPosition="bottom" />
-                            <p-button label="Esquerda" severity="secondary" outlined pTooltip="Tooltip à esquerda" tooltipPosition="left" />
+                            <p-button label="Esquerda" [outlined]="true" pTooltip="Tooltip à esquerda" tooltipPosition="left" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code.tooltip }}</pre></div>
                     </div>

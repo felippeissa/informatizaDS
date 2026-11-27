@@ -41,11 +41,11 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body form-grid">
                             <div class="form-col">
                                 <label>Básico</label>
-                                <textarea pTextarea rows="3" placeholder="Escreva aqui..." [(ngModel)]="area" style="width:100%"></textarea>
+                                <textarea pTextarea rows="3" placeholder="Digite" [(ngModel)]="area" style="width:100%"></textarea>
                             </div>
                             <div class="form-col">
                                 <label>Auto-resize</label>
-                                <textarea pTextarea [autoResize]="true" rows="2" placeholder="Cresce conforme o conteúdo..." style="width:100%"></textarea>
+                                <textarea pTextarea [autoResize]="true" rows="2" placeholder="Digite" style="width:100%"></textarea>
                             </div>
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
@@ -91,13 +91,13 @@ export class TextareaDemo {
     area = '';
 
     code = `<textarea pTextarea rows="4" [(ngModel)]="texto"
-    placeholder="Escreva aqui..."
+    placeholder="Digite"
     style="width:100%">
 </textarea>
 
 <!-- Auto-resize -->
 <textarea pTextarea [autoResize]="true" rows="2"
-    placeholder="Cresce conforme o conteúdo...">
+    placeholder="Digite">
 </textarea>`;
 
     props = [

@@ -41,7 +41,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <div class="form-col">
                                 <label>Cidades</label>
                                 <p-cascadeselect [(ngModel)]="selected" [options]="countries" optionLabel="cname" optionGroupLabel="name"
-                                    [optionGroupChildren]="['states','cities']" placeholder="Selecione uma cidade" style="min-width:220px" />
+                                    [optionGroupChildren]="['states','cities']" placeholder="Selecione" style="min-width:220px" />
                                 <small *ngIf="selected" style="color:var(--text-color-secondary)">Selecionado: {{ selected.cname }}</small>
                             </div>
                         </div>
@@ -54,7 +54,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         </div>
                         <div class="demo-card-body">
                             <p-cascadeselect [options]="countries" optionLabel="cname" optionGroupLabel="name"
-                                [optionGroupChildren]="['states','cities']" placeholder="Desabilitado" [disabled]="true" style="min-width:220px" />
+                                [optionGroupChildren]="['states','cities']" placeholder="Selecione" [disabled]="true" style="min-width:220px" />
                         </div>
                     </div>
 

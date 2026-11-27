@@ -41,32 +41,32 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body demo-grid">
                             <div class="form-col">
                                 <label>Apenas inteiros (int)</label>
-                                <input pInputText pKeyFilter="int" (input)="v1=$any($event.target).value" [value]="v1" placeholder="Somente inteiros" />
+                                <input pInputText pKeyFilter="int" (input)="v1=$any($event.target).value" [value]="v1" placeholder="0" />
                                 <small>Valor: {{ v1 }}</small>
                             </div>
                             <div class="form-col">
                                 <label>Apenas números positivos (pnum)</label>
-                                <input pInputText pKeyFilter="pnum" (input)="v2=$any($event.target).value" [value]="v2" placeholder="Números com decimal" />
+                                <input pInputText pKeyFilter="pnum" (input)="v2=$any($event.target).value" [value]="v2" placeholder="0,00" />
                                 <small>Valor: {{ v2 }}</small>
                             </div>
                             <div class="form-col">
                                 <label>Apenas letras (alpha)</label>
-                                <input pInputText pKeyFilter="alpha" (input)="v3=$any($event.target).value" [value]="v3" placeholder="Somente letras" />
+                                <input pInputText pKeyFilter="alpha" (input)="v3=$any($event.target).value" [value]="v3" placeholder="Digite" />
                                 <small>Valor: {{ v3 }}</small>
                             </div>
                             <div class="form-col">
                                 <label>Alfanumérico (alphanum)</label>
-                                <input pInputText pKeyFilter="alphanum" (input)="v4=$any($event.target).value" [value]="v4" placeholder="Letras e números" />
+                                <input pInputText pKeyFilter="alphanum" (input)="v4=$any($event.target).value" [value]="v4" placeholder="Digite" />
                                 <small>Valor: {{ v4 }}</small>
                             </div>
                             <div class="form-col">
                                 <label>Monetário (money)</label>
-                                <input pInputText pKeyFilter="money" (input)="v5=$any($event.target).value" [value]="v5" placeholder="Ex: 1.234,56" />
+                                <input pInputText pKeyFilter="money" (input)="v5=$any($event.target).value" [value]="v5" placeholder="0,00" />
                                 <small>Valor: {{ v5 }}</small>
                             </div>
                             <div class="form-col">
                                 <label>E-mail (email)</label>
-                                <input pInputText pKeyFilter="email" (input)="v6=$any($event.target).value" [value]="v6" placeholder="Ex: user@email.com" />
+                                <input pInputText pKeyFilter="email" (input)="v6=$any($event.target).value" [value]="v6" placeholder="email@goias.gov.br" />
                                 <small>Valor: {{ v6 }}</small>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ import { DEMO_STYLES } from './demo-shared.styles';
                         <div class="demo-card-body demo-grid">
                             <div class="form-col">
                                 <label>Apenas hex 0-9 A-F</label>
-                                <input pInputText [pKeyFilter]="hexRegex" (input)="v7=$any($event.target).value" [value]="v7" placeholder="Ex: 1A2B3C" />
+                                <input pInputText [pKeyFilter]="hexRegex" (input)="v7=$any($event.target).value" [value]="v7" placeholder="Digite" />
                                 <small>Valor: {{ v7 }}</small>
                             </div>
                         </div>

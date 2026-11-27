@@ -20,9 +20,12 @@ interface Product {
     imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, TagModule, TabsModule, IconFieldModule, InputIconModule],
     styles: [DEMO_STYLES + `
         .status-badge { padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .status-em  { background:#DCFCE7; color:#15803D; }
-        .status-bx  { background:#FEF9C3; color:#A16207; }
-        .status-ez  { background:#FEE2E2; color:#B91C1C; }
+        .status-em  { background: color-mix(in srgb, var(--p-green-500) 16%, transparent); color: var(--p-green-700); }
+        .status-bx  { background: color-mix(in srgb, var(--p-yellow-500) 18%, transparent); color: var(--p-yellow-800); }
+        .status-ez  { background: color-mix(in srgb, var(--p-red-500) 14%, transparent); color: var(--p-red-700); }
+        :host-context(.app-dark) .status-em { color: var(--p-green-300); }
+        :host-context(.app-dark) .status-bx { color: var(--p-yellow-200); }
+        :host-context(.app-dark) .status-ez { color: var(--p-red-300); }
     `],
     template: `
         <div class="comp-header">
@@ -97,7 +100,7 @@ interface Product {
                         <div style="background:var(--surface-card);padding:12px 16px;border-bottom:1px solid var(--surface-border)">
                             <p-iconfield>
                                 <p-inputicon class="pi pi-search" />
-                                <input #filterInput pInputText type="text" (input)="dt.filterGlobal(filterInput.value, 'contains')" placeholder="Buscar produto..." style="width:280px" />
+                                <input #filterInput pInputText type="text" (input)="dt.filterGlobal(filterInput.value, 'contains')" placeholder="Digite" style="width:280px" />
                             </p-iconfield>
                         </div>
                         <div style="background:var(--surface-card)">
@@ -204,14 +207,14 @@ export class TableDemo implements OnInit {
         <tr>
             <th>Nome</th>
             <th>Categoria</th>
-            <th>Preço</th>
+            <th style="text-align:right">Preço</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-produto>
         <tr>
             <td>{{ produto.name }}</td>
             <td>{{ produto.category }}</td>
-            <td>{{ produto.price | currency:'BRL' }}</td>
+            <td style="text-align:right">{{ produto.price | currency:'BRL' }}</td>
         </tr>
     </ng-template>
 </p-table>`,
@@ -231,7 +234,7 @@ export class TableDemo implements OnInit {
 
         filter: `<input pInputText type="text"
     (input)="dt.filterGlobal($event.target.value, 'contains')"
-    placeholder="Buscar..." />
+    placeholder="Digite" />
 
 <p-table #dt [value]="products"
     [globalFilterFields]="['name','category','status']">

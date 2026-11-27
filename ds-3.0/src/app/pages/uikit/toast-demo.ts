@@ -39,10 +39,10 @@ import { DEMO_STYLES } from './demo-shared.styles';
                             <p class="demo-card-desc">Notificação temporária que aparece no canto da tela via <code>MessageService</code>. Requer <code>&lt;p-toast /&gt;</code> no template.</p>
                         </div>
                         <div class="demo-card-body" style="gap:10px;flex-wrap:wrap">
-                            <p-button label="Sucesso"   severity="success" icon="pi pi-check"               (click)="show('success','Salvo!','Registro salvo com sucesso.')" />
-                            <p-button label="Informação" severity="info"    icon="pi pi-info-circle"          (click)="show('info','Informação','Operação em andamento.')" />
-                            <p-button label="Aviso"     severity="warn"    icon="pi pi-exclamation-triangle" (click)="show('warn','Atenção','Verifique os dados.')" />
-                            <p-button label="Erro"      severity="danger"  icon="pi pi-times"               (click)="show('error','Erro','Falha ao processar.')" />
+                            <p-button label="Sucesso"   severity="success"               (click)="show('success','Sucesso','Registro salvo com sucesso.')" />
+                            <p-button label="Informação" severity="info"          (click)="show('info','Informação','Operação em andamento.')" />
+                            <p-button label="Atenção"   severity="warn" (click)="show('warn','Atenção','Verifique os dados.')" />
+                            <p-button label="Erro"      severity="danger"               (click)="show('error','Erro','Falha ao processar.')" />
                         </div>
                         <div class="demo-card-code"><pre>{{ code }}</pre></div>
                     </div>
@@ -98,7 +98,7 @@ constructor(private ms: MessageService) {}
 <!-- 3. Dispare notificações -->
 this.ms.add({
     severity: 'success',
-    summary: 'Salvo!',
+    summary: 'Sucesso',
     detail: 'Registro salvo com sucesso.',
     life: 3000
 });`;
